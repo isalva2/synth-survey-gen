@@ -12,7 +12,40 @@ def generate_system_prompt() -> list[str]:
     We may use some spatial data in the future e.g. using RAG to interface with a transit stop location,
     but that is a later problem.
     """
+    demographic_data = pd.read_csv('data/demographic/demographic.csv')
+    # I am going to first check with the demographic data, then continue land use data 
+    # if my implementation for demographic data is working as intended
+
+    #land_use_data = pd.read_csv('data/land_use/land_use.csv
+
+    prompt_template = ("You live in {city}. The total population is {population} and the median age is {median_age}. "
+                       "The employment rate is {employment_rate:.2f}%. The median income is ${income}, and most households "
+                       "own around {car_ownership} vehicle(s).")
+    # this is the result that returns a list of strings for demographic data
+    res = []
+
+    # I am iterating over each row demogrphic dataframe
+    for index, row in demographic_data.iterrows():
+        # if we want to modify this data by performing operations
+        city = row['GEOG']
+        population = row['TOT_POP']
+        median_age = row['MED_AGE']
+        income = row['MEDINC']
+        employment_rate = row['EMP'] / row['POP_16OV'] * 100 if row['POP_16OV'] != 0 else 0
+        car_ownership = row['ONE_VEH'] + row['TWO_VEH'] + row['THREEOM_VEH']
+        # I formated the template in a way it can be expressed with variables
+        prompt = prompt_template.format(city=city, population=population, median_age=median_age, 
+                                        employment_rate=employment_rate, income=income, car_ownership=car_ownership)
+        
+        res.append(prompt)
+    
+    return res
+
     pass
+system_prompts = generate_system_prompt()
+# For this case I am testing with 5 prompts
+for prompt in system_prompts[:5]:
+    print(prompt)
 
 def build_travel_survey():
     """
