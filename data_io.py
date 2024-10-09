@@ -54,8 +54,8 @@ def generate_system_prompt(n_prompts: int, seed: int = None) -> list[str]:
 
     demographic_col_names = list(demographic_data.columns)
 
-    for index, current_column in enumerate(demographic_col_names):
-        print(f"{index}: {current_column}")
+    # for index, current_column in enumerate(demographic_col_names):
+    #     print(f"{index}: {current_column}")
 
     Category_Groups = {
         'Age Brackets': ['UND19', 'A20_34', 'A35_49', 'A50_64', 'A65_74', 'A75_84', 'OV85'],
