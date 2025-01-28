@@ -170,6 +170,7 @@ cython_debug/
 # keep data out of main repo
 data/
 meta/
+working/
 
 # anything related to testing
 test*
