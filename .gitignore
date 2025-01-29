@@ -168,8 +168,7 @@ cython_debug/
 .DS_Store
 
 # keep data out of main repo
-data/
-meta/
+*data/
 working/
 
 # anything related to testing

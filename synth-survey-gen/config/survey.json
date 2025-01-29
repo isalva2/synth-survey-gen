@@ -1,0 +1,14 @@
+{
+    "prompt_template": "Please assume the role of a {} year old survey respondent located in {}. We will be be asking you a series of questions, Please answer the survey questions in the provided format.",
+    "survey_questions": [
+        "This is question 1",
+        "This is question 2",
+        "This is question 3"
+    ],
+    "response_type_id": [0, 1, 2],
+    "response_types": {
+        "0": "Please answer the question, and on the next line please give a numeric value between 1 to 10 rating your answer",
+        "1": "Please answer in one word, followed by a numeric rating between 1 to 10 in the format [word: rating (numeric).",
+        "2": "Please answer with a single, numeric value"
+    }
+}

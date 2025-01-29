@@ -1,0 +1,15 @@
+{
+    "prompt_template": "Veuillez assumer le rôle d'un répondant à l'enquête âgé de {} ans et résidez à {}. Nous allons vous poser une série de questions.",
+    "survey_questions": [
+        "Quel est votre type de nourriture préféré, et quelle note lui donneriez-vous par rapport aux autres aliments ?",
+        "Quel est votre genre de musique préféré ?",
+        "Quel est votre salaire annuel en euros (€) ?",
+        "À quelle température (en Celsius) commencez-vous à vous sentir mal à l'aise ?"
+    ],
+    "response_type_id": [0, 1, 2, 2],
+    "response_types": {
+        "0": "Veuillez répondre à la question et, sur la ligne suivante, donner une valeur numérique entre 1 et 10 pour évaluer votre réponse.",
+        "1": "Veuillez répondre en un seul mot, suivi d'une note numérique entre 1 et 10 au format [mot : note (numérique)].",
+        "2": "Veuillez répondre avec une seule valeur numérique."
+    }
+}
