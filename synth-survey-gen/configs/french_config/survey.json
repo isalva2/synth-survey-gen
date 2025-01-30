@@ -9,7 +9,7 @@
     "response_type_id": [0, 1, 2, 2],
     "response_types": {
         "0": "Veuillez répondre à la question et, sur la ligne suivante, donner une valeur numérique entre 1 et 10 pour évaluer votre réponse.",
-        "1": "Veuillez répondre en un seul mot, suivi d'une note numérique entre 1 et 10 au format [mot : note (numérique)].",
+        "1": "Veuillez répondre en un seul mot, suivi d'une note numérique entre 1 et 10 au format 'mot : note (1-10)'.",
         "2": "Veuillez répondre avec une seule valeur numérique."
     }
 }

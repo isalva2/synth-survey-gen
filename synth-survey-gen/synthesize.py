@@ -18,6 +18,7 @@ def read_config(config_folder:Path=Path("config/")):
 
     return model_config, survey_config
 
+
 def generate_population_sample(n: int) -> List[List[str]]:
     """
     Returns a list of string attributes for `n` many agents. Uses iterative proportional fitting.
@@ -41,26 +42,27 @@ def build_survey(population_sample: List[List[str]], model_config:Dict, survey_c
     """
 
     # prepare system prompts and response
-    survey = []
+    agents = []
     for agent_id, individual_attributes in enumerate(population_sample):
         system_prompt = survey_config["prompt_template"].format(*individual_attributes)
 
         agent = {
             "agent_id": agent_id,
             "system_prompt": system_prompt,
-            "survey_responses": []
+            "survey_responses": [],
+            "chat_history": None
         }
 
-        survey.append(agent)
+        agents.append(agent)
 
     return agents
 
 
-def begin_survey(agents: Dict, model_config: Dict, survey_config: Dict):
+def begin_survey(agents: List[Dict], model_config: Dict, survey_config: Dict):
 
+    # get model params and survey questions
     model_name = model_config["model_name"]
     model_parameters = model_config["model_params"]
-
     survey_questions = survey_config["survey_questions"]
     response_types = survey_config["response_types"]
 
@@ -69,16 +71,17 @@ def begin_survey(agents: Dict, model_config: Dict, survey_config: Dict):
         system_prompt = agent["system_prompt"]
         messages = [{"role": "system", "content": system_prompt}]
 
-        responses = []
-
-        for question, response_type in zip(survey_questions, survey_config["response_type_id"]):
+        for i, question, response_type in enumerate(zip(survey_questions, survey_config["response_type_id"])):
 
             # append survey question to chat history
-            chat_question = {"role": "user", "content": f"{question} {response_types[str(response_type)]}"}
+            chat_question = {
+                "role": "user",
+                "content": f"{question} {response_types[str(response_type)]}"
+                }
             messages.append(chat_question)
             print(messages)
 
-            # llm time
+            # call model using ollama API
             response: ChatResponse = ollama.chat(
                 model = model_name,
                 options = model_parameters,
@@ -86,15 +89,16 @@ def begin_survey(agents: Dict, model_config: Dict, survey_config: Dict):
                 stream=False
             )
 
-            # append response to chat history:
-            assistant_response = {"role": "assistant", "content": response["message"]["content"]}
-            print(assistant_response)
-            agent["survey_responses"].append(assistant_response["content"])
+            # extract assistant response from ChatResponse
+            assistant_content = response["message"]["content"]
+            agent["survey_responses"].append(assistant_content)
+
+            # append response to
+            assistant_response = {"role": "assistant", "content": assistant_content}
             messages.append(assistant_response)
 
-            print(messages)
-
-
+            if i == len(survey_questions)-1:
+                agent["chat_history"] = messages
 
 
 def main():
