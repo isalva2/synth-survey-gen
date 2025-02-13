@@ -1,0 +1,1135 @@
+{
+    "AGE": {
+        "question": "How old are you?",
+        "response": {
+
+            "-7": "I prefer not to answer"
+        }
+    },
+    "AAGE": {
+        "question": "Because we want to make sure to ask questions that are age appropriate, in which age group do you belong?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "0-4 years old ",
+            "2": "5-12 years old",
+            "3": "13-15 years old",
+            "4": "16-17 years old",
+            "5": "18-44 years old",
+            "6": "45-64 years old",
+            "7": "65 years old or older"
+        }
+    },
+    "AGE18": {
+        "question": "Are you 18 years of age or older?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes, 18 or older ",
+            "2": "No, under 18"
+        }
+    },
+    "SEX": {
+        "question": "Are you male or female?",
+        "response": {
+
+
+            "1": "Male",
+            "2": "Female"
+        }
+    },
+    "LIC": {
+        "question": "Do you have a valid driver's license?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "HISP": {
+        "question": "Are you of Hispanic, Latino, or Spanish origin?",
+        "response": {
+
+
+            "1": "Yes",
+            "2": "No",
+            "97": "Other"
+        }
+    },
+    "HISP_O": {
+        "question": "Please describe.",
+        "response": {
+            "-1": "Appropriate skip"
+        }
+    },
+    "RACE": {
+        "question": "Which of the following describes your race?",
+        "response": {
+            "-8": "I don't know ",
+            "-7": "I prefer not to answer ",
+            "1": "White ",
+            "2": "African American, Black",
+            "3": "Asian ",
+            "4": "American Indian, Alaskan Native",
+            "5": "Native Hawaiian or Pacific Islander",
+            "6": "Multiracial",
+            "97": "Some other race "
+        }
+    },
+    "RACE_O": {
+        "question": "Please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "SMRTPHN": {
+        "question": "Do you have a smartphone?",
+        "response": {
+
+            "-7": "I prefer not to answer ",
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "EMPLY_ASK": {
+        "question": "Are you employed? (Being employed includes doing any work for pay.)",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "JOBS": {
+        "question": "How many jobs do you work?",
+        "response": {
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "WKSTAT": {
+        "question": "Which of the following best describes your employment status?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "0": "Worker, including self employed",
+            "1": "Retired ",
+            "2": "Volunteer",
+            "3": "Homemaker ",
+            "4": "Unemployed but looking for work",
+            "5": "Unemployed, not seeking employment",
+            "6": "Student (part-time or full-time)",
+            "7": "Disabled non-worker",
+            "97": "Something else"
+        }
+    },
+    "WKSTAT_O": {
+        "question": "If you said something else, please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "VOLUN_FREQ": {
+        "question": "How many days per week do you volunteer?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "1 day a week",
+            "2": "2 days a week",
+            "3": "3 days a week",
+            "4": "4 days a week",
+            "5": "5 days a week",
+            "6": "6 days a week",
+            "7": "7 days a week"
+        }
+    },
+    "WPLACE": {
+        "question": "Do you go to the same work place every day that you work?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Same work place every day",
+            "2": "Work from home",
+            "3": "No fixed work place"
+        }
+    },
+    "WMODE": {
+        "question": "How do you usually travel to work?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Walk",
+            "2": "Bike",
+            "3": "Motorcycle/moped",
+            "4": "Auto / van / truck (as the driver)",
+            "5": "Auto / van / truck (as the passenger)",
+            "6": "Carpool/vanpool",
+            "7": "School bus",
+            "8": "Bus (CTA, PACE, Huskie Line, Indiana)",
+            "9": "Train (CTA/METRA/NICTD)",
+            "10": "Local transit (NIRPC region)",
+            "11": "Dial-a-Ride",
+            "12": "Call-n-Ride",
+            "13": "Paratransit",
+            "14": "Private shuttle bus",
+            "15": "Taxi/limo",
+            "16": "Uber/Lyft",
+            "17": "Airplane",
+            "18": "I do not travel to work",
+            "97": "Something Else"
+        }
+    },
+    "WMODE_O": {
+        "question": "If you said something else, please provide details.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "WPARKRIDE": {
+        "question": "Do you use a park and ride lot at a train station during your commute to work?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "PERVH": {
+        "question": "Do you have a vehicle available through work? This would include a vehicle provided by your employer which you use to make at least some of your daily trips.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "WRKHRS": {
+        "question": "How many hours do you work in a typical week at your primary workplace?",
+        "response": {
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "WTRAV": {
+        "question": "On average, how many days per week do you travel to your work location?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "0": "Never",
+            "1": "1 day a week",
+            "2": "2 days a week",
+            "3": "3 days a week",
+            "4": "4 days a week",
+            "5": "5 days a week",
+            "6": "6 days a week",
+            "7": "7 days a week"
+        }
+    },
+    "OCCUP": {
+        "question": "Which of these is the best match for what you typed?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "11": "Management Occupations",
+            "13": "Business and Financial Operations Occupations",
+            "15": "Computer and Mathematical Occupations",
+            "17": "Architecture and Engineering Occupations",
+            "19": "Life, Physical, and Social Science Occupations",
+            "21": "Community and Social Service Occupations",
+            "23": "Legal Occupations",
+            "25": "Educational Instruction and Library Occupations",
+            "27": "Arts, Design, Entertainment, Sports, and Media Occupations",
+            "29": "Healthcare Practitioners and Technical Occupations",
+            "31": "Healthcare Support Occupations",
+            "33": "Protective Service Occupations",
+            "35": "Food Preparation and Serving Related Occupations",
+            "37": "Building and Grounds Cleaning and Maintenance Occupations",
+            "39": "Personal Care and Service Occupations",
+            "41": "Sales and Related Occupations",
+            "43": "Office and Administrative Support Occupations",
+            "45": "Farming, Fishing, and Forestry Occupations",
+            "47": "Construction and Extraction Occupations",
+            "49": "Installation, Maintenance, and Repair Occupations",
+            "51": "Production Occupations",
+            "53": "Transportation and Material Moving Occupations",
+            "55": "Military Specific Occupations",
+            "97": "None of these are a match"
+        }
+    },
+    "OCCUP_O": {
+        "question": "Tell us in a few words what you do at work.",
+        "response": {
+            "-1": "Appropriate skip"
+        }
+    },
+    "INDUS": {
+        "question": "Which of these is the best match for what you typed?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "11": "Agriculture, Forestry, Fishing and Hunting",
+            "21": "Mining, Quarrying, and Oil and Gas Extraction",
+            "22": "Utilities",
+            "23": "Construction",
+            "42": "Wholesale Trade",
+            "51": "Information",
+            "52": "Finance and Insurance",
+            "53": "Real Estate and Rental and Leasing",
+            "54": "Professional, Scientific, and Technical Services",
+            "55": "Management of Companies and Enterprises",
+            "56": "Administrative and Support and Waste Management and Remediation Services",
+            "61": "Educational Services",
+            "62": "Health Care and Social Assistance",
+            "71": "Arts, Entertainment, and Recreation",
+            "72": "Accommodation and Food Services",
+            "81": "Other Services (except Public Administration)",
+            "92": "Public Administration",
+            "97": "Something else",
+            "48-49": "Transportation and Warehousing",
+            "31-33": "Manufacturing",
+            "44-45": "Retail Trade"
+        }
+    },
+    "INDUS_O": {
+        "question": "Tell us in a few words what your company does.",
+        "response": {
+            "-1": "Appropriate skip"
+        }
+    },
+    "EMPLY_TRANSIT": {
+        "question": "Which best describes how your employer subsidizes the use of Public Transportation?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Employer pays 25% or less of my monthly fares",
+            "2": "Employer pays between 26% and 75% of my monthly fares",
+            "3": "Employer pays for more than 75% of my monthly fares",
+            "4": "Employer deducts pre-tax earnings to apply to my monthly fares",
+            "5": "No subsidy offered",
+            "97": "Something else"
+        }
+    },
+    "EMPLY_TRANSIT_O": {
+        "question": "If you said something else, please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "EMPLY_PARK": {
+        "question": "Which of the following best describes your parking costs at work?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Free onsite parking",
+            "2": "Employer pays 25% or less of my parking costs",
+            "3": "Employer pays between 26% and 75% of my parking costs",
+            "4": "Employer pays for more than 75% of my parking costs",
+            "5": "Employer deducts pre-tax earnings to apply to my parking costs",
+            "6": "No subsidy offered",
+            "97": "Something else"
+        }
+    },
+    "EMPLY_PARK_O": {
+        "question": "If you said something else, please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "STUDE": {
+        "question": "Are you currently enrolled in any type of school, including daycare technical school, or university?",
+        "response": {
+
+
+            "1": "Yes - Full Time",
+            "2": "Yes - Part Time",
+            "3": "No"
+        }
+    },
+    "SCHOL": {
+        "question": "What school grade or level do you attend?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Daycare",
+            "2": "Nursery/Pre-school",
+            "3": "Kindergarten to 8th grade",
+            "4": "9th-12th grade",
+            "5": "Vocational/Technical school",
+            "6": "2-year college (community college)",
+            "7": "4-year college or university",
+            "8": "Graduate/Professional school",
+            "97": "Something else"
+        }
+    },
+    "SCHOL_O": {
+        "question": "If you said something else, please provide details.",
+        "response": {
+            "-1": "Appropriate skip"
+        }
+    },
+    "SLOC": {
+        "question": "Are you home schooled?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "SWEB": {
+        "question": "Is your school an online-only curriculum?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "SMODE": {
+        "question": "How do you usually get to school?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Walk",
+            "2": "Bike",
+            "3": "Motorcycle/moped",
+            "4": "Auto / van / truck (as the driver)",
+            "5": "Auto / van / truck (as the passenger)",
+            "6": "Carpool/vanpool",
+            "7": "School bus",
+            "8": "Bus (CTA, PACE, Huskie Line, Indiana)",
+            "9": "Train (CTA/METRA/NICTD)",
+            "10": "Local transit (NIRPC region)",
+            "11": "Dial-a-Ride",
+            "12": "Call-n-Ride",
+            "13": "Paratransit",
+            "14": "Private shuttle bus",
+            "15": "Taxi/limo",
+            "16": "Uber/Lyft",
+            "17": "Airplane",
+            "18": "I do not travel to school",
+            "97": "Something Else"
+        }
+    },
+    "SMODE_O": {
+        "question": "If you said something else, please provide details.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "SPARKRIDE": {
+        "question": "Do you use a park and ride lot at a train station during your trip to school?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "EDUC": {
+        "question": "What is the highest grade or degree that you have earned?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "1": "Not a high school graduate, grade 12 or less (this includes very young children)",
+            "2": "High school graduate (high school diploma or GED)",
+            "3": "Some college credit but no degree",
+            "4": "Associate or technical school degree",
+            "5": "Bachelor's or undergraduate degree",
+            "6": "Graduate degree (includes professional degree like PHD, MD, DD, JD)",
+            "97": "Some other degree"
+        }
+    },
+    "EDUC_O": {
+        "question": "If you said some other degree, please provide the degree.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "HPTOL": {
+        "question": "How did ?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Cash",
+            "2": "IPASS (Electronic payment with transponder)",
+            "3": "Both cash and IPASS",
+            "97": "Something else"
+        }
+    },
+    "HPTOL_O": {
+        "question": "Please describe...",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "PAY_ALLDAY": {
+        "question": "Did you pay to park at all?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TOLLS": {
+        "question": "How much did you pay?",
+        "response": {
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "TOLLTRIP": {
+        "question": "Did you pay any tolls on [$CURRENTDATE]?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TYPDAY": {
+        "question": "Was this a typical day for you?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TYPDAY_NO": {
+        "question": "What was unusual about this day?",
+        "response": {
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "TYPPL": {
+        "question": "Where your activities planned or changed?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "1": "Planned",
+            "2": "Changed along the way"
+        }
+    },
+    "CARPTOWK": {
+        "question": "How many times have you carpooled to work in the past week? This includes traveling with a member of your household or with someone from a different household.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Zero Times (never)",
+            "2": "Once or Twice",
+            "3": "Three or four times",
+            "4": "Five or more times"
+        }
+    },
+    "WALKTOWK": {
+        "question": "How many times have you walked to work in the past week?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Zero Times (never)",
+            "2": "Once or Twice",
+            "3": "Three or four times",
+            "4": "Five or more times"
+        }
+    },
+    "BIKETOWK": {
+        "question": "How many times have you bicycled to work in the past week? ",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Zero Times (never)",
+            "2": "Once or Twice",
+            "3": "Three or four times",
+            "4": "Five or more times"
+        }
+    },
+    "RIBUS": {
+        "question": "In a typical week, how often do you take public transportation to work (including a local bus, commuter bus, or train)?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Zero Times (never)",
+            "2": "Once or Twice",
+            "3": "Three or four times",
+            "4": "Five or more times"
+        }
+    },
+    "TCOFF": {
+        "question": "Regardless of whether you telecommute, is telecommuting offered at your primary workplace?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TCDAYS": {
+        "question": "How many days do you telecommute per week (meaning you work from home instead of traveling to your workplace)?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "COMPR": {
+        "question": "Do you work a compressed work week, such as 40 hours in 4 days or 80 hours in 9 days?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "4/40",
+            "2": "9/80",
+            "3": "3/36",
+            "4": "No",
+            "97": "Other, SPECIFY"
+        }
+    },
+    "COMPR_O": {
+        "question": "If you said \u2018Other', please describe\u2026",
+        "response": {
+            "-1": "Appropriate skip"
+        }
+    },
+    "WKFLEX": {
+        "question": "Do you have the ability to set or change your own start or end work times?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TNC_USE": {
+        "question": "How many times in the past week have you used a service like Uber, Lyft, or Via?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "TNC_TYP": {
+        "question": "Was the number of times using Uber, Lyft, or Via this past week low, typical, or high?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Low",
+            "2": "Typical",
+            "3": "High"
+        }
+    },
+    "TNC_COST": {
+        "question": "On average, how much do you pay for a ride when using a service like Uber or Lyft?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "TNC_PURP": {
+        "question": "For what type of trip do you use the service most?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "For your whole commute",
+            "2": "As part of your commute to get to transit",
+            "3": "For work-related travel during the day (e.g., off site meetings)",
+            "4": "For travel not related to work  during the day (e.g., personal errands or leisure)",
+            "5": "For late-night service (e.g., after dinner or socializing with friends)"
+        }
+    },
+    "DISAB": {
+        "question": "Do you have a disability?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "DTYPE_O": {
+        "question": "Please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "DTYPE2": {
+        "question": "Do you think your disability limits your options for daily travel?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "NOGOWHY": {
+        "question": "What was the main reason that you did not go anywhere on your travel day?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Personally sick",
+            "2": "Vacation or personal day",
+            "3": "Caretaking",
+            "4": "Home-bound elderly or disabled",
+            "5": "Worked at home (for pay)",
+            "6": "Not scheduled to work",
+            "7": "Worked around home (not for pay)",
+            "8": "Out of area",
+            "9": "No transportation available",
+            "10": "No longer a household resident",
+            "97": "Something else"
+        }
+    },
+    "NOGOWHY_O": {
+        "question": "What was the main reason that you did not go anywhere on your travel day?",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "NOGOWHY2": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_1": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_2": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_3": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_4": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_5": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_RF": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "NOGOWHY2_DK": {
+        "question": "Did you do any of the following on your travel day? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Shop online (including online groceries)",
+            "2": "Socialize online",
+            "3": "Order food for delivery",
+            "4": "Have a parcel delivered for home use",
+            "5": "I did none of these"
+        }
+    },
+    "TRAVELDATAUSE": {
+        "question": "Do you regularly (at least once a week) use real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Yes",
+            "2": "No"
+        }
+    },
+    "TRAVELDATADEVICE": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_1": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_2": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_3": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_SE": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_RF": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_DK": {
+        "question": "How do you get your real-time traveler information?",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Message signs",
+            "2": "Smartphones",
+            "3": "Navigation devices",
+            "97": "Other"
+        }
+    },
+    "TRAVELDATADEVICE_O": {
+        "question": "Please describe.",
+        "response": {
+            "-9": "Not ascertained",
+            "-1": "Appropriate skip"
+        }
+    },
+    "TRAVELDATAMODE": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_1": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_2": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_3": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_4": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_5": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_SE": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_RF": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_DK": {
+        "question": "For which of the following do you use real-time traveler information? Select all that apply.",
+        "response": {
+            "-9": "Not ascertained",
+
+
+            "-1": "Appropriate skip",
+            "1": "Driving",
+            "2": "Public Transportation - Bus Schedule",
+            "3": "Public Transportation - Train Schedule",
+            "4": "Parking availability",
+            "97": "Something Else"
+        }
+    },
+    "TRAVELDATAMODE_O": {
+        "question": "Please describe.",
+        "response": {
+            "-9": "Not ascertained",
+
+            "-1": "Appropriate skip"
+        }
+    },
+    "DTYPE": {
+        "question": "Do you have a disability?",
+        "response": {
+
+
+            "-1": "Appropriate skip",
+            "1": "Visually Impaired or Blind",
+            "2": "Hearing Impaired or Deaf",
+            "3": "Cane or Walker",
+            "4": "Wheelchair Non-Transferable",
+            "5": "Wheelchair Transferable",
+            "6": "Mentally or Emotionally Disabled",
+            "97": "Other (Specify)"
+        }
+    }
+}
