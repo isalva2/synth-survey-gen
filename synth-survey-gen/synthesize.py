@@ -1,8 +1,9 @@
 import ollama
 import json
 from typing import List, Dict
+import copy
+from tqdm import tqdm
 from pathlib import Path
-
 from ollama import chat, ChatResponse
 
 
@@ -12,10 +13,10 @@ def read_config(config_folder:str="config/"):
     """
     config_folder = Path(config_folder)
     with open(config_folder / "config.json", "r") as file:
-        model_config = json.load(file)
+        model_config: dict = json.load(file)
 
     with open( config_folder / "questions_condensed.json", "r") as file:
-        questions = json.load(file)
+        questions: dict = json.load(file)
 
     return model_config, questions
 
@@ -26,95 +27,119 @@ class survey_agent:
         self.system_prompt = prompt_template.format(*agent_attrs)
 
         self.messages = []
+        self.survey_variables = []
         self.survey_responses = []
         self.person_response = None
-        self.is_compiled = False
 
         initial_prompt = {"role": "system", "content": self.system_prompt}
         self.messages.append(initial_prompt)
 
-    def record_question(self, user_response:str):
+    def record_question(self, user_response:str)->None:
         user_message = {"role": "user", "content": user_response}
         self.messages.append(user_message)
 
-    def record_response(self, assistant_response:str):
+    def record_response(self, assistant_response:str)->None:
         self.survey_responses.append(assistant_response)
         assistant_message = {"role": "assistant", "content": assistant_response}
         self.messages.append(assistant_message)
 
-
-def run_survey(agents:List[survey_agent], model_config: Dict, questions: Dict):
-    model_name = model_config["model_name"]
-    model_parameters = model_config["model_params"]
-
-    for agent in agents:
-        for item in questions.items:
+    def write_person_response(self)->None:
+        for variable, response in zip(self.survey_variables, self.survey_responses):
             pass
+            
 
-
-def build_survey(population_sample: List[List[str]], model_config:Dict, survey_config:Dict):
+def run_survey(agents:List[survey_agent], model_config: Dict, questions: Dict, max_q: int = None, truncate_memory: bool=True):
     """
-    Prepare agent ID, individual unique system prompt, and list to store agent responses
+    Run's the survey sequentially on a list of survey agents.
+    Uses a truncated short-term memory system.
     """
-
-    # prepare system prompts and response
-    agents = []
-    for agent_id, individual_attributes in enumerate(population_sample):
-        system_prompt = survey_config["prompt_template"].format(*individual_attributes)
-
-        agent = {
-            "agent_id": agent_id,
-            "system_prompt": system_prompt,
-            "survey_responses": [],
-            "chat_history": None
-        }
-
-        agents.append(agent)
-
-    return agents
-
-
-def begin_survey(agents: List[Dict], model_config: Dict, survey_config: Dict):
-
-    # get model params and survey questions
     model_name = model_config["model_name"]
     model_parameters = model_config["model_params"]
-    survey_questions = survey_config["survey_questions"]
-    response_types = survey_config["response_types"]
 
-    # run through agents and survey questions:
+    # Loop through list of agent
     for agent in agents:
-        system_prompt = agent["system_prompt"]
-        messages = [{"role": "system", "content": system_prompt}]
+        # Loop through every survey qeustion/response variable in question dictionary
+        for key in tqdm(list(questions.keys())[:max_q], desc="Asking questions"):
+            
+            # get question and possible repsonses corresponding to survey variable, this is in order
+            survey_question = questions[key]["question"]
+            possible_responses = "; ".join(f"{k}: {v}" for k, v in questions[key]["response"].items())
+            formatted_question: str =  f"{survey_question} Please respond in the format 'number: option'. Possible choices are {possible_responses}"
 
-        for i, question, response_type in enumerate(zip(survey_questions, survey_config["response_type_id"])):
-
-            # append survey question to chat history
+            # build chat question with possible responses and add to chat message input
             chat_question = {
                 "role": "user",
-                "content": f"{question} {response_types[str(response_type)]}"
+                "content": formatted_question
                 }
-            messages.append(chat_question)
-            print(messages)
+            
+            # choose to truncate memory
+            if truncate_memory:
+                chat_message = copy.deepcopy(agent.messages)
+                chat_message.append(chat_question)
 
-            # call model using ollama API
+                # record survey question
+                agent.record_question(survey_question)
+            else:
+                agent.record_question(formatted_question)
+                chat_message = agent.messages
+
+            # actual ollama API call
             response: ChatResponse = ollama.chat(
                 model = model_name,
                 options = model_parameters,
-                messages = messages,
+                messages = chat_message,
                 stream=False
             )
 
-            # extract assistant response from ChatResponse
+            # add survey variable to agent, extract context - need to add COT processing here I believe
+            agent.survey_variables.append(key)
             assistant_content = response["message"]["content"]
-            agent["survey_responses"].append(assistant_content)
+            agent.record_response(assistant_content)
 
-            # append response to
-            assistant_response = {"role": "assistant", "content": assistant_content}
-            messages.append(assistant_response)
 
-            if i == len(survey_questions)-1:
-                agent["chat_history"] = messages
+class dummy_chat():
+    def __init__(self, model_config: Dict):
+        self.model_name = model_config["model_name"]
+        self.model_parameters = model_config["model_params"]
+
+        self.system_prompt: str = None
+        self.messages = []
+        self.ChatResponses = []
+
+    def initialize(self, system_prompt: str):
+        if self.system_prompt is None:
+            self.system_prompt = system_prompt
+            self.messages.append(self._prepare_message(0, system_prompt))
+
+    def chat(self, chat_msg:str, verbose=True, ):
+        self.messages.append(self._prepare_message(1, chat_msg))
+
+        response: ChatResponse = ollama.chat(
+            model = self.model_name,
+            options = self.model_parameters,
+            messages = self.messages,
+            stream = False
+        )
+
+        assistant_content = response["message"]["content"]
+        self.ChatResponses.append(response)
+        self.messages.append(self._prepare_message(2, assistant_content))
+
+        if verbose:
+            return assistant_content
+        
+    def chat_history(self):
+        return [message["content"] for message in self.messages]
+
+    def clear(self):
+        self.system_prompt = None
+        self.messages = []
+        self.ChatResponses = []
+
+
+    def _prepare_message(self, role:int, message:str)-> Dict[str,str]:
+        role_ids = ["system", "user", "assistant"]
+        return {"role":role_ids[role], "content":message}
 
 
 def main():
