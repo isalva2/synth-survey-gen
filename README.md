@@ -1,3 +1,5 @@
 # Synthetic Survey Generation
 
-This project focuses on the
+
+## Links:
+ollama GGUF from hugging face: https://www.youtube.com/watch?v=fnvZJU5Fj3Q
