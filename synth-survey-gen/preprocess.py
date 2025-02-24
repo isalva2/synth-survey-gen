@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 import json
 
+
 def process_MyDailyTravelData(source:Path):
 
     # get variables and table from data dictionary
@@ -33,32 +34,54 @@ def process_MyDailyTravelData(source:Path):
 
     return variables_df, query_dictionary, person_response
 
-def process_pums_data(source: str, write: str | None = None) -> Dict[str, str] | None:
-    data_path = Path(source)
-    df_path = data_path.glob("psam_p*.csv")
-    dd_path = data_path.glob("PUMS_Data_Dictionary*.csv")
-    df = pd.read_csv(*df_path, nrows=1)
-    dd = pd.read_csv(*dd_path, header=None, names=list("abcdefg"))
 
-    person_variables = df.columns.values
+def process_pums_data(source: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
+    """
+    Reads US Census Public Use Microdata Sample (PUMS) Uses 1-year ACS data.
+    Househould and person data: https://www2.census.gov/programs-surveys/acs/data/pums/2019/1-Year/
+
+    """
+    data_path = Path(source)
+    dd_path = data_path.glob("PUMS_Data_Dictionary*.csv")
+    dd = pd.read_csv(*dd_path, header=None, names=list("abcdefg"))
     variable_desc = dd[dd.a == "NAME"].set_index("b")["e"].to_dict()
 
-    person_variable_dict = {k:v for k,v in variable_desc.items() if k in person_variables}
-
-    person_answer_mapper = {}
-    for variable,description in person_variable_dict.items():
-        answers = dd[(dd.a!="NAME") & (dd.b==variable)][["f","g"]].drop_duplicates().set_index("f")["g"].to_dict()
-        person_answer_mapper[variable] = {
-            "description": description,
-            "answers": answers
-        }
+    if person:
+        df_path = data_path.glob("psam_p*.csv")
+        df = pd.read_csv(*df_path, nrows=1)
+        person_variables = df.columns.values
+        person_variable_dict = {k:v for k,v in variable_desc.items() if k in person_variables}
+        mapper = {}
+        for variable,description in person_variable_dict.items():
+            answers = dd[(dd.a!="NAME") & (dd.b==variable)][["f","g"]].drop_duplicates().set_index("f")["g"].to_dict()
+            mapper[variable] = {
+                "description": description,
+                "answers": answers
+            }
+        
+    if not person:
+        df_path = data_path.glob("psam_h*.csv")
+        df = pd.read_csv(*df_path, nrows=1)
+        housing_variables = df.columns.values
+        housing_variable_dict = {k:v for k,v in variable_desc.items() if k in housing_variables}
+        mapper = {}
+        for variable,description in housing_variable_dict.items():
+            answers = dd[(dd.a!="NAME") & (dd.b==variable)][["f","g"]].drop_duplicates().set_index("f")["g"].to_dict()
+            mapper[variable] = {
+                "description": description,
+                "answers": answers
+            }
 
     if write != None:
         with open(write, "w") as file:
-            json.dump(person_answer_mapper, file)
+            json.dump(mapper, file)
     else:
-        return person_answer_mapper
+        return mapper
+    
+
+def pums_sample(data_path: str, n: int, ):
+    pass
 
 
 if __name__ == "__main__":
-    person_answer_mapper = process_pums_data("data/pums", "configs/pums_answer_mapper.json")
+    pass
