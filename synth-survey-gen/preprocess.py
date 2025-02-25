@@ -3,6 +3,13 @@ import pandas as pd
 from pathlib import Path
 import json
 
+"""
+Preprocessing steps for census and travel survey data. 
+These functions prepare json files for a specific survey
+configuration, however there are a couple steps (~10%)
+that needs to be done manually.
+"""
+
 
 def process_MyDailyTravelData(source:Path):
 
@@ -39,7 +46,7 @@ def process_pums_data(source: str, person: bool = True, write: str | None = None
     """
     Reads US Census Public Use Microdata Sample (PUMS) Uses 1-year ACS data.
     Househould and person data: https://www2.census.gov/programs-surveys/acs/data/pums/2019/1-Year/
-
+    Public Use Microdata Area (PUMA) Spatial Data (derived from 2010 census): https://usa.ipums.org/usa/volii/pumas10.shtml#boundary-file
     """
     data_path = Path(source)
     dd_path = data_path.glob("PUMS_Data_Dictionary*.csv")
@@ -80,7 +87,14 @@ def process_pums_data(source: str, person: bool = True, write: str | None = None
     
 
 def pums_sample(data_path: str, n: int, ):
-    pass
+    """
+    Generates a sample from the Public Use Microdata Sample.
+    Should pull a sample in proportion and spatially equivalent
+    to the sample from the CMAP My Daily Travel Survey.
+    """
+    data_path = Path(data_path).glob("psam_p*.csv")
+    df = pd.read_csv(*data_path)
+    return df
 
 
 if __name__ == "__main__":
