@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 
 """
-Preprocessing steps for census and travel survey data. 
+Preprocessing steps for census and travel survey data.
 These functions prepare json files for a specific survey
 configuration, however there are a couple steps (~10%)
 that needs to be done manually.
@@ -65,7 +65,7 @@ def process_pums_data(source: str, person: bool = True, write: str | None = None
                 "description": description,
                 "answers": answers
             }
-        
+
     if not person:
         df_path = data_path.glob("psam_h*.csv")
         df = pd.read_csv(*df_path, nrows=1)
@@ -84,7 +84,11 @@ def process_pums_data(source: str, person: bool = True, write: str | None = None
             json.dump(mapper, file)
     else:
         return mapper
-    
+
+
+def process_puma_data():
+    pass
+
 
 def pums_sample(data_path: str, n: int, ):
     """
