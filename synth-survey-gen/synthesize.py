@@ -14,7 +14,7 @@ from ollama import ChatResponse
 
 def read_config(config_folder:str):
     """
-    Prepares config folder 
+    Prepares config folder
     """
 
     # read config, question, and mappers
@@ -29,18 +29,24 @@ def read_config(config_folder:str):
 def synthesize_population(config_folder:str, n_sample:int, source:str="pums", random_state=0):
 
     data_folder = Path(config_folder) / "data"
-    state = "Illinois"
 
     if source == "pums":
+        """
+        Data derived from 2019 Public Use Microdata Sample (PUMS) dataset.
+        PUMS: https://www.census.gov/programs-surveys/acs/microdata/access.2019.html#list-tab-735824205
+        PUMA: https://catalog.data.gov/dataset/tiger-line-shapefile-2019-series-information-for-the-2010-census-public-use-microdata-area-puma
+        """
+
         crs:str = "EPSG:4326"
 
         # load PUMS and PUMA data
         person_df = pd.read_csv(data_folder/"person.csv", low_memory=False)
         location_df = pd.read_csv(data_folder/"location.csv")
         pums_person_df = pd.read_csv(data_folder/"psam_p17.csv")
-        puma_gdf = gpd.read_csv(data_folder/"ipums_puma_2010.shp")
+
+        puma_gdf = gpd.read_file(data_folder/"tl_2019_17_puma10.shp")
         puma_gdf = puma_gdf.to_crs(crs=crs)
-        puma_gdf = puma_gdf[puma_gdf.State==state]
+        puma_gdf["PUMA"] = puma_gdf["PUMACE10"].astype(int)
 
         # get the size of each household
         household_sizes = person_df[["sampno", "perno"]].groupby(by="sampno")["perno"].max()
@@ -48,22 +54,36 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", ra
             .drop_duplicates(subset="sampno") \
             .set_index("sampno")[["longitude", "latitude"]] # always x, y for spatial operations apparently
         household_locations = household_locations.join(household_sizes)
-        
-        # get household locations as gdf 
+
+        # get household locations as gdf
         geometry = household_locations.apply(
-            lambda row: Point(x=row.longitude, y=row.latitude), axis=1
+            lambda row: Point(row.longitude, row.latitude), axis=1
         )
         household_gdf = GeoDataFrame(household_locations, geometry=geometry, crs=crs)
-        
+
         # get count of households in each PUMA zone
         household_join = household_gdf.sjoin(puma_gdf, predicate="within")
         household_counts = household_join.groupby(by=["PUMA"])["perno"].sum()
-        puma_household_counts = puma_gdf.set_index("PUMA").join(household_counts, how="inner")[["GEOID", "Name", "perno", "geometry"]]
+        puma_household_counts = puma_gdf \
+            .set_index("PUMA") \
+            .join(household_counts, how="inner")[["GEOID10", "NAMELSAD10", "perno", "geometry"]]
+        puma_household_counts.reset_index(inplace=True)
 
         # sample by PUMA area
         samples = []
-        
-        
+        puma_household_counts["weight"] = puma_household_counts.perno / puma_household_counts.perno.sum()
+        for _, row in puma_household_counts.iterrows():
+            puma = row.PUMA
+            weight = row.weight
+            n = int(weight*n_sample)
+
+            sample = pums_person_df[pums_person_df.PUMA==puma].sample(n, random_state=random_state)
+            samples.append(sample)
+
+        population_sample = pd.concat(samples)
+
+        return population_sample
+
     pass
 
 
