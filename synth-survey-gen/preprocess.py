@@ -47,7 +47,6 @@ def process_pums_data(config_folder: str, person: bool = True, write: str | None
     """
     Reads US Census Public Use Microdata Sample (PUMS) Uses 1-year ACS data.
     Househould and person data: https://www2.census.gov/programs-surveys/acs/data/pums/2019/1-Year/
-    Public Use Microdata Area (PUMA) Spatial Data (derived from 2010 census): https://usa.ipums.org/usa/volii/pumas10.shtml#boundary-file
     """
     data_path = Path(config_folder) / "data"
     dd_path = data_path.glob("PUMS_Data_Dictionary*.csv")
@@ -104,15 +103,17 @@ def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dic
     return individual_attributes
 
 
-def attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
+def get_attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
     return {key+"_desc": decoder_dict[key]["description"] for key in decoder_dict.keys()}
 
 
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str) -> str:
 
     env_path = Path(config_folder) / "templates"
-    env = Environment(loader=FileSystemLoader)
-    bio = env.render(**attributes, **descriptions)
+    env = Environment(loader=FileSystemLoader(env_path))
+    bio_template = env.get_template("bio.j2")
+    bio = bio_template.render(**attributes, **descriptions)
+    print(bio)
 
 
 if __name__ == "__main__":

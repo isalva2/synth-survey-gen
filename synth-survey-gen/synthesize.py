@@ -10,6 +10,7 @@ from tqdm import tqdm
 from pathlib import Path
 import ollama
 from ollama import ChatResponse
+from preprocess import *
 
 
 
@@ -268,9 +269,19 @@ class dummy_chat():
         return {"role":role_ids[role], "content":message}
 
 
-def main():
-    pass
+def main(config_folder:str, n):
+
+    person = process_pums_data(config_folder, True)
+    household = process_pums_data(config_folder, False)
+
+    population_sample = synthesize_population(config_folder, n)
+
+    for i, individual in population_sample.iterrows():
+        individual_attributes = attribute_decoder_dict(individual.to_dict(), person)
+        attribute_descriptions = get_attribute_descriptions(person)
+
+        write_individual_bio(individual_attributes, attribute_descriptions, config_folder)
 
 
 if __name__ == "__main__":
-    main()
+    main("configs/Chicago", 50)
