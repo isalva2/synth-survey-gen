@@ -1,6 +1,7 @@
 {
     "RT": {
         "description": "Record Type",
+        "dtype": "C",
         "answers": {
             "H": "Housing Record or Group Quarters Unit",
             "P": "Person Record"
@@ -8,6 +9,7 @@
     },
     "SERIALNO": {
         "description": "Housing unit/GQ person serial number",
+        "dtype": "C",
         "answers": {
             "2019GQ9999999": "GQ Unique identifier",
             "2019HU9999999": "HU Unique identifier"
@@ -15,6 +17,7 @@
     },
     "DIVISION": {
         "description": "Division code based on 2010 Census definitions",
+        "dtype": "C",
         "answers": {
             "0": "Puerto Rico",
             "1": "New England (Northeast region)",
@@ -30,12 +33,14 @@
     },
     "PUMA": {
         "description": "Public use microdata area code (PUMA) based on 2010 Census definition (areas with population of 100,000 or more, use with ST for unique code)",
+        "dtype": "C",
         "answers": {
             "70301": "Public use microdata area codes"
         }
     },
     "REGION": {
         "description": "Region code based on 2010 Census definitions",
+        "dtype": "C",
         "answers": {
             "1": "Northeast",
             "2": "Midwest",
@@ -46,6 +51,7 @@
     },
     "ST": {
         "description": "State Code based on 2010 Census definitions",
+        "dtype": "C",
         "answers": {
             "01": "Alabama/AL",
             "02": "Alaska/AK",
@@ -103,24 +109,28 @@
     },
     "ADJINC": {
         "description": "Adjustment factor for income and earnings dollar amounts (6 implied decimal places)",
+        "dtype": "C",
         "answers": {
             "1010145": "2019 factor (1.010145)"
         }
     },
     "SPORDER": {
         "description": "Person number",
+        "dtype": "N",
         "answers": {
             "20": "Person number"
         }
     },
     "PWGTP": {
         "description": "Person's weight",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "AGEP": {
         "description": "Age",
+        "dtype": "N",
         "answers": {
             "0": "Under 1 year",
             "99": "1 to 99 years (Top-coded)"
@@ -128,6 +138,7 @@
     },
     "CIT": {
         "description": "Citizenship status",
+        "dtype": "C",
         "answers": {
             "1": "Born in the U.S.",
             "2": "Born in Puerto Rico, Guam, the U.S. Virgin Islands, or the Northern Marianas",
@@ -138,6 +149,7 @@
     },
     "CITWP": {
         "description": "Year of naturalization write-in",
+        "dtype": "N",
         "answers": {
             "bbbb": "Not eligible - not naturalized",
             "1944": "1944 or earlier (Bottom-coded)",
@@ -217,6 +229,7 @@
     },
     "COW": {
         "description": "Class of worker",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old/NILF who last worked more than 5 years ago or never worked)",
             "1": "Employee of a private for-profit company or business, or of an individual, for wages, salary, or commissions",
@@ -232,6 +245,7 @@
     },
     "DDRS": {
         "description": "Self-care difficulty",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Less than 5 years old)",
             "1": "Yes",
@@ -240,6 +254,7 @@
     },
     "DEAR": {
         "description": "Hearing difficulty",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -247,6 +262,7 @@
     },
     "DEYE": {
         "description": "Vision difficulty",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -254,6 +270,7 @@
     },
     "DOUT": {
         "description": "Independent living difficulty",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Less than 15 years old)",
             "1": "Yes",
@@ -262,6 +279,7 @@
     },
     "DPHY": {
         "description": "Ambulatory difficulty",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Less than 5 years old)",
             "1": "Yes",
@@ -270,6 +288,7 @@
     },
     "DRAT": {
         "description": "Veteran service connected disability rating (percentage)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (No service-connected disability/never served in military)",
             "1": "0 percent",
@@ -282,6 +301,7 @@
     },
     "DRATX": {
         "description": "Veteran service connected disability rating (checkbox)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Less than 17 years old/never served in military)",
             "1": "Yes",
@@ -290,6 +310,7 @@
     },
     "DREM": {
         "description": "Cognitive difficulty",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Less than 5 years old)",
             "1": "Yes",
@@ -298,6 +319,7 @@
     },
     "ENG": {
         "description": "Ability to speak English",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 5 years old/speaks only English)",
             "1": "Very well",
@@ -308,6 +330,7 @@
     },
     "FER": {
         "description": "Gave birth to child within the past 12 months",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 15 years/greater than 50 years/ male)",
             "1": "Yes",
@@ -316,6 +339,7 @@
     },
     "GCL": {
         "description": "Grandparents living with grandchildren",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 30 years/institutional GQ)",
             "1": "Yes",
@@ -324,6 +348,7 @@
     },
     "GCM": {
         "description": "Length of time responsible for grandchildren",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 30 years/grandparent not responsible for grandchild/institutional GQ)",
             "1": "Less than 6 months",
@@ -335,6 +360,7 @@
     },
     "GCR": {
         "description": "Grandparents responsible for grandchildren",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 30 years/institutional GQ/grandparent not living with grandchild)",
             "1": "Yes",
@@ -343,6 +369,7 @@
     },
     "HIMRKS": {
         "description": "Subsidized Marketplace Coverage",
+        "dtype": "C",
         "answers": {
             "0": "Categorically ineligible for subsidy",
             "1": "Direct purchase coverage, with premium subsidy",
@@ -351,6 +378,7 @@
     },
     "HINS1": {
         "description": "Insurance through a current or former employer or union",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -358,6 +386,7 @@
     },
     "HINS2": {
         "description": "Insurance purchased directly from an insurance company",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -365,6 +394,7 @@
     },
     "HINS3": {
         "description": "Medicare, for people 65 and older, or people with certain disabilities",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -372,6 +402,7 @@
     },
     "HINS4": {
         "description": "Medicaid, Medical Assistance, or any kind of government-assistance plan for those with low incomes or a disability",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -379,6 +410,7 @@
     },
     "HINS5": {
         "description": "TRICARE or other military health care",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -386,6 +418,7 @@
     },
     "HINS6": {
         "description": "VA (enrolled for VA health care)",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -393,6 +426,7 @@
     },
     "HINS7": {
         "description": "Indian Health Service",
+        "dtype": "C",
         "answers": {
             "1": "Yes",
             "2": "No"
@@ -400,15 +434,17 @@
     },
     "INTP": {
         "description": "Interest, dividends, and net rental income past 12 months (signed, use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "-4": "Loss of $4 to $10000 (Rounded and bottom-coded)",
             "999999": "$4 to $999999 (Rounded and top-coded)"
         }
     },
     "JWMNP": {
         "description": "Travel time to work",
+        "dtype": "N",
         "answers": {
             "bbb": "N/A (not a worker or worker who worked at home)",
             "200": "1 to 200 minutes to get to work (Top-coded)"
@@ -416,6 +452,7 @@
     },
     "JWRIP": {
         "description": "Vehicle occupancy",
+        "dtype": "N",
         "answers": {
             "bb": "N/A (not a worker or worker whose means of transportation to work was not car, truck, or van)",
             "1": "Drove alone",
@@ -432,6 +469,7 @@
     },
     "JWTRNS": {
         "description": "Means of transportation to work",
+        "dtype": "C",
         "answers": {
             "bb": "N/A (not a worker-not in the labor force, including persons under 16 years; unemployed; employed, with a job but not at work; Armed Forces, with a job but not at work)",
             "01": "Car, truck, or van",
@@ -450,6 +488,7 @@
     },
     "LANX": {
         "description": "Language other than English spoken at home",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 5 years old)",
             "1": "Yes, speaks another language",
@@ -458,6 +497,7 @@
     },
     "MAR": {
         "description": "Marital status",
+        "dtype": "C",
         "answers": {
             "1": "Married",
             "2": "Widowed",
@@ -468,6 +508,7 @@
     },
     "MARHD": {
         "description": "Divorced in the past 12 months",
+        "dtype": "C",
         "answers": {
             "b": "N/A (age less than 15 years; never married)",
             "1": "Yes",
@@ -477,6 +518,7 @@
     },
     "MARHM": {
         "description": "Married in the past 12 months",
+        "dtype": "C",
         "answers": {
             "b": "N/A (age less than 15 years; never married)",
             "1": "Yes",
@@ -485,6 +527,7 @@
     },
     "MARHT": {
         "description": "Number of times married",
+        "dtype": "C",
         "answers": {
             "b": "N/A (age less than 15 years; never married)",
             "1": "One time",
@@ -494,6 +537,7 @@
     },
     "MARHW": {
         "description": "Widowed in the past 12 months",
+        "dtype": "C",
         "answers": {
             "b": "N/A (age less than 15 years; never married)",
             "1": "Yes",
@@ -502,6 +546,7 @@
     },
     "MARHYP": {
         "description": "Year last married",
+        "dtype": "N",
         "answers": {
             "bbbb": "N/A (age less than 15 years; never married)",
             "1940": "1940 or earlier (Bottom-coded)",
@@ -588,6 +633,7 @@
     },
     "MIG": {
         "description": "Mobility status (lived here 1 year ago)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 1 year old)",
             "1": "Yes, same house (nonmovers)",
@@ -597,6 +643,7 @@
     },
     "MIL": {
         "description": "Military service",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old)",
             "1": "Now on active duty",
@@ -607,6 +654,7 @@
     },
     "MLPA": {
         "description": "Served September 2001 or later",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -615,6 +663,7 @@
     },
     "MLPB": {
         "description": "Served August 1990 - August 2001 (including Persian Gulf War)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -623,6 +672,7 @@
     },
     "MLPCD": {
         "description": "Served May 1975 - July 1990",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -631,6 +681,7 @@
     },
     "MLPE": {
         "description": "Served Vietnam era (August 1964 - April 1975)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -639,6 +690,7 @@
     },
     "MLPFG": {
         "description": "Served February 1955 - July 1964",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -647,6 +699,7 @@
     },
     "MLPH": {
         "description": "Served Korean War (July 1950 - January 1955)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -655,6 +708,7 @@
     },
     "MLPI": {
         "description": "Served January 1947 - June 1950",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -663,6 +717,7 @@
     },
     "MLPJ": {
         "description": "Served World War II (December 1941 - December 1946)",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -671,6 +726,7 @@
     },
     "MLPK": {
         "description": "Served November 1941 or earlier",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 17 years old/no active duty)",
             "0": "Did not serve this period",
@@ -679,6 +735,7 @@
     },
     "NWAB": {
         "description": "Temporary absence from work (UNEDITED - See 'Employment Status Recode' (ESR))",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old/at work/on layoff)",
             "1": "Yes",
@@ -688,6 +745,7 @@
     },
     "NWAV": {
         "description": "Available for work (UNEDITED - See 'Employment Status Recode' (ESR))",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years/at work/not looking)",
             "1": "Yes",
@@ -699,6 +757,7 @@
     },
     "NWLA": {
         "description": "On layoff from work (UNEDITED - See 'Employment Status Recode' (ESR))",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old/at work)",
             "1": "Yes",
@@ -708,6 +767,7 @@
     },
     "NWLK": {
         "description": "Looking for work (UNEDITED - See 'Employment Status Recode' (ESR))",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old/at work/temporarily absent/informed of recall)",
             "1": "Yes",
@@ -717,6 +777,7 @@
     },
     "NWRE": {
         "description": "Informed of recall (UNEDITED - See 'Employment Status Recode' (ESR))",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old/at work/not on layoff)",
             "1": "Yes",
@@ -726,22 +787,25 @@
     },
     "OIP": {
         "description": "All other income past 12 months (use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "999999": "$4 to $999999 (Rounded and top-coded)"
         }
     },
     "PAP": {
         "description": "Public assistance income past 12 months (use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "30000": "$4 to $30000 (Rounded and top-coded)"
         }
     },
     "RELSHIPP": {
         "description": "Relationship",
+        "dtype": "C",
         "answers": {
             "20": "Reference person",
             "21": "Opposite-sex husband/wife/spouse",
@@ -766,14 +830,16 @@
     },
     "RETP": {
         "description": "Retirement income past 12 months (use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "999999": "$4 to $999999 (Rounded and top-coded)"
         }
     },
     "SCH": {
         "description": "School enrollment",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 3 years old)",
             "1": "No, has not attended in the last 3 months",
@@ -783,6 +849,7 @@
     },
     "SCHG": {
         "description": "Grade level attending",
+        "dtype": "C",
         "answers": {
             "bb": "N/A (not attending school)",
             "01": "Nursery school/preschool",
@@ -805,6 +872,7 @@
     },
     "SCHL": {
         "description": "Educational attainment",
+        "dtype": "C",
         "answers": {
             "bb": "N/A (less than 3 years old)",
             "01": "No schooling completed",
@@ -835,15 +903,17 @@
     },
     "SEMP": {
         "description": "Self-employment income past 12 months (signed, use ADJINC to adjust SEMP to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "-4": "Loss of $4 to $10000 (Rounded and bottom-coded)",
             "999999": "$1 to $999999 (Rounded and top-coded)"
         }
     },
     "SEX": {
         "description": "Sex",
+        "dtype": "C",
         "answers": {
             "1": "Male",
             "2": "Female"
@@ -851,30 +921,34 @@
     },
     "SSIP": {
         "description": "Supplementary Security Income past 12 months (use ADJINC to adjust SSIP to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "30000": "$4 to $30000 (Rounded and top-coded)"
         }
     },
     "SSP": {
         "description": "Social Security income past 12 months (use ADJINC to adjust SSP to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "50000": "$4 to $50000 (Rounded and top-coded)"
         }
     },
     "WAGP": {
         "description": "Wages or salary income past 12 months (use ADJINC to adjust WAGP to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "999999": "$4 to 999999 (Rounded and top-coded)"
         }
     },
     "WKHP": {
         "description": "Usual hours worked per week past 12 months",
+        "dtype": "N",
         "answers": {
             "bb": "N/A (less than 16 years old/did not work during the past 12 months)",
             "98": "1 to 98 usual hours",
@@ -883,6 +957,7 @@
     },
     "WKL": {
         "description": "When last worked",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old)",
             "1": "Within the past 12 months",
@@ -892,6 +967,7 @@
     },
     "WKWN": {
         "description": "Weeks worked during past 12 months",
+        "dtype": "N",
         "answers": {
             "bb": "N/A (less than 16 years old/did not work during the past 12 months)",
             "52": "1 to 52 weeks worked during past 12 months"
@@ -899,6 +975,7 @@
     },
     "WRK": {
         "description": "Worked last week",
+        "dtype": "C",
         "answers": {
             "b": "N/A (not reported)",
             "1": "Worked",
@@ -907,6 +984,7 @@
     },
     "YOEP": {
         "description": "Year of entry",
+        "dtype": "N",
         "answers": {
             "bbbb": "Not eligible - Born in the US",
             "1929": "1929 or earlier (Bottom-coded)",
@@ -994,6 +1072,7 @@
     },
     "ANC": {
         "description": "Ancestry recode",
+        "dtype": "C",
         "answers": {
             "1": "Single",
             "2": "Multiple",
@@ -1004,6 +1083,7 @@
     },
     "ANC1P": {
         "description": "Recoded Detailed Ancestry - first entry",
+        "dtype": "C",
         "answers": {
             "000": "Suppressed for data year 2018 for select PUMAs",
             "001": "Alsatian",
@@ -1249,6 +1329,7 @@
     },
     "ANC2P": {
         "description": "Recoded Detailed Ancestry - second entry",
+        "dtype": "C",
         "answers": {
             "000": "Suppressed for data year 2018 for select PUMAs",
             "001": "Alsatian",
@@ -1494,6 +1575,7 @@
     },
     "DECADE": {
         "description": "Decade of entry",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Born in the US)",
             "1": "Before 1950",
@@ -1508,6 +1590,7 @@
     },
     "DIS": {
         "description": "Disability recode",
+        "dtype": "C",
         "answers": {
             "1": "With a disability",
             "2": "Without a disability"
@@ -1515,6 +1598,7 @@
     },
     "DRIVESP": {
         "description": "Number of vehicles calculated from JWRI",
+        "dtype": "C",
         "answers": {
             "b": "N/A (Nonworker or worker who does not drive to work)",
             "1": "1.000 vehicles (Drove alone)",
@@ -1527,6 +1611,7 @@
     },
     "ESP": {
         "description": "Employment status of parents",
+        "dtype": "C",
         "answers": {
             "b": "N/A (not own child of householder, and not child in subfamily) Living with two parents:",
             "1": "Both parents in labor force",
@@ -1541,6 +1626,7 @@
     },
     "ESR": {
         "description": "Employment status recode",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than 16 years old)",
             "1": "Civilian employed, at work",
@@ -1553,6 +1639,7 @@
     },
     "FOD1P": {
         "description": "Recoded field of degree - first entry",
+        "dtype": "C",
         "answers": {
             "bbbb": "N/A (less than bachelor's degree)",
             "1100": "General Agriculture",
@@ -1732,6 +1819,7 @@
     },
     "FOD2P": {
         "description": "Recoded field of degree - second entry",
+        "dtype": "C",
         "answers": {
             "bbbb": "N/A (less than bachelor's degree)",
             "1100": "General Agriculture",
@@ -1911,6 +1999,7 @@
     },
     "HICOV": {
         "description": "Health insurance coverage recode",
+        "dtype": "C",
         "answers": {
             "1": "With health insurance coverage",
             "2": "No health insurance coverage"
@@ -1918,6 +2007,7 @@
     },
     "HISP": {
         "description": "Recoded detailed Hispanic origin",
+        "dtype": "C",
         "answers": {
             "01": "Not Spanish/Hispanic/Latino",
             "02": "Mexican",
@@ -1947,6 +2037,7 @@
     },
     "INDP": {
         "description": "Industry recode for 2018 and later based on 2017 IND codes",
+        "dtype": "C",
         "answers": {
             "bbbb": "N/A (less than 16 years old/NILF who last worked more than 5 years ago or never worked)",
             "0170": "AGR-Crop Production",
@@ -2223,6 +2314,7 @@
     },
     "JWAP": {
         "description": "Time of arrival at work - hour and minute",
+        "dtype": "C",
         "answers": {
             "bbb": "N/A (not a worker; worker who worked at home)",
             "001": "12:00 a.m. to 12:04 a.m.",
@@ -2514,6 +2606,7 @@
     },
     "JWDP": {
         "description": "Time of departure for work - hour and minute",
+        "dtype": "C",
         "answers": {
             "bbb": "N/A (not a worker; worker who worked at home)",
             "001": "12:00 a.m. to 12:29 a.m.",
@@ -2670,6 +2763,7 @@
     },
     "LANP": {
         "description": "Language spoken at home",
+        "dtype": "C",
         "answers": {
             "bbbb": "N/A (GQ/vacant)",
             "1000": "Jamaican Creole English",
@@ -2806,6 +2900,7 @@
     },
     "MIGPUMA": {
         "description": "Migration PUMA based on 2010 Census definition",
+        "dtype": "C",
         "answers": {
             "bbbbb": "N/A (person less than 1 year old/lived in same house 1 year ago)",
             "00001": "Did not live in the United States or in Puerto Rico one year ago",
@@ -2815,6 +2910,7 @@
     },
     "MIGSP": {
         "description": "Migration recode - State or foreign country code",
+        "dtype": "C",
         "answers": {
             "bbb": "N/A (person less than 1 year old/lived in same house 1 year ago)",
             "001": "Alabama/AL",
@@ -2928,6 +3024,7 @@
     },
     "MSP": {
         "description": "Married, spouse present/spouse absent",
+        "dtype": "C",
         "answers": {
             "b": "N/A (age less than 15 years)",
             "1": "Now married, spouse present",
@@ -2940,6 +3037,7 @@
     },
     "NAICSP": {
         "description": "North American Industry Classification System (NAICS) recode for 2018 and later based on 2017 NAICS codes",
+        "dtype": "C",
         "answers": {
             "bbbbbbbb": "N/A (less than 16 years old/NILF who last worked more than 5 years ago or never worked)",
             "111": "AGR-Crop Production",
@@ -3216,6 +3314,7 @@
     },
     "NATIVITY": {
         "description": "Nativity",
+        "dtype": "C",
         "answers": {
             "1": "Native",
             "2": "Foreign born"
@@ -3223,6 +3322,7 @@
     },
     "NOP": {
         "description": "Nativity of parent",
+        "dtype": "C",
         "answers": {
             "b": "N/A (greater than 17 years old/not an own child of householder, and not child in subfamily)",
             "1": "Living with two parents: Both parents NATIVE",
@@ -3237,6 +3337,7 @@
     },
     "OC": {
         "description": "Own child",
+        "dtype": "C",
         "answers": {
             "b": "N/A (in GQ)",
             "0": "No",
@@ -3245,6 +3346,7 @@
     },
     "OCCP": {
         "description": "Occupation recode for 2018 and later based on 2018 OCC codes",
+        "dtype": "C",
         "answers": {
             "bbbb": "N/A (less than 16 years old/NILF who last worked more than 5 years ago or never worked)",
             "0010": "MGR-Chief Executives And Legislators",
@@ -3781,6 +3883,7 @@
     },
     "PAOC": {
         "description": "Presence and age of own children",
+        "dtype": "C",
         "answers": {
             "b": "N/A (male/female under 16 years old/GQ)",
             "1": "Females with own children under 6 years only",
@@ -3791,6 +3894,7 @@
     },
     "PERNP": {
         "description": "Total person's earnings (use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbbb": "N/A (less than 16 years old)",
             "0": "No earnings",
@@ -3801,9 +3905,10 @@
     },
     "PINCP": {
         "description": "Total person's income (signed, use ADJINC to adjust to constant dollars)",
+        "dtype": "N",
         "answers": {
             "bbbbbbb": "N/A (less than 15 years old)",
-            "0": "None",
+            "0": "MISSING",
             "-19998": "Loss of $19998 or more (Rounded and bottom- coded components)",
             "-1": "Loss $1 to $19997 (Rounded components)",
             "4209995": "$1 to $4209995 (Rounded and top-coded components)"
@@ -3811,6 +3916,7 @@
     },
     "POBP": {
         "description": "Place of birth (Recode)",
+        "dtype": "C",
         "answers": {
             "001": "Alabama/AL",
             "002": "Alaska/AK",
@@ -4040,14 +4146,16 @@
     },
     "POVPIP": {
         "description": "Income-to-poverty ratio recode",
+        "dtype": "N",
         "answers": {
-            "bbb": "None",
+            "bbb": "MISSING",
             "500": "Below 501 percent",
             "501": "501 percent or more"
         }
     },
     "POWPUMA": {
         "description": "Place of work PUMA based on 2010 Census definition",
+        "dtype": "C",
         "answers": {
             "bbbbb": "N/A (not a worker-not in the labor force, force, including persons under 16 years; unemployed; civilian employed, with a job not at work; Armed Forces, with a job but not at work)",
             "00001": "Did not work in the United States or in Puerto Rico",
@@ -4056,6 +4164,7 @@
     },
     "POWSP": {
         "description": "Place of work - State or foreign country recode",
+        "dtype": "C",
         "answers": {
             "bbb": "N/A (not a worker-not in the labor force, including persons under 16 years; unemployed; employed, with a job not at work; Armed Forces, with a job but not at work)",
             "001": "Alabama/AL",
@@ -4121,6 +4230,7 @@
     },
     "PRIVCOV": {
         "description": "Private health insurance coverage recode",
+        "dtype": "C",
         "answers": {
             "1": "With private health insurance coverage",
             "2": "Without private health insurance coverage"
@@ -4128,6 +4238,7 @@
     },
     "PUBCOV": {
         "description": "Public health coverage recode",
+        "dtype": "C",
         "answers": {
             "1": "With public health coverage",
             "2": "Without public health coverage"
@@ -4135,6 +4246,7 @@
     },
     "QTRBIR": {
         "description": "Quarter of birth",
+        "dtype": "C",
         "answers": {
             "1": "January through March",
             "2": "April through June",
@@ -4144,6 +4256,7 @@
     },
     "RAC1P": {
         "description": "Recoded detailed race code",
+        "dtype": "C",
         "answers": {
             "1": "White alone",
             "2": "Black or African American alone",
@@ -4158,6 +4271,7 @@
     },
     "RAC2P": {
         "description": "Recoded detailed race code",
+        "dtype": "C",
         "answers": {
             "01": "White alone",
             "02": "Black or African American alone",
@@ -4231,6 +4345,7 @@
     },
     "RAC3P": {
         "description": "Recoded detailed race code",
+        "dtype": "C",
         "answers": {
             "001": "White alone",
             "002": "Black or African American alone",
@@ -4336,6 +4451,7 @@
     },
     "RACAIAN": {
         "description": "American Indian and Alaska Native recode (American Indian and Alaska Native alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4343,6 +4459,7 @@
     },
     "RACASN": {
         "description": "Asian recode (Asian alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4350,6 +4467,7 @@
     },
     "RACBLK": {
         "description": "Black or African American recode (Black alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4357,6 +4475,7 @@
     },
     "RACNH": {
         "description": "Native Hawaiian recode (Native Hawaiian alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4364,12 +4483,14 @@
     },
     "RACNUM": {
         "description": "Number of major race groups represented",
+        "dtype": "C",
         "answers": {
             "6": "Race groups"
         }
     },
     "RACPI": {
         "description": "Other Pacific Islander recode (Other Pacific Islander alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4377,6 +4498,7 @@
     },
     "RACSOR": {
         "description": "Some other race recode (Some other race alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4384,6 +4506,7 @@
     },
     "RACWHT": {
         "description": "White recode (White alone or in combination with one or more other races)",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -4391,6 +4514,7 @@
     },
     "RC": {
         "description": "Related child",
+        "dtype": "C",
         "answers": {
             "b": "N/A (in GQ)",
             "0": "No",
@@ -4399,6 +4523,7 @@
     },
     "SCIENGP": {
         "description": "Field of Degree Science and Engineering Flag - NSF Definition",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than bachelor's degree)",
             "1": "Yes",
@@ -4407,6 +4532,7 @@
     },
     "SCIENGRLP": {
         "description": "Field of Degree Science and Engineering Related Flag - NSF Definition",
+        "dtype": "C",
         "answers": {
             "b": "N/A (less than bachelor's degree)",
             "1": "Yes",
@@ -4415,6 +4541,7 @@
     },
     "SFN": {
         "description": "Subfamily number",
+        "dtype": "C",
         "answers": {
             "b": "N/A (GQ/not in a subfamily)",
             "1": "In subfamily 1",
@@ -4425,6 +4552,7 @@
     },
     "SFR": {
         "description": "Subfamily relationship",
+        "dtype": "C",
         "answers": {
             "b": "N/A (GQ/not in a subfamily)",
             "1": "Husband/wife no children",
@@ -4437,6 +4565,7 @@
     },
     "SOCP": {
         "description": "Standard Occupational Classification (SOC) codes for 2018 and later based on 2018 SOC codes",
+        "dtype": "C",
         "answers": {
             "bbbbbb": "N/A (less than 16 years old/NILF who last worked more than 5 years ago or never worked)",
             "1110XX": "MGR-Chief Executives And Legislators",
@@ -4973,6 +5102,7 @@
     },
     "VPS": {
         "description": "Veteran period of service",
+        "dtype": "C",
         "answers": {
             "bb": "N/A (less than 17 years old, no active duty)",
             "01": "Gulf War: 9/2001 or later",
@@ -4994,6 +5124,7 @@
     },
     "WAOB": {
         "description": "World area of birth",
+        "dtype": "C",
         "answers": {
             "1": "US state (POBP = 001-059)",
             "2": "PR and US Island Areas (POBP = 061-099)",
@@ -5007,6 +5138,7 @@
     },
     "FAGEP": {
         "description": "Age allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5014,6 +5146,7 @@
     },
     "FANCP": {
         "description": "Ancestry allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5021,6 +5154,7 @@
     },
     "FCITP": {
         "description": "Citizenship allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5028,6 +5162,7 @@
     },
     "FCITWP": {
         "description": "Year of naturalization write-in allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5035,6 +5170,7 @@
     },
     "FCOWP": {
         "description": "Class of worker allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5042,6 +5178,7 @@
     },
     "FDDRSP": {
         "description": "Self-care difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5049,6 +5186,7 @@
     },
     "FDEARP": {
         "description": "Hearing difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5056,6 +5194,7 @@
     },
     "FDEYEP": {
         "description": "Vision difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5063,6 +5202,7 @@
     },
     "FDISP": {
         "description": "Disability recode allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5070,6 +5210,7 @@
     },
     "FDOUTP": {
         "description": "Independent living difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5077,6 +5218,7 @@
     },
     "FDPHYP": {
         "description": "Ambulatory difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5084,6 +5226,7 @@
     },
     "FDRATP": {
         "description": "Disability rating percentage allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5091,6 +5234,7 @@
     },
     "FDRATXP": {
         "description": "Disability rating checkbox allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5098,6 +5242,7 @@
     },
     "FDREMP": {
         "description": "Cognitive difficulty allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5105,6 +5250,7 @@
     },
     "FENGP": {
         "description": "Ability to speak English allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5112,6 +5258,7 @@
     },
     "FESRP": {
         "description": "Employment status recode allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5119,6 +5266,7 @@
     },
     "FFERP": {
         "description": "Gave birth to child within the past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5126,6 +5274,7 @@
     },
     "FFODP": {
         "description": "Field of Degree allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5133,6 +5282,7 @@
     },
     "FGCLP": {
         "description": "Grandparents living with grandchildren allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5140,6 +5290,7 @@
     },
     "FGCMP": {
         "description": "Length of time responsible for grandchildren allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5147,6 +5298,7 @@
     },
     "FGCRP": {
         "description": "Grandparents responsible for grandchildren allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5154,6 +5306,7 @@
     },
     "FHICOVP": {
         "description": "Health insurance coverage recode allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5161,6 +5314,7 @@
     },
     "FHIMRKSP": {
         "description": "Subsidized Marketplace Coverage allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5168,6 +5322,7 @@
     },
     "FHINS1P": {
         "description": "Insurance through a current or former employer or union allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5175,6 +5330,7 @@
     },
     "FHINS2P": {
         "description": "Insurance purchased directly from an insurance company allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5182,6 +5338,7 @@
     },
     "FHINS3C": {
         "description": "Medicare coverage given through the eligibility coverage edit",
+        "dtype": "C",
         "answers": {
             "b": "Does not have Medicare coverage (HINS3=2)",
             "0": "No",
@@ -5190,6 +5347,7 @@
     },
     "FHINS3P": {
         "description": "Medicare, for people 65 or older, or people with certain disabilities allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5197,6 +5355,7 @@
     },
     "FHINS4C": {
         "description": "Medicaid coverage given through the eligibility coverage edit",
+        "dtype": "C",
         "answers": {
             "b": "Does not have Medicaid coverage (HINS4=2)",
             "0": "No",
@@ -5205,6 +5364,7 @@
     },
     "FHINS4P": {
         "description": "Medicaid, medical assistance, or any kind of government-assistance plan for people with low incomes or a disability allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5212,6 +5372,7 @@
     },
     "FHINS5C": {
         "description": "TRICARE coverage given through the eligibility coverage edit",
+        "dtype": "C",
         "answers": {
             "b": "Does not have TRICARE coverage (HINS5=2)",
             "0": "No",
@@ -5220,6 +5381,7 @@
     },
     "FHINS5P": {
         "description": "TRICARE or other military health care allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5227,6 +5389,7 @@
     },
     "FHINS6P": {
         "description": "VA (enrolled for VA health care) allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5234,6 +5397,7 @@
     },
     "FHINS7P": {
         "description": "Indian health service allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5241,6 +5405,7 @@
     },
     "FHISP": {
         "description": "Detailed Hispanic origin allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5248,6 +5413,7 @@
     },
     "FINDP": {
         "description": "Industry allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5255,6 +5421,7 @@
     },
     "FINTP": {
         "description": "Interest, dividend, and net rental income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5262,6 +5429,7 @@
     },
     "FJWDP": {
         "description": "Time of departure to work allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5269,6 +5437,7 @@
     },
     "FJWMNP": {
         "description": "Travel time to work allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5276,6 +5445,7 @@
     },
     "FJWRIP": {
         "description": "Vehicle occupancy allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5283,6 +5453,7 @@
     },
     "FJWTRNSP": {
         "description": "Means of transportation to work allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5290,6 +5461,7 @@
     },
     "FLANP": {
         "description": "Language spoken at home allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5297,6 +5469,7 @@
     },
     "FLANXP": {
         "description": "Language other than English allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5304,6 +5477,7 @@
     },
     "FMARP": {
         "description": "Marital status allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5311,6 +5485,7 @@
     },
     "FMARHDP": {
         "description": "Divorced in the past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5318,6 +5493,7 @@
     },
     "FMARHMP": {
         "description": "Married in the past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5325,6 +5501,7 @@
     },
     "FMARHTP": {
         "description": "Times married allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5332,6 +5509,7 @@
     },
     "FMARHWP": {
         "description": "Widowed in the past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5339,6 +5517,7 @@
     },
     "FMARHYP": {
         "description": "Year last married allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5346,6 +5525,7 @@
     },
     "FMIGP": {
         "description": "Mobility status allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5353,6 +5533,7 @@
     },
     "FMIGSP": {
         "description": "Migration state allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5360,6 +5541,7 @@
     },
     "FMILPP": {
         "description": "Military periods of service allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5367,6 +5549,7 @@
     },
     "FMILSP": {
         "description": "Military service allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5374,6 +5557,7 @@
     },
     "FOCCP": {
         "description": "Occupation allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5381,6 +5565,7 @@
     },
     "FOIP": {
         "description": "All other income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5388,6 +5573,7 @@
     },
     "FPAP": {
         "description": "Public assistance income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5395,6 +5581,7 @@
     },
     "FPERNP": {
         "description": "Total person's earnings allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5402,6 +5589,7 @@
     },
     "FPINCP": {
         "description": "Total person's income (signed) allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5409,6 +5597,7 @@
     },
     "FPOBP": {
         "description": "Place of birth allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5416,6 +5605,7 @@
     },
     "FPOWSP": {
         "description": "Place of work state allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5423,6 +5613,7 @@
     },
     "FPRIVCOVP": {
         "description": "Private health insurance coverage recode allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5430,6 +5621,7 @@
     },
     "FPUBCOVP": {
         "description": "Public health coverage recode allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5437,6 +5629,7 @@
     },
     "FRACP": {
         "description": "Detailed race allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5444,6 +5637,7 @@
     },
     "FRELSHIPP": {
         "description": "Relationship allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5451,6 +5645,7 @@
     },
     "FRETP": {
         "description": "Retirement income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5458,6 +5653,7 @@
     },
     "FSCHGP": {
         "description": "Grade attending allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5465,6 +5661,7 @@
     },
     "FSCHLP": {
         "description": "Highest education allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5472,6 +5669,7 @@
     },
     "FSCHP": {
         "description": "School enrollment allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5479,6 +5677,7 @@
     },
     "FSEMP": {
         "description": "Self-employment income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5486,6 +5685,7 @@
     },
     "FSEXP": {
         "description": "Sex allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5493,6 +5693,7 @@
     },
     "FSSIP": {
         "description": "Supplementary Security Income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5500,6 +5701,7 @@
     },
     "FSSP": {
         "description": "Social Security income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5507,6 +5709,7 @@
     },
     "FWAGP": {
         "description": "Wages and salary income allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5514,6 +5717,7 @@
     },
     "FWKHP": {
         "description": "Usual hours worked per week past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5521,6 +5725,7 @@
     },
     "FWKLP": {
         "description": "Last worked allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5528,6 +5733,7 @@
     },
     "FWKWNP": {
         "description": "Weeks worked past 12 months allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5535,6 +5741,7 @@
     },
     "FWRKP": {
         "description": "Worked last week allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5542,6 +5749,7 @@
     },
     "FYOEP": {
         "description": "Year of entry allocation flag",
+        "dtype": "C",
         "answers": {
             "0": "No",
             "1": "Yes"
@@ -5549,480 +5757,560 @@
     },
     "PWGTP1": {
         "description": "Person's Weight replicate 1",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP2": {
         "description": "Person's Weight replicate 2",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP3": {
         "description": "Person's Weight replicate 3",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP4": {
         "description": "Person's Weight replicate 4",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP5": {
         "description": "Person's Weight replicate 5",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP6": {
         "description": "Person's Weight replicate 6",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP7": {
         "description": "Person's Weight replicate 7",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP8": {
         "description": "Person's Weight replicate 8",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP9": {
         "description": "Person's Weight replicate 9",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP10": {
         "description": "Person's Weight replicate 10",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP11": {
         "description": "Person's Weight replicate 11",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP12": {
         "description": "Person's Weight replicate 12",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP13": {
         "description": "Person's Weight replicate 13",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP14": {
         "description": "Person's Weight replicate 14",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP15": {
         "description": "Person's Weight replicate 15",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP16": {
         "description": "Person's Weight replicate 16",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP17": {
         "description": "Person's Weight replicate 17",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP18": {
         "description": "Person's Weight replicate 18",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP19": {
         "description": "Person's Weight replicate 19",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP20": {
         "description": "Person's Weight replicate 20",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP21": {
         "description": "Person's Weight replicate 21",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP22": {
         "description": "Person's Weight replicate 22",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP23": {
         "description": "Person's Weight replicate 23",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP24": {
         "description": "Person's Weight replicate 24",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP25": {
         "description": "Person's Weight replicate 25",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP26": {
         "description": "Person's Weight replicate 26",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP27": {
         "description": "Person's Weight replicate 27",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP28": {
         "description": "Person's Weight replicate 28",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP29": {
         "description": "Person's Weight replicate 29",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP30": {
         "description": "Person's Weight replicate 30",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP31": {
         "description": "Person's Weight replicate 31",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP32": {
         "description": "Person's Weight replicate 32",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP33": {
         "description": "Person's Weight replicate 33",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP34": {
         "description": "Person's Weight replicate 34",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP35": {
         "description": "Person's Weight replicate 35",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP36": {
         "description": "Person's Weight replicate 36",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP37": {
         "description": "Person's Weight replicate 37",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP38": {
         "description": "Person's Weight replicate 38",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP39": {
         "description": "Person's Weight replicate 39",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP40": {
         "description": "Person's Weight replicate 40",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP41": {
         "description": "Person's Weight replicate 41",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP42": {
         "description": "Person's Weight replicate 42",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP43": {
         "description": "Person's Weight replicate 43",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP44": {
         "description": "Person's Weight replicate 44",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP45": {
         "description": "Person's Weight replicate 45",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP46": {
         "description": "Person's Weight replicate 46",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP47": {
         "description": "Person's Weight replicate 47",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP48": {
         "description": "Person's Weight replicate 48",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP49": {
         "description": "Person's Weight replicate 49",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP50": {
         "description": "Person's Weight replicate 50",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP51": {
         "description": "Person's Weight replicate 51",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP52": {
         "description": "Person's Weight replicate 52",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP53": {
         "description": "Person's Weight replicate 53",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP54": {
         "description": "Person's Weight replicate 54",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP55": {
         "description": "Person's Weight replicate 55",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP56": {
         "description": "Person's Weight replicate 56",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP57": {
         "description": "Person's Weight replicate 57",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP58": {
         "description": "Person's Weight replicate 58",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP59": {
         "description": "Person's Weight replicate 59",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP60": {
         "description": "Person's Weight replicate 60",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP61": {
         "description": "Person's Weight replicate 61",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP62": {
         "description": "Person's Weight replicate 62",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP63": {
         "description": "Person's Weight replicate 63",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP64": {
         "description": "Person's Weight replicate 64",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP65": {
         "description": "Person's Weight replicate 65",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP66": {
         "description": "Person's Weight replicate 66",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP67": {
         "description": "Person's Weight replicate 67",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP68": {
         "description": "Person's Weight replicate 68",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP69": {
         "description": "Person's Weight replicate 69",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP70": {
         "description": "Person's Weight replicate 70",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP71": {
         "description": "Person's Weight replicate 71",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP72": {
         "description": "Person's Weight replicate 72",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP73": {
         "description": "Person's Weight replicate 73",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP74": {
         "description": "Person's Weight replicate 74",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP75": {
         "description": "Person's Weight replicate 75",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP76": {
         "description": "Person's Weight replicate 76",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP77": {
         "description": "Person's Weight replicate 77",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP78": {
         "description": "Person's Weight replicate 78",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP79": {
         "description": "Person's Weight replicate 79",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }
     },
     "PWGTP80": {
         "description": "Person's Weight replicate 80",
+        "dtype": "N",
         "answers": {
             "9999": "Integer weight of person"
         }

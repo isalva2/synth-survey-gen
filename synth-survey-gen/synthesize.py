@@ -2,6 +2,7 @@ import pandas as pd
 import geopandas as gpd
 from geopandas import GeoDataFrame
 from shapely import Point
+from math import ceil
 import json
 from typing import List, Dict, Tuple
 import copy
@@ -25,10 +26,13 @@ def read_config(config_folder:str):
     with open(config_path / "questions.json", "r") as file:
         questions: dict = json.load(file)
 
+    return model_config, questions
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="pums", random_state=0):
+
+def synthesize_population(config_folder:str, n_sample:int, source:str="pums", random_state=0) -> pd.DataFrame | None:
 
     data_folder = Path(config_folder) / "data"
+    na_str = "MISSING"
 
     if source == "pums":
         """
@@ -42,7 +46,7 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", ra
         # load PUMS and PUMA data
         person_df = pd.read_csv(data_folder/"person.csv", low_memory=False)
         location_df = pd.read_csv(data_folder/"location.csv")
-        pums_person_df = pd.read_csv(data_folder/"psam_p17.csv")
+        pums_person_df = pd.read_csv(data_folder/"psam_p17.csv", dtype=str)
 
         puma_gdf = gpd.read_file(data_folder/"tl_2019_17_puma10.shp")
         puma_gdf = puma_gdf.to_crs(crs=crs)
@@ -66,24 +70,29 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", ra
         household_counts = household_join.groupby(by=["PUMA"])["perno"].sum()
         puma_household_counts = puma_gdf \
             .set_index("PUMA") \
-            .join(household_counts, how="inner")[["GEOID10", "NAMELSAD10", "perno", "geometry"]]
+            .join(household_counts, how="inner")[["GEOID10", "PUMACE10", "NAMELSAD10", "perno", "geometry"]]
         puma_household_counts.reset_index(inplace=True)
 
         # sample by PUMA area
         samples = []
         puma_household_counts["weight"] = puma_household_counts.perno / puma_household_counts.perno.sum()
         for _, row in puma_household_counts.iterrows():
-            puma = row.PUMA
+            puma = row.PUMACE10
             weight = row.weight
-            n = int(weight*n_sample)
+            n = max(int(weight*n_sample), 1)
 
             sample = pums_person_df[pums_person_df.PUMA==puma].sample(n, random_state=random_state)
             samples.append(sample)
 
         population_sample = pd.concat(samples)
+        population_sample.fillna(na_str, inplace=True)
 
         return population_sample
 
+    return None
+
+
+def write_bio(population_sample: pd.DataFrame):
     pass
 
 

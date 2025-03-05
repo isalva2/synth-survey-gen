@@ -1,5 +1,6 @@
 from typing import Dict
 import pandas as pd
+from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import json
 
@@ -42,63 +43,76 @@ def process_MyDailyTravelData(source:Path):
     return variables_df, query_dictionary, person_response
 
 
-def process_pums_data(source: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
+def process_pums_data(config_folder: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
     """
     Reads US Census Public Use Microdata Sample (PUMS) Uses 1-year ACS data.
     Househould and person data: https://www2.census.gov/programs-surveys/acs/data/pums/2019/1-Year/
     Public Use Microdata Area (PUMA) Spatial Data (derived from 2010 census): https://usa.ipums.org/usa/volii/pumas10.shtml#boundary-file
     """
-    data_path = Path(source)
+    data_path = Path(config_folder) / "data"
     dd_path = data_path.glob("PUMS_Data_Dictionary*.csv")
     dd = pd.read_csv(*dd_path, header=None, names=list("abcdefg"))
     variable_desc = dd[dd.a == "NAME"].set_index("b")["e"].to_dict()
 
+    na_str = "MISSING"
+
     if person:
         df_path = data_path.glob("psam_p*.csv")
-        df = pd.read_csv(*df_path, nrows=1)
-        person_variables = df.columns.values
-        person_variable_dict = {k:v for k,v in variable_desc.items() if k in person_variables}
-        mapper = {}
-        for variable,description in person_variable_dict.items():
-            answers = dd[(dd.a!="NAME") & (dd.b==variable)][["f","g"]].drop_duplicates().set_index("f")["g"].to_dict()
-            mapper[variable] = {
-                "description": description,
-                "answers": answers
-            }
-
-    if not person:
+    else:
         df_path = data_path.glob("psam_h*.csv")
-        df = pd.read_csv(*df_path, nrows=1)
-        housing_variables = df.columns.values
-        housing_variable_dict = {k:v for k,v in variable_desc.items() if k in housing_variables}
-        mapper = {}
-        for variable,description in housing_variable_dict.items():
-            answers = dd[(dd.a!="NAME") & (dd.b==variable)][["f","g"]].drop_duplicates().set_index("f")["g"].to_dict()
-            mapper[variable] = {
-                "description": description,
-                "answers": answers
-            }
+    df = pd.read_csv(*df_path, nrows=1)
+    pums_variables = df.columns.values
+    pums_variable_dict = {k:v for k,v in variable_desc.items() if k in pums_variables}
+    mapper = {}
+    for variable,description in pums_variable_dict.items():
+        description_row = dd[(dd.a!="NAME") & (dd.b==variable)]
+        dtype = description_row.c.iloc[0]
+        answers = description_row[["f","g"]] \
+            .drop_duplicates() \
+            .fillna(na_str) \
+            .set_index("f")["g"] \
+            .to_dict()
+        mapper[variable] = {
+            "description": description,
+            "dtype": dtype,
+            "answers": answers
+        }
 
     if write != None:
         with open(write, "w") as file:
-            json.dump(mapper, file)
+            json.dump(mapper, file, indent=4)
     else:
         return mapper
 
 
-def process_puma_data():
-    pass
+def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dict[any, any]) -> Dict[str, str]:
+    """
+    prepares a dictionary of encoded individual attributes and their
+    descriptions (from the person.json and house.json files) for system prompt templating
+    """
+    individual_attributes = {}
+    keyCatch = ["SERIALNO"]
+    for key, val in encoded_attributes.items():
+        try:
+                if (decoder_dict[key]["dtype"] == "N") or (key in keyCatch) :
+                    individual_attributes[key] = val
+                else:
+                    individual_attributes[key] = decoder_dict[key]["answers"][val]
+        except:
+            individual_attributes[key] = "MISSING"
+
+    return individual_attributes
 
 
-def pums_sample(data_path: str, n: int, ):
-    """
-    Generates a sample from the Public Use Microdata Sample.
-    Should pull a sample in proportion and spatially equivalent
-    to the sample from the CMAP My Daily Travel Survey.
-    """
-    data_path = Path(data_path).glob("psam_p*.csv")
-    df = pd.read_csv(*data_path)
-    return df
+def attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
+    return {key+"_desc": decoder_dict[key]["description"] for key in decoder_dict.keys()}
+
+
+def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str) -> str:
+
+    env_path = Path(config_folder) / "templates"
+    env = Environment(loader=FileSystemLoader)
+    bio = env.render(**attributes, **descriptions)
 
 
 if __name__ == "__main__":
