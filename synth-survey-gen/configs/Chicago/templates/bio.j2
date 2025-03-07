@@ -1,9 +1,15 @@
 {#
 biography template for synthetic survey generation
 control flow for biography generation
-#}
-This is a test to see if the templating pipeline works.
-Okay {{RT}}
-Serial number: {{SERIALNO}} description: {{SERIALNO_desc}}.
-Age: {{AGEP}} description: {{AGEP_desc}}
-end.
+#}{#
+This block is for age and gender
+#}You are a {{AGEP}} year old
+{%- if AGEP | int < 13 -%}
+    {{" child"}}
+{%- elif AGEP | int < 18 -%}
+    {{" teenager"}}
+{%- elif ((AGEP | int >= 18) and (SEX=="Male")) -%}
+    {{" man"}}
+{%- elif ((AGEP | int >= 18) and (SEX=="Female")) -%}
+    {{" woman"}}
+{%- endif -%}
