@@ -90,7 +90,7 @@ def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dic
     descriptions (from the person.json and house.json files) for system prompt templating
     """
     individual_attributes = {}
-    keyCatch = ["SERIALNO"]
+    keyCatch = ["SERIALNO", "PUMA"]
     for key, val in encoded_attributes.items():
         try:
                 if (decoder_dict[key]["dtype"] == "N") or (key in keyCatch) :
@@ -107,14 +107,19 @@ def get_attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
     return {key+"_desc": decoder_dict[key]["description"] for key in decoder_dict.keys()}
 
 
+def _decapitalize(sentence: str)->str:
+    return sentence[0].lower()+sentence[1:]
+
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str) -> str:
 
     env_path = Path(config_folder) / "templates"
     env = Environment(loader=FileSystemLoader(env_path))
+    env.globals["desentence"] = _decapitalize
+
     bio_template = env.get_template("bio.j2")
     bio = bio_template.render(**attributes, **descriptions)
-    print(bio)
-
+    return bio
 
 if __name__ == "__main__":
     pass
