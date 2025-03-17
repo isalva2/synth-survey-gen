@@ -1,8 +1,11 @@
-from typing import Dict
+from typing import Dict, List
 import pandas as pd
+import geopandas as gpd
+import random
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import json
+import textwrap
 
 """
 Preprocessing steps for census and travel survey data.
@@ -10,6 +13,15 @@ These functions prepare json files for a specific survey
 configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
+PRETTY = True
+
+def pprint(func, PRETTY=PRETTY, width=80):
+    def wrapper(*args, **kwargs):
+        text = func(*args, **kwargs)
+        wrapped_text = textwrap.fill(text, width)
+        print(wrapped_text, "\n")
+        return text
+    return wrapper
 
 
 def process_MyDailyTravelData(source:Path):
@@ -84,6 +96,23 @@ def process_pums_data(config_folder: str, person: bool = True, write: str | None
         return mapper
 
 
+def puma_locations(config_folder: str) -> Dict[str, List[str]]:
+    """
+    returns a dictionary of PUMA codes keys and list of cities within PUMA.
+    derived from:https://catalog.data.gov/dataset/tiger-line-shapefile-2019-state-illinois-current-place-state-based
+    """
+    epsg = 26971 # NAD83 StatePlane Illinois East FIPS 1201
+    data_path = Path(config_folder) / "data"
+    puma = gpd.read_file(data_path / "tl_2019_17_puma10.shp").to_crs(epsg=epsg)
+    place = gpd.read_file(data_path / "tl_2019_17_place.shp").to_crs(epsg=epsg)
+
+    place["geometry"] = place.geometry.centroid
+    joined_place = gpd.sjoin_nearest(place, puma, how="left")
+
+    puma_locations = joined_place[["NAME", "PUMACE10"]].groupby("PUMACE10")["NAME"].apply(list).to_dict()
+    return puma_locations
+
+
 def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dict[any, any]) -> Dict[str, str]:
     """
     prepares a dictionary of encoded individual attributes and their
@@ -111,14 +140,44 @@ def _decapitalize(sentence: str)->str:
     return sentence[0].lower()+sentence[1:]
 
 
-def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str) -> str:
+def _indefinite(noun_phrase: str) -> str:
+    vowels = "aeiou"
+    indefinite_article = "an" if noun_phrase[0].lower() in vowels else "a"
+    return f"{indefinite_article} {noun_phrase}"
+
+
+def _wspace(word: str) -> str:
+    return f" {word}"
+
+
+def _random_select(key: str, mapper: Dict[str, List[str]]):
+    try:
+        return random.choice(mapper.get(key))
+    except:
+        return "MISSING"
+    # return mapper[key][0]
+
+@pprint
+def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
+
+    # globals -> to be derived from a config file eventually, ahahahah
+    year = "2015"
+    month = "March"
+    day = "17"
 
     env_path = Path(config_folder) / "templates"
-    env = Environment(loader=FileSystemLoader(env_path))
-    env.globals["desentence"] = _decapitalize
+    env = Environment(
+        loader=FileSystemLoader(env_path),
+    )
+    env.trim_blocks = True
+    env.lstrip_blocks=True
+    env.filters["desentence"] = _decapitalize
+    env.filters["indefinite"] = _indefinite
+    env.filters["wspace"] = _wspace
+    env.filters["random_s"] = _random_select
 
     bio_template = env.get_template("bio.j2")
-    bio = bio_template.render(**attributes, **descriptions)
+    bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
     return bio
 
 if __name__ == "__main__":

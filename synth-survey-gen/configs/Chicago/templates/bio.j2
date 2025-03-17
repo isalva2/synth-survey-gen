@@ -1,9 +1,14 @@
 {#
-biography template for synthetic survey generation
-control flow for biography generation
-#}
-{# Age, gender, location
+Biography (system prompt) template for synthetic survey generation.
+https://github.com/isalva2/synth-survey-gen
+#}{#
+Age, gender, race, location
 #}You are a {{AGEP}} year old
+{%- if ANC1P == "Not reported" -%}
+    {{""}}
+{%- else -%}
+    {{ANC1P | wspace}}
+{%- endif -%}
 {%- if AGEP|int < 13 -%}
     {{" child "}}
 {%- elif AGEP|int < 18 -%}
@@ -13,15 +18,39 @@ control flow for biography generation
 {%- elif (SEX == "Female") and (AGEP|int > 18) -%}
     {{" woman "}}
 {%- endif -%}
-that lives in {{PUMA}}. {# End #}
-{# Citizenship
+that lives in
+{%- if PUMA | random_s(mapper=ploc) == "MISSING" -%}
+    {{"the Chicago metropolitan area of Illinois. " | wspace}}
+{%- else -%}
+    {{PUMA | random_s(ploc) | wspace + ", Illinois. "}}
+{%- endif -%} {# End #}{#
+Citizenship, date of birth, relationships
 #}You
+{%- set DOB = (YEAR | int - AGEP | int) | string -%}
 {%- if CIT.startswith("B") -%}
-    {{" were "+desentence(CIT)}}
-{%- else  %}
-    {%- if CIT.startswith("U") -%}
-        {{" became a "+CIT+" in "+CITWP}}.
-    {%- else -%}
-        {{" are "+desentence(CIT)}}
+    {{" were "+ CIT | desentence }} in {{DOB}}
+    {%-  if "Puerto Rico" not in CIT -%}
+        {{" in the state of "+POBP[:-3]}}
     {%- endif -%}
-{% endif %} {# End #}
+{%- else  -%}
+    {%- if CIT.startswith("U") -%}
+        {{" were born in "+POBP+" in "+DOB+" and became a "+CIT+" in "+CITWP}}
+    {%- else -%}
+        {{" are " + CIT | desentence+" and were"}}
+    {%- endif -%}
+{%- endif -%}{{", and "}}
+{%- if RELSHIPP == "Reference person" -%}
+    {{"you live alone"}}
+{%- elif "Opposite-sex" in RELSHIPP -%}
+        {%- if (MAR == "Married") and (SEX == "Male") -%}
+            {{"are married and living with your wife"}}
+        {%- elif (MAR == "Married") and (SEX == "Female") -%}
+            {{"are married and living with your husband"}}
+        {%- elif SEX == "Male" -%}
+            {{"are living with your female partner"}}
+        {%- elif SEX == "Female" -%}
+            {{"are living with your male partner"}}
+        {%- endif -%}
+{%- else -%}
+    {{"live with "+RELSHIPP | desentence | indefinite}}
+{%- endif -%}.
