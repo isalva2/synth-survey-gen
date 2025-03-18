@@ -36,7 +36,7 @@ Citizenship, date of birth, relationships
     {%- if CIT.startswith("U") -%}
         {{" were born in "+POBP+" in "+DOB+" and became a "+CIT+" in "+CITWP}}
     {%- else -%}
-        {{" are " + CIT | desentence+" and were"}}
+        {{" You are not " + CIT | desentence+" and were born in "+DOB}}
     {%- endif -%}
 {%- endif -%}
 {%- if ("Opposite-sex" in RELSHIPP) or ("Married" in MAR) -%}
