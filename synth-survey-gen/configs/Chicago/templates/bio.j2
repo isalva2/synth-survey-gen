@@ -53,7 +53,7 @@ Citizenship, date of birth, relationships
 {%- elif RELSHIPP == "Reference person" -%}
     {{""}}
 {%- else -%}
-    {{"live with "+RELSHIPP | desentence | indefinite}}
+    {{", and you live with "+RELSHIPP | desentence | indefinite}}
 {%- endif -%}
 {{"."}}{# End #}{#
 Occupation: Student, worker, or retired and military history
@@ -61,5 +61,9 @@ Occupation: Student, worker, or retired and military history
 {%- if "No" in SCH -%}{# Working #}
     {{"You do not go to school"}}
 {%- else -%}{# Student or retired #}
-    {{"You attend School"}}
+    {%- if SCHG.startswith("Grade")-%}
+        {{" You are a high school student in "+SCHG}}
+    {%- elif SCHG.startswith("College")-%}
+        {{" You are a college student in "+SCHG}}
+    {%- endif -%}
 {%- endif -%}
