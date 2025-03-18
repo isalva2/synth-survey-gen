@@ -30,8 +30,7 @@ def read_config(config_folder:str):
     return model_config, questions
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="pums", random_state=0) -> pd.DataFrame | None:
-
+def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int | None = None, random_state=0) -> pd.DataFrame | None:
     data_folder = Path(config_folder) / "data"
     na_str = "MISSING"
 
@@ -47,7 +46,10 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", ra
         # load PUMS and PUMA data
         person_df = pd.read_csv(data_folder/"person.csv", low_memory=False)
         location_df = pd.read_csv(data_folder/"location.csv")
+
         pums_person_df = pd.read_csv(data_folder/"psam_p17.csv", dtype=str)
+        if min_age is not None:
+            pums_person_df = pums_person_df[pums_person_df.AGEP.astype(int) >= min_age]
 
         puma_gdf = gpd.read_file(data_folder/"tl_2019_17_puma10.shp")
         puma_gdf = puma_gdf.to_crs(crs=crs)

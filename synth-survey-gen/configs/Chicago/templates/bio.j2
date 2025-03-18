@@ -1,15 +1,65 @@
 {#
-biography template for synthetic survey generation
-control flow for biography generation
+Biography (system prompt) template for synthetic survey generation.
+https://github.com/isalva2/synth-survey-gen
 #}{#
-This block is for age and gender
-#}You are a {{AGEP}} year old
-{%- if AGEP | int < 13 -%}
-    {{" child"}}
-{%- elif AGEP | int < 18 -%}
-    {{" teenager"}}
-{%- elif ((AGEP | int >= 18) and (SEX=="Male")) -%}
-    {{" man"}}
-{%- elif ((AGEP | int >= 18) and (SEX=="Female")) -%}
-    {{" woman"}}
+Age, gender, race, location
+#}{{"You are a "+AGEP+" year old"}}
+{%- if ANC1P == "Not reported" -%}
+    {{""}}
+{%- else -%}
+    {{ANC1P | wspace}}
+{%- endif -%}
+{%- if AGEP|int < 13 -%}
+    {{" child "}}
+{%- elif AGEP|int < 18 -%}
+    {{" teenager "}}
+{%- elif (SEX == "Male") and (AGEP|int > 18) -%}
+    {{" man "}}
+{%- elif (SEX == "Female") and (AGEP|int > 18) -%}
+    {{" woman "}}
+{%- endif -%}
+{{"that lives in"}}
+{%- if PUMA | random_s(mapper=ploc) == "MISSING" -%}
+    {{"the Chicago metropolitan area of Illinois." | wspace}}
+{%- else -%}
+    {{PUMA | random_s(ploc) | wspace + ", Illinois."}}
+{%- endif -%} {# End #}{#
+Citizenship, date of birth, relationships
+#}{{" You"}}
+{%- set DOB = (YEAR | int - AGEP | int) | string -%}
+{%- if CIT.startswith("B") -%}
+    {{" were "+ CIT | desentence }} in {{DOB}}
+    {%-  if "Puerto Rico" not in CIT -%}
+        {{" in the state of "+POBP[:-3]}}
+    {%- endif -%}
+{%- else  -%}
+    {%- if CIT.startswith("U") -%}
+        {{" were born in "+POBP+" in "+DOB+" and became a "+CIT+" in "+CITWP}}
+    {%- else -%}
+        {{" are " + CIT | desentence+" and were"}}
+    {%- endif -%}
+{%- endif -%}
+{%- if ("Opposite-sex" in RELSHIPP) or ("Married" in MAR) -%}
+        {{", and you "}}
+        {%- if (MAR == "Married") and (SEX == "Male") -%}
+            {{"are married and living with your wife"}}
+        {%- elif SEX == "Male" -%}
+            {{"are living with your female partner"}}
+        {%- elif (MAR == "Married") and (SEX == "Female") -%}
+            {{"are married and living with your husband"}}
+        {%- elif SEX == "Female" -%}
+            {{"are living with your male partner"}}
+        {%- endif -%}
+{%- elif RELSHIPP == "Reference person" -%}
+    {{""}}
+{%- else -%}
+    {{"live with "+RELSHIPP | desentence | indefinite}}
+{%- endif -%}
+{{"."}}{# End #}{#
+Occupation: Student, worker, or retired and military history
+#}{{""}}
+{%- if "No" in SCH -%}{# Working #}
+    {{"You do not go to school"}}
+{%- else -%}{# Student or retired #}
+    {{"You attend School"}}
 {%- endif -%}
