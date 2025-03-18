@@ -3,7 +3,7 @@ Biography (system prompt) template for synthetic survey generation.
 https://github.com/isalva2/synth-survey-gen
 #}{#
 Age, gender, race, location
-#}You are a {{AGEP}} year old
+#}{{"You are a "+AGEP+" year old"}}
 {%- if ANC1P == "Not reported" -%}
     {{""}}
 {%- else -%}
@@ -18,14 +18,14 @@ Age, gender, race, location
 {%- elif (SEX == "Female") and (AGEP|int > 18) -%}
     {{" woman "}}
 {%- endif -%}
-that lives in
+{{"that lives in"}}
 {%- if PUMA | random_s(mapper=ploc) == "MISSING" -%}
-    {{"the Chicago metropolitan area of Illinois. " | wspace}}
+    {{"the Chicago metropolitan area of Illinois." | wspace}}
 {%- else -%}
-    {{PUMA | random_s(ploc) | wspace + ", Illinois. "}}
+    {{PUMA | random_s(ploc) | wspace + ", Illinois."}}
 {%- endif -%} {# End #}{#
 Citizenship, date of birth, relationships
-#}You
+#}{{" You"}}
 {%- set DOB = (YEAR | int - AGEP | int) | string -%}
 {%- if CIT.startswith("B") -%}
     {{" were "+ CIT | desentence }} in {{DOB}}
@@ -38,19 +38,28 @@ Citizenship, date of birth, relationships
     {%- else -%}
         {{" are " + CIT | desentence+" and were"}}
     {%- endif -%}
-{%- endif -%}{{", and "}}
-{%- if RELSHIPP == "Reference person" -%}
-    {{"you live alone"}}
-{%- elif "Opposite-sex" in RELSHIPP -%}
+{%- endif -%}
+{%- if ("Opposite-sex" in RELSHIPP) or ("Married" in MAR) -%}
+        {{", and you "}}
         {%- if (MAR == "Married") and (SEX == "Male") -%}
             {{"are married and living with your wife"}}
-        {%- elif (MAR == "Married") and (SEX == "Female") -%}
-            {{"are married and living with your husband"}}
         {%- elif SEX == "Male" -%}
             {{"are living with your female partner"}}
+        {%- elif (MAR == "Married") and (SEX == "Female") -%}
+            {{"are married and living with your husband"}}
         {%- elif SEX == "Female" -%}
             {{"are living with your male partner"}}
         {%- endif -%}
+{%- elif RELSHIPP == "Reference person" -%}
+    {{""}}
 {%- else -%}
     {{"live with "+RELSHIPP | desentence | indefinite}}
-{%- endif -%}.
+{%- endif -%}
+{{"."}}{# End #}{#
+Occupation: Student, worker, or retired and military history
+#}{{""}}
+{%- if "No" in SCH -%}{# Working #}
+    {{"You do not go to school"}}
+{%- else -%}{# Student or retired #}
+    {{"You attend School"}}
+{%- endif -%}
