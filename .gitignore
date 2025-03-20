@@ -176,4 +176,5 @@ working/
 test*
 
 # LLM
-logs
+logs/
+private/
