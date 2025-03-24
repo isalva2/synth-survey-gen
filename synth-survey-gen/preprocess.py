@@ -13,16 +13,6 @@ These functions prepare json files for a specific survey
 configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
-PRETTY = True
-
-def pprint(func, PRETTY=PRETTY, width=80):
-    def wrapper(*args, **kwargs):
-        text = func(*args, **kwargs)
-        wrapped_text = textwrap.fill(text, width)
-        print(wrapped_text, "\n")
-        return text
-    return wrapper
-
 
 def process_MyDailyTravelData(source:Path):
 
@@ -157,7 +147,6 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
         return "MISSING"
     # return mapper[key][0]
 
-@pprint
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah

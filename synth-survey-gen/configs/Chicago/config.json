@@ -1,0 +1,10 @@
+{
+    "model": {
+        "chat_model": "ollama/llama3.1",
+        "chat_context_length": 16000
+    },
+    "synthesis": {
+        "sample_size": 100,
+        "source": "US"
+    }
+}
