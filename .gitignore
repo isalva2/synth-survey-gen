@@ -129,6 +129,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+lenv/
 
 # Spyder project settings
 .spyderproject
@@ -173,3 +174,7 @@ working/
 
 # anything related to testing
 test*
+
+# LLM
+logs/
+private/
