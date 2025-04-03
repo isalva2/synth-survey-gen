@@ -5,7 +5,7 @@ import random
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import json
-import textwrap
+import re
 
 """
 Preprocessing steps for census and travel survey data.
@@ -14,19 +14,65 @@ configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
 
-def process_MyDailyTravelData(source:Path):
+def process_MyDailyTravelData(config_folder: str):
+    def value_to_int(x):
+        try:
+            return int(x)
+        except:
+            return int(x.split("-")[0])
+
+    def clean_and_replace(text: str, replacements: dict) -> str:
+
+        text = " ".join(text.split())  # Remove excess whitespace and new lines
+
+        def replace_match(match):
+            key = match.group(1)
+            return replacements.get(key, match.group(0))  # Replace if found, else keep original
+
+        return re.sub(r"\[\$(.*?)\]", replace_match, text)
+
+    replacement_dict = {
+        "AGE_COMPUTED": "",
+        "ARE_YOU": "are you",
+        "ARE_YOU_CAP": "Are you",
+        "DO_YOU": "do you",
+        "DO_YOU_CAP": "Do you",
+        "HAVE_YOU": "have you",
+        "JOBTEXT": "",
+        "NONWORKER_TEXT": "",
+        "PRIMARY": " primary",
+        "WERE_ACTIVITIES": "Were activities",
+        "WORK_PRE": "",
+        "WORKER_TEXT": "",
+        "YOUR": "your",
+        "YOUR1": "your",
+        "YOUR1": "you",
+        "YOUR_EMPLOYER": "your employer",
+        "YOUR_THEIR": "your",
+        "YOU": "you",
+        "YOU1": "you",
+        "YOU_DO": "you do",
+        "YOU_HAVE": "you",
+        "YOU_TELECOMMUTE": "you telecommute",
+        "YOU_THEIR": "your",
+        "YOU_WORK": "you work"
+    }
 
     # get variables and table from data dictionary
-    file_path = source / "data_dictionary.xlsx"
+    data_path = Path(config_folder) / "data"
+    file_path = data_path / "data_dictionary.xlsx"
     data_dictionary = pd.read_excel(file_path, sheet_name=None)
     variables_df = data_dictionary["Variables"]
     variables_df = variables_df[variables_df["QUESTION TEXT"].notna()]
+
     lookup_df = data_dictionary["Value Lookup"]
+    lookup_df["VALUE_INT"] = lookup_df["VALUE"].apply(
+        lambda x: value_to_int(x)
+        )
 
     # get response dictionary from person.csv
-    file_path = source / "person.csv"
+    file_path = data_path / "person.csv"
     person_cols = pd.read_csv(file_path, nrows=0).columns.to_list()
-    person_response = {col:None for col in person_cols}
 
     # query dictionary
     query_dictionary = {}
@@ -36,13 +82,19 @@ def process_MyDailyTravelData(source:Path):
                 lookup_table = lookup_df[lookup_df["NAME"]==col.upper()]
                 query_dictionary[col.upper()] = {
                     "question":(variables_df[variables_df["NAME"] == col.upper()]["QUESTION TEXT"].values)[0],
-                    "response": lookup_table.set_index("VALUE")["LABEL"].to_dict()
+                    "dtype":(variables_df[variables_df["NAME"] == col.upper()]["DATA TYPE"].values)[0],
+                    "response": lookup_table.set_index("VALUE_INT")["LABEL"].to_dict()
                 }
             except:
                 query_dictionary[col.upper()] = "This didnt work"
 
+    for item in query_dictionary.items():
+        survey_variable, question_response = item
+        if "question" in question_response.keys():
+            question_text = query_dictionary[survey_variable]["question"]
+            query_dictionary[survey_variable]["question"] = clean_and_replace(question_text, replacement_dict)
 
-    return variables_df, query_dictionary, person_response
+    return query_dictionary
 
 
 def process_pums_data(config_folder: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
@@ -152,7 +204,7 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     # globals -> to be derived from a config file eventually, ahahahah
     year = "2015"
     month = "March"
-    day = "17"
+    day = "25"
 
     env_path = Path(config_folder) / "templates"
     env = Environment(
