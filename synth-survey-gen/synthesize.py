@@ -237,14 +237,19 @@ def build_agents(config_folder:str, n, subsample):
     population_sample = synthesize_population(config_folder, n, min_age=18)
     ploc = puma_locations(config_folder)
 
+    MsgGen = SystemMessageGenerator(config_folder, "bio.j2")
+    year = 2015
+
     system_messages = []
     attribute_descriptions = get_attribute_descriptions(person)
     for i, individual in population_sample.iterrows():
         individual_attributes = attribute_decoder_dict(individual.to_dict(), person)
-        system_message = write_individual_bio(
-            individual_attributes,
-            attribute_descriptions,
-            config_folder, ploc=ploc)
+        system_message = MsgGen.write_system_message(
+            **individual_attributes,
+            **attribute_descriptions,
+            ploc=ploc,
+            YEAR=year
+            )
         system_messages.append(system_message)
 
     llm_config = lm.OpenAIGPTConfig(**model_config["model"])
@@ -265,6 +270,7 @@ def build_agents(config_folder:str, n, subsample):
         agents.append(agent)
 
     return agents
+
 
 if __name__ == "__main__":
     build_agents("configs/Chicago", 50, 3)

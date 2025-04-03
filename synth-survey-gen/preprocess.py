@@ -179,25 +179,40 @@ def get_attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
 
 
 def _decapitalize(sentence: str)->str:
+    """
+    Returns sentence without capitalization
+    """
     return sentence[0].lower()+sentence[1:]
 
 
 def _indefinite(noun_phrase: str) -> str:
+    """
+    Adds an indefinite article to noun phrase
+    """
     vowels = "aeiou"
     indefinite_article = "an" if noun_phrase[0].lower() in vowels else "a"
     return f"{indefinite_article} {noun_phrase}"
 
 
 def _wspace(word: str) -> str:
+    "Adds singe space to start of phrase"
     return f" {word}"
 
 
 def _random_select(key: str, mapper: Dict[str, List[str]]):
+    """Takes a string phrase as a key and returns a random selection from mapper dictionary
+
+    Args:
+        key (str): jinja template variable
+        mapper (Dict[str, List[str]]): A dictionary with items corresponding to jinja environment variables and there possible values
+
+    Returns:
+        _type_: _description_
+    """
     try:
         return random.choice(mapper.get(key))
     except:
-        return "MISSING"
-    # return mapper[key][0]
+        return "RANDOM_SELECT_MISSING"
 
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
@@ -220,6 +235,41 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     bio_template = env.get_template("bio.j2")
     bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
     return bio
+
+class SystemMessageGenerator:
+    def __init__(self, config_folder: str, template: str):
+        # load environment
+        self.env = Environment(
+            loader=FileSystemLoader(
+                Path(config_folder) / "templates"
+            )
+        )
+        self.template = template
+
+        # initialize environment preferences and filters
+        self.env.trim_blocks=True
+        self.env.lstrip_blocks=True
+        self.env.filters["desentence"] = _decapitalize
+        self.env.filters["indefinite"] = _indefinite
+        self.env.filters["wspace"]     = _wspace
+        self.env.filters["random_s"]   = _random_select
+
+        # get system message template
+        self.system_message_template = self.env.get_template(self.template)
+
+    def write_system_message(self, **kwargs):
+        return self.system_message_template.render(**kwargs)
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     pass
