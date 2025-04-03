@@ -237,7 +237,7 @@ def build_agents(config_folder:str, n, subsample):
     population_sample = synthesize_population(config_folder, n, min_age=18)
     ploc = puma_locations(config_folder)
 
-    MsgGen = SystemMessageGenerator(config_folder, "bio.j2")
+    MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2")
     year = 2015
 
     system_messages = []

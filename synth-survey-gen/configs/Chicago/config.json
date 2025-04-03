@@ -8,5 +8,26 @@
         "sample_size": 100,
         "source": "US"
     },
-    "survey": "NA"
+    "survey": {
+        "logic": {
+            "AGE": {
+                "-8": "AAGE",
+                "-7": "AAGE",
+                "ELSE": "SEX"
+            },
+            "SEX": "LIC",
+            "LIC": "DISAB",
+            "DISAB": {
+                "1": "DTYPE",
+                "ELSE": "HISP"
+            },
+            "DTYPE": "DTYPE_O",
+            "DTYPE2": "HISP",
+            "HISP": {
+                "1": "HISP_O",
+                "ELSE": "RACE"
+            },
+            "HISP_O": "RACE"
+        }
+    }
 }
