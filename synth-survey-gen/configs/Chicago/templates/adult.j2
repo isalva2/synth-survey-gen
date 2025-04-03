@@ -1,0 +1,10 @@
+{#
+Introduction as gendered adult
+I am not trying to be political, this is as encoded
+#}
+You are a {{AGEP}} year old
+{%- if SEX == "Male" -%}
+    {{"man"|wspace}}
+{%- elif SEX == "Female"  -%}
+    {{"woman"|wspace}}
+{%- endif -%}

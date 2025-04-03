@@ -67,23 +67,23 @@
             {{" You are a college student in "+SCHG}}
         {%- endif -%}
     {%- endif -%}
-    
-    {# 
+
+    {#
         New additions to template:
     #}
-    {# 
+    {#
         More detail about Biography, Work, Veteran and Retirement
     #}
         {# Identity and Race #}
-        {{ "In terms of identity, your primary race is " + RAC1P + 
-        ". Additional details from secondary (" + RAC2P + ") and tertiary (" + RAC3P + 
+        {{ "In terms of identity, your primary race is " + RAC1P +
+        ". Additional details from secondary (" + RAC2P + ") and tertiary (" + RAC3P +
         ") race codes indicate a diversity captured by a total race count of " + RACNUM + "." }}
         {%- if HISP != "MISSING" -%}
             {{ " You also identify as " + HISP | desentence }}
         {%- endif -%}
-    
-        {# 
-        Demographics 
+
+        {#
+        Demographics
         #}
             {{"You are a "+AGEP+" year old"}}
             {%- if RAC1P != "MISSING" -%}
@@ -94,21 +94,21 @@
             {%- endif -%}
             {{" " + SEX | lower + " of " + ANC1P | default("unspecified ancestry") + " descent"}}
             {{" living in " + POWPUMA | random_s(puma_mapper) + "."}}
-    
-        {# 
-        Employment 
+
+        {#
+        Employment
         #}
         {%- if WKHP|int > 0 and WAGP|int > 0 -%}
-            {{ "In the realm of work, you typically work " + WKHP + " hours per week at a wage of " + WAGP + 
+            {{ "In the realm of work, you typically work " + WKHP + " hours per week at a wage of " + WAGP +
             ", resulting in a total income of " + PINCP + "." }}
         {%- else -%}
             {{"You are not engaged in traditional wage employment at the moment."}}
         {%- endif %}
-    
+
         {#
-        Retirement 
+        Retirement
         #}
-        {{ "You entered the workforce in " + YOEP + 
+        {{ "You entered the workforce in " + YOEP +
         ", and " }}
         {%- if RETP in ["0", "MISSING"] -%}
         {{"you do not have a recorded retirement income."}}
@@ -117,20 +117,20 @@
         {%- endif %}
         {{ " Your Social Security benefits are summarized by a base amount of " + SSP +
         " along with supplementary income of " + SSIP + ", offering further support." }}
-        
-        {# 
-        Military Service and Additional Information 
+
+        {#
+        Military Service and Additional Information
         #}
         {%- if VPS|int > 0 -%}
             {{"Notably, your military service spans a veteran period of " + VPS + ", which enriches your profile."}}
         {%- else -%}
             {{"There is no record of military service in your background."}}
         {%- endif %}
-    
-        {# 
-        Combined Classification 
+
+        {#
+        Combined Classification
         #}
-        {{ "To summarize, based on your educational attainment (" + SCHL + "), work earnings (" + PERNP + 
+        {{ "To summarize, based on your educational attainment (" + SCHL + "), work earnings (" + PERNP +
         "), and retirement income (" + RETP + "), you are classified as " }}
         {%- if (SCH in ["2", "3"]) and (PERNP|int == 0) -%}
         {{"a student."}}
@@ -141,12 +141,12 @@
         {%- else -%}
         {{"an individual with a unique profile."}}
         {%- endif %}
-    
-    {# 
+
+    {#
         Family Structure, Health Insurance, Income
-    #} 
-        {# 
-        Family Structure 
+    #}
+        {#
+        Family Structure
         #}
         {%- if RELSHIPP != "Reference person" -%}
             {{" Household role: " + RELSHIPP | desentence | lower }}
@@ -155,17 +155,18 @@
             {%- endif -%}
             {{"."}}
         {%- endif -%}
-    
+
         {#
         Primary Househould Language
         #}
         {%- if LANP != "MISSING" -%}
         {{" Primary home language: " + LANP | desentence | lower + "."}}
         {%- endif -%}
-    
-        {# 
-        Income Section 
+
+        {#
+        Income Section
         #}
+        {#
         {%- if PINCP|int > 0 -%}
         {{" Earns " + "${:,.0f}".format(PINCP|int) + " annually"}}
         {%- if RETP|int > 0 -%}
@@ -173,7 +174,7 @@
         {%- endif -%}
         {{", placing them " + POVPIP | poverty_level + "."}}
         {%- endif -%}
-        
+        #}
         {#
         Health Insurance coverage
         #}
@@ -189,12 +190,11 @@
             {%- endif -%}
             {{" health insurance."}}
         {%- endif -%}
-    
-        {# 
+
+        {#
         Health Insurance and economic standing - summarized
         #}
         {{ "Your health insurance profile is comprehensive, with private coverage (" + PRIVCOV +
         ") and public support (" + PUBCOV + ") combining to form an overall profile of " + HICOV + "." }}
         {{ "Economically, your earnings of " + PERNP + " together with your income of " + PINCP +
         " yield an income-to-poverty ratio of " + POVPIP + "." }}
-    

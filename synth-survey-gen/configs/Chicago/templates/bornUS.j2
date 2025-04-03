@@ -1,0 +1,5 @@
+{#
+Born in the United States
+#}
+{% set DOB = (YEAR - AGEP|int)|string %}
+{{"You were" + CIT|desentence|wspace + " in "+DOB}}

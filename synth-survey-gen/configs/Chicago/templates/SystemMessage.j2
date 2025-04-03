@@ -1,0 +1,31 @@
+{#
+System Message Template for synthetic survey generation
+https://github.com/isalva2/synth-survey-gen
+#}
+{# Age and gender if adult #}
+{%- if AGEP|int < 18-%}
+
+    {% include 'teen.j2' %}
+
+{%- elif AGEP|int >=18 -%}
+
+    {% include 'adult.j2' %}
+
+{%- endif -%}
+
+{#
+Randomly Assigned residence by PUMA location
+or generic location
+#}
+{% include 'residence.j2' %}
+
+{#
+Birth and citizenship
+#}
+{% if CIT.startswith('B') %}
+    {% include 'bornUS.j2' %}
+
+{% else %}
+    {% include 'notBornUS.j2'%}
+
+{% endif %}
