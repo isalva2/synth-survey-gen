@@ -1,14 +1,19 @@
 {
     "model": {
-        "chat_model": "ollama/llama3.2:latest",
+        "chat_model": "ollama/llama3.1",
         "chat_context_length": 16000,
-        "temperature": 0.95
+        "temperature": 0.2
     },
     "synthesis": {
         "sample_size": 100,
         "source": "US"
     },
     "survey": {
+        "tool_parser_types": {
+            "NUMERIC": ["discreteNumericResponse"],
+            "TEXT": ["singleAnswerResponse", "multipleAnswerResponse"]
+        },
+        "start": "AGE",
         "logic": {
             "AGE": {
                 "-8": "AAGE",

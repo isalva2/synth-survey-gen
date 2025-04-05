@@ -19,9 +19,9 @@ def load_config(config_folder:str):
 
     # read config, question, and mappers
     with open(config_path / "config.json", "r") as file:
-        model_config: dict = json.load(file)
+        config: dict = json.load(file)
 
-    return model_config
+    return config.values()
 
 
 def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int | None = None, random_state=0) -> pd.DataFrame | None:
@@ -96,7 +96,7 @@ def write_bio(population_sample: pd.DataFrame):
     pass
 
 
-class singleAnswerTool(lr.agent.ToolMessage):
+class _singleAnswerTool(lr.agent.ToolMessage):
     request: str = "singleAnswerResponse"
     purpose: str = """
         To respond with the <answer_key> of the answer that you specify.
@@ -114,7 +114,7 @@ class singleAnswerTool(lr.agent.ToolMessage):
         ]
 
 
-class multipleAnswerTool(lr.agent.ToolMessage):
+class _multipleAnswerTool(lr.agent.ToolMessage):
     request: str = "multipleAnswerResponse"
     purpose: str = """
     To respond with a list of <answer_keys> of the answers that apply to your response.
@@ -136,7 +136,7 @@ class multipleAnswerTool(lr.agent.ToolMessage):
         ]
 
 
-class discreteNumericTool(lr.agent.ToolMessage):
+class _discreteNumericTool(lr.agent.ToolMessage):
     request: str = "discreteNumericResponse"
     purpose: str = """
         To respond with an appropriate numeric <discrete_response> value when none of the possible responses make sense to apply.
@@ -183,12 +183,17 @@ class SurveyAgent(lr.ChatAgent):
         self.answer_response = None
         self.answer_types = []
 
-    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]]):
+        # survey logging
+        self.survey_complete: bool
+        self.survey_failed: bool     
+
+    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]], strict_format: bool = True):
         """Takes a question/response
 
         Args:
             variable (str): Question variable
             question_package (Dict): Survey question and possible response dict containing variable encoding and response.
+            strict_format (bool): 
         """
 
         #
@@ -209,30 +214,30 @@ class SurveyAgent(lr.ChatAgent):
                 f"{key}: {value}" for key, value in self.possible_responses.items()
                 )
 
+    def llm_response(self, message: Optional[str | ChatDocument] = None) -> Optional[ChatDocument]:
+        return super().llm_response(message)
+
     def ask_question(self):
         self.llm_response(self.queued_question)
 
-    def singleAnswerResponse(self, msg: singleAnswerTool) -> str:
+    def singleAnswerResponse(self, msg: _singleAnswerTool) -> str:
         # return answer if exists in queued keys
         self.dtype_matches.append("TEXT" == self.question_dtypes[-1])
         return str(msg.answer_key if msg.answer_key in self.queued_keys else None)
 
-    def multipleAnswerResponse(self, msg: multipleAnswerTool):
+    def multipleAnswerResponse(self, msg: _multipleAnswerTool):
         self.dtype_matches.append("TEXT" == self.question_dtypes[-1])
         return str(
-            multipleAnswerTool.answer_keys if all(
-                key in self.queued_keys for key in multipleAnswerTool.answer_keys) else None)
+            _multipleAnswerTool.answer_keys if all(
+                key in self.queued_keys for key in _multipleAnswerTool.answer_keys) else None)
 
-    def discreteNumericResponse(self, msg: discreteNumericTool):
+    def discreteNumericResponse(self, msg: _discreteNumericTool):
         self.dtype_matches.append("NUMERIC" == self.question_dtypes[-1])
         return str(msg.discrete_response if msg.discrete_response not in self.queued_keys else None)
 
-    def llm_response(self, message: Optional[str | ChatDocument] = None) -> Optional[ChatDocument]:
-        return super().llm_response(message)
 
-
-def build_agents(config_folder:str, n, subsample):
-    model_config = load_config(config_folder)
+def build_agents(config_folder:str, n: int, subsample: int | None = None):
+    model_config, _, _ = load_config(config_folder)
     person = process_pums_data(config_folder)
     population_sample = synthesize_population(config_folder, n, min_age=18)
     ploc = puma_locations(config_folder)
@@ -252,8 +257,7 @@ def build_agents(config_folder:str, n, subsample):
             )
         system_messages.append(system_message)
 
-    llm_config = lm.OpenAIGPTConfig(**model_config["model"])
-    print(system_message)
+    llm_config = lm.OpenAIGPTConfig(**model_config)
     agents = []
     for i, system_message in enumerate(system_messages[0:subsample]):
         agent_config = lr.ChatAgentConfig(
@@ -263,10 +267,10 @@ def build_agents(config_folder:str, n, subsample):
                 + system_message + \
                 " The date is July 17, 2015. Please answer the following travel survey questions."
             )
-        agent = SurveyAgent(config=agent_config, agent_id = 0)
-        agent.enable_message(singleAnswerTool)
-        agent.enable_message(multipleAnswerTool)
-        agent.enable_message(discreteNumericTool)
+        agent = SurveyAgent(config=agent_config, agent_id = i)
+        agent.enable_message(_singleAnswerTool)
+        agent.enable_message(_multipleAnswerTool)
+        agent.enable_message(_discreteNumericTool)
         agents.append(agent)
 
     return agents

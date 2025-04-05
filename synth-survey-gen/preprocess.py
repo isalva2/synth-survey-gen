@@ -261,15 +261,5 @@ class SystemMessageGenerator:
         return self.system_message_template.render(**kwargs)
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     pass
