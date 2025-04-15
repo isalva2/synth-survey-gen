@@ -92,10 +92,6 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", mi
     return None
 
 
-def write_bio(population_sample: pd.DataFrame):
-    pass
-
-
 class _singleAnswerTool(lr.agent.ToolMessage):
     request: str = "singleAnswerResponse"
     purpose: str = """
@@ -185,7 +181,7 @@ class SurveyAgent(lr.ChatAgent):
 
         # survey logging
         self.survey_complete: bool
-        self.survey_failed: bool     
+        self.survey_failed: bool
 
     def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]], strict_format: bool = True):
         """Takes a question/response
@@ -193,7 +189,7 @@ class SurveyAgent(lr.ChatAgent):
         Args:
             variable (str): Question variable
             question_package (Dict): Survey question and possible response dict containing variable encoding and response.
-            strict_format (bool): 
+            strict_format (bool):
         """
 
         #
@@ -253,8 +249,7 @@ def build_agents(config_folder:str, n: int, subsample: int | None = None):
             **individual_attributes,
             **attribute_descriptions,
             ploc=ploc,
-            YEAR=year
-            )
+            YEAR=year)
         system_messages.append(system_message)
 
     llm_config = lm.OpenAIGPTConfig(**model_config)
@@ -265,8 +260,9 @@ def build_agents(config_folder:str, n: int, subsample: int | None = None):
             llm=llm_config,
             system_message= f"We are role playing. Please assume the identity provided below and answer the questions to the best of your ability. " \
                 + system_message + \
-                " The date is July 17, 2015. Please answer the following travel survey questions."
-            )
+                " The date is July 17, 2015. Please answer the following travel survey questions.",
+            use_tools=True,
+            use_functions_api=False)
         agent = SurveyAgent(config=agent_config, agent_id = i)
         agent.enable_message(_singleAnswerTool)
         agent.enable_message(_multipleAnswerTool)

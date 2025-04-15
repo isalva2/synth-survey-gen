@@ -9,9 +9,9 @@
         "source": "US"
     },
     "survey": {
-        "tool_parser_types": {
+        "dtype_tools": {
             "NUMERIC": ["discreteNumericResponse"],
-            "TEXT": ["singleAnswerResponse", "multipleAnswerResponse"]
+            "TEXT": ["singleAnswerResponse", "multipleAnswerResponse", "textResponse"]
         },
         "start": "AGE",
         "logic": {
@@ -32,7 +32,8 @@
                 "1": "HISP_O",
                 "ELSE": "RACE"
             },
-            "HISP_O": "RACE"
+            "HISP_O": "RACE",
+            "RACE": null
         }
     }
 }
