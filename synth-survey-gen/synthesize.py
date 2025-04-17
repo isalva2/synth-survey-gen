@@ -95,17 +95,17 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", mi
 class _singleAnswerTool(lr.agent.ToolMessage):
     request: str = "singleAnswerResponse"
     purpose: str = """
-        To respond with the <answer_key> of the answer that you specify.
+        To respond with the <TEXT> of the answer that you specify.
         """
-    answer_key: int
+    TEXT: int
 
     @classmethod
     def example(cls):
         return [
-            cls(answer_key=45),
+            cls(TEXT=45),
             (
                 "To respond to the survey question with only one answer",
-                cls(answer_key=5)
+                cls(TEXT=5)
             )
         ]
 
@@ -113,21 +113,21 @@ class _singleAnswerTool(lr.agent.ToolMessage):
 class _multipleAnswerTool(lr.agent.ToolMessage):
     request: str = "multipleAnswerResponse"
     purpose: str = """
-    To respond with a list of <answer_keys> of the answers that apply to your response.
+    To respond with a list of <TEXT> of the answers that apply to your response.
     """
-    answer_keys: Tuple[int]
+    TEXT: Tuple[int]
 
     @ classmethod
     def example(cls):
         return [
-            cls(answer_keys=(4, 7, 12)),
+            cls(TEXT=(4, 7, 12)),
             (
                 "I want to response with the keys of the 4 answers that apply to me",
-                cls(answer_keys=(4, 8, 23, 35))
+                cls(TEXT=(4, 8, 23, 35))
             ),
             (
                 "Only one answer applys to me.",
-                cls(answer_keys=(5,))
+                cls(TEXT=(5,))
             )
         ]
 
@@ -135,26 +135,23 @@ class _multipleAnswerTool(lr.agent.ToolMessage):
 class _discreteNumericTool(lr.agent.ToolMessage):
     request: str = "discreteNumericResponse"
     purpose: str = """
-        To respond with an appropriate numeric <discrete_response> value when none of the possible responses make sense to apply.
+        To respond with an appropriate numeric <NUMERIC> value when none of the possible responses make sense to apply.
         """
-    discrete_response: int
+    NUMERIC: int
 
     @classmethod
     def example(cls):
         return [
-            cls(discrete_response=43),
+            cls(NUMERIC=43),
             (
                 "I want to respond with my age of 28",
-                cls(discrete_response=28)
+                cls(NUMERIC=28)
             ),
             (
                 "I want to repond with my yearly salary",
-                cls(discrete_respnose=43_000)
+                cls(NUMERIC=43_000)
             )
         ]
-
-    # def handle(self) -> str:
-    #     return str(self.discrete_response)
 
 
 class SurveyAgent(lr.ChatAgent):
@@ -219,17 +216,17 @@ class SurveyAgent(lr.ChatAgent):
     def singleAnswerResponse(self, msg: _singleAnswerTool) -> str:
         # return answer if exists in queued keys
         self.dtype_matches.append("TEXT" == self.question_dtypes[-1])
-        return str(msg.answer_key if msg.answer_key in self.queued_keys else None)
+        return str(msg.TEXT if msg.TEXT in self.queued_keys else None)
 
     def multipleAnswerResponse(self, msg: _multipleAnswerTool):
         self.dtype_matches.append("TEXT" == self.question_dtypes[-1])
         return str(
-            _multipleAnswerTool.answer_keys if all(
-                key in self.queued_keys for key in _multipleAnswerTool.answer_keys) else None)
+            _multipleAnswerTool.TEXT if all(
+                key in self.queued_keys for key in _multipleAnswerTool.TEXT) else None)
 
     def discreteNumericResponse(self, msg: _discreteNumericTool):
         self.dtype_matches.append("NUMERIC" == self.question_dtypes[-1])
-        return str(msg.discrete_response if msg.discrete_response not in self.queued_keys else None)
+        return str(msg.NUMERIC if msg.NUMERIC not in self.queued_keys else None)
 
 
 def build_agents(config_folder:str, n: int, subsample: int | None = None):

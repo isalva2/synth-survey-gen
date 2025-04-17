@@ -28,13 +28,65 @@
                 "ELSE": "HISP"
             },
             "DTYPE": "DTYPE_O",
+            "DTYPE_O": "DTYPE2",
             "DTYPE2": "HISP",
             "HISP": {
                 "1": "HISP_O",
                 "ELSE": "RACE"
             },
             "HISP_O": "RACE",
-            "RACE": null
+            "RACE": {
+                "97":"RACE_O",
+                "ELSE": "SMRTPHN"
+            },
+            "SMRTPHN": "EMPLY_ASK",
+            "EMPLY_ASK": {
+                "1": "JOBS",
+                "2": "WKSTAT",
+                "ELSE": "JOBS"
+            },
+            "JOBS": {
+                "-7": "WKSTAT",
+                "-8": "WKSTAT",
+                "ELSE": "WPLACE"
+            },
+            "WKSTAT": {
+                "0": "WPLACE",
+                "2": "VOLUN_FREQ",
+                "97": "WKSTAT_O",
+                "ELSE": null
+            },
+            "WKSTAT_O": "VOLUN_FREQ",
+            "VOLUN_FREQ": "WMODE",
+            "WPLACE": "WMODE",
+            "WMODE": {
+                "1": "TCOFF",
+                "2": "TCOFF",
+                "97": "WMODE_O",
+                "ELSE": "CARPTOWK"
+            },
+            "WMODE_O": "CARPTOWK",
+            "CARPTOWK": "WPARKRIDE",
+            "WPARKRIDE": "PERVH",
+            "PERVH": "TCOFF",
+            "TCOFF": "WRKHRS",
+            "WRKHRS": "WTRAV",
+            "WTRAV": "OCCUP_O",
+            "OCCUP_O": "OCCUP",
+            "OCCUP": "INDUS_O",
+            "INDUS_O": "INDUS",
+            "INDUS": "EMPLY_TRANSIT",
+            "EMPLY_TRANSIT": {
+                "97": "EMPLY_TRANSIT_O",
+                "ELSE": "EMPLY_PARK"
+            },
+            "EMPLY_TRANSIT_O": "EMPLY_PARK",
+            "EMPLY_PARK": {
+                "97": "EMPLY_PARK_O",
+                "ELSE": "TRAVELDATADEVICE"
+            },
+            "EMPLY_PARK_O": "TRAVELDATADEVICE",
+            "TRAVELDATADEVICE": null
         }
     }
 }

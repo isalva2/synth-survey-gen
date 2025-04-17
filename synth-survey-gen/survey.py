@@ -18,6 +18,7 @@ def _response_from_tool_message(survey_response: LLMMessage) -> str | Dict[str, 
     Returns:
         _type_: str | Dict[str, str] | None
     """
+    # eventually modify to return tuple, json and then "scraps" of anything else left over
     message_content = survey_response.content
     match = re.search(r'{\s*(.*)\s*}', message_content, re.DOTALL)
     if match:
@@ -33,34 +34,7 @@ def _response_from_tool_message(survey_response: LLMMessage) -> str | Dict[str, 
 
 
 class ResponsePackage:
-    def __init__(self, id):
-        self.id = id
-        pass
-        self.survey_logic = []
-        self.raw_llm_contents = []
-        self.question_dtypes = []
-        self.timestamps = []
-        self.encoded_responses = []
-        self.parse_errors = []
-        self.dtype_matches = []
-
-    def record_instance(
-        self,
-        survey_variable: str, # Survey question variable
-        raw_content: str, # LLMMessage content
-        question_dtype: str, # NUMERIC or TEXT survey question type (primarily TEXT)
-        timestamp: datetime, # langroid runtime
-        encoded_response: int | List[int] | str | None, # possible response type based on available agent tools
-        parse_error: bool, # flag if parsed correctly
-        dtype_match: bool): # flag if mismatch on question type and response type
-        self.survey_logic.append(survey_variable)
-        self.raw_llm_contents.append(raw_content)
-        self.question_dtypes.append(question_dtype)
-        self.timestamps.append(timestamp)
-        self.encoded_responses.append(encoded_response)
-        self.parse_errors.append(parse_error)
-        self.dtype_matches.append(dtype_match)
-
+    pass
 
 class SurveyEngine:
     def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent]):
@@ -72,98 +46,93 @@ class SurveyEngine:
     def run(self):
         # survey logic and tool mapping
         survey_logic = self.survey_conf["logic"]
-        type_tool_map = self.survey_conf["dtype_tools"]
+        survey_variables = list(survey_logic.keys())
 
         for agent in self.agents:
-            id = agent.agent_id
             queued_variable = self.survey_conf["start"]               # queue up first question variable
-            print(queued_variable)
             queued_question_package = self.questions[queued_variable] # get corresponding question package
-            queued_question_dtype = queued_question_package["dtype"]
+            target_dtype = queued_question_package["dtype"]           # tool response dtype shoudl match this
 
-            # logging response
-            agent_response_package = ResponsePackage(id=id)
-            logic_log = []
-            n_iter = 0
+            # logging
+            logic_flow = []
+            encoded_responses = []
+            tool_dtypes = []
+            raw_contents = []
+            n_questions = 1
 
+
+            # question queueing and execution, survey logic control
             while queued_variable != None:
+                queued_question_package = self.questions[queued_variable] # get corresponding question package
+                target_dtype = queued_question_package["dtype"]
+
+                # load up question package and corresponding survey variable
                 agent.queue_question(queued_variable, queued_question_package)
                 agent.ask_question()
 
+                # get latest LLM response message from message history
                 last_message = agent.message_history[-1]
-                content = last_message.content
-                timestamp = last_message.timestamp
                 parsed_response = _response_from_tool_message(last_message)
 
-                # this match case needs to return this at minimum
-                tool_type: str
-                encoded_response: int | List[int] | str | None
-                parse_error: bool = False
-                dtype_match: bool
-
+                # match case to settle different tool responses
                 match parsed_response: # extensible
                     case str():
-                        tool_type = "textResponse"
+                        # get tool response type and encoded survey response
+                        tool_dtype = "TEXT"
                         encoded_response = parsed_response
                     case dict():
                         try:
-                            tool_type = parsed_response["request"]
-                            if tool_type == "singleAnswerResponse":
-                                encoded_response = parsed_response["answer_key"]
-                            elif tool_type == "multipleAnswerResponse":
-                                encoded_response = parsed_response["answer_keys"]
-                            elif tool_type == "discreteNumericResponse":
-                                encoded_response = parsed_response["discrete_response"]
+                            # get tool response type and encoded survey response
+                            tool_dtype = list(parsed_response.keys())[-1]
+                            encoded_response = parsed_response[tool_dtype]
                         except:
-                            tool_type = "BadResponse"
+                            tool_dtype = "BADRESPONSE"
                             encoded_response = None
-                            parse_error=True
                     case None:
-                        tool_type = "BadResponse"
+                        tool_dtype = "BADRESPONSE"
                         encoded_response = None
-                        parse_error=True
-
                     case _:
-                        tool_type = "BadResponse"
-                        encoded_response = None
-                        parse_error=True
+                        print("something bad happened")
+                        pass # this should never happen
 
-                # dtype match
-                dtype_match = tool_type in type_tool_map[queued_question_dtype]
+                """
+                RESPONSE LOGGING
+                    essential
+                    1. queued_variable - logic flow
+                    2. encoded_responses
+                    3. tool_dtype - check for bad response
+                    4.
+                    ancillary
+                    5. LLMMessage content - leftovers from parsing
+                """
+                logic_flow.append(queued_variable)
+                encoded_responses.append(encoded_response)
+                tool_dtypes.append(tool_dtype)
+                raw_contents.append(last_message.content)
 
-                # log results and append
-                agent_response_package.record_instance(
-                    survey_variable=queued_variable,
-                    raw_content=content,
-                    question_dtype=queued_question_dtype,
-                    timestamp=timestamp,
-                    encoded_response=encoded_response,
-                    parse_error=parse_error,
-                    dtype_match=dtype_match)
-                self.respondent_summaries.append(agent_response_package)
+                """
+                SURVEY LOGIC
+                    1. check if survey question dtype matches tool response dtype
+                    2. set control flag based on response keys, numeric or ELSE
+                    3. check if next question requires flag or direct to next question
+                """
+                dtype_match = target_dtype == tool_dtype # 1.
+                if dtype_match:
+                    flag = str(encoded_response) # 2a.
+                    if flag not in survey_logic[queued_variable]:
+                        flag == "ELSE"
+                elif not dtype_match:
+                    flag = "ELSE" # 2b.
 
-                logic_log.append(queued_variable)
-
-                # survey logic control
-                # queue up next variable
-
-
-
-
-
-
-                if isinstance(survey_logic[queued_variable], dict):
-                    try:
-                        print(isinstance(encoded_response, int))
-                        if isinstance(encoded_response, int):
-                            queued_variable = survey_logic[queued_variable][str(encoded_response)]
-                            print(survey_logic[queued_variable])
-                        elif isinstance(encoded_response, list) or encoded_response is None:
-                            queued_variable = survey_logic[queued_variable]["ELSE"]
-                    except:
-                        print("bingo bitch")
-                        queued_variable = survey_logic[queued_variable]
+                if isinstance(survey_logic[queued_variable], dict): # logic moves to possible responses
+                    if flag in survey_logic[queued_variable]:
+                        queued_variable = survey_logic[queued_variable][flag]
+                    elif (flag not in survey_logic[queued_variable]) and tool_dtype == "NUMERIC":
+                        flag = "ELSE"
+                        queued_variable = survey_logic[queued_variable][flag]
+                    else: queued_variable = None
                 elif isinstance(survey_logic[queued_variable], str):
                     queued_variable = survey_logic[queued_variable]
+                else: queued_variable = None
 
-                n_iter += 1
+                n_questions+=1
