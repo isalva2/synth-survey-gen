@@ -4,7 +4,7 @@ from survey import SurveyEngine
 
 config_folder = "configs/Chicago"
 n = 100
-subsample = 5
+subsample = 10
 
 def main():
 

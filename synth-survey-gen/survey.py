@@ -33,9 +33,6 @@ def _response_from_tool_message(survey_response: LLMMessage) -> str | Dict[str, 
         return message_content
 
 
-class ResponsePackage:
-    pass
-
 class SurveyEngine:
     def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent]):
         self.survey_conf = survey_conf
@@ -46,7 +43,6 @@ class SurveyEngine:
     def run(self):
         # survey logic and tool mapping
         survey_logic = self.survey_conf["logic"]
-        survey_variables = list(survey_logic.keys())
 
         for agent in self.agents:
             queued_variable = self.survey_conf["start"]               # queue up first question variable
@@ -95,16 +91,6 @@ class SurveyEngine:
                         print("something bad happened")
                         pass # this should never happen
 
-                """
-                RESPONSE LOGGING
-                    essential
-                    1. queued_variable - logic flow
-                    2. encoded_responses
-                    3. tool_dtype - check for bad response
-                    4.
-                    ancillary
-                    5. LLMMessage content - leftovers from parsing
-                """
                 logic_flow.append(queued_variable)
                 encoded_responses.append(encoded_response)
                 tool_dtypes.append(tool_dtype)
@@ -120,19 +106,19 @@ class SurveyEngine:
                 if dtype_match:
                     flag = str(encoded_response) # 2a.
                     if flag not in survey_logic[queued_variable]:
-                        flag == "ELSE"
+                        flag = "ELSE"
+                # if bad match use catch
                 elif not dtype_match:
                     flag = "ELSE" # 2b.
 
-                if isinstance(survey_logic[queued_variable], dict): # logic moves to possible responses
-                    if flag in survey_logic[queued_variable]:
-                        queued_variable = survey_logic[queued_variable][flag]
-                    elif (flag not in survey_logic[queued_variable]) and tool_dtype == "NUMERIC":
-                        flag = "ELSE"
-                        queued_variable = survey_logic[queued_variable][flag]
-                    else: queued_variable = None
-                elif isinstance(survey_logic[queued_variable], str):
-                    queued_variable = survey_logic[queued_variable]
-                else: queued_variable = None
+                step = survey_logic.get(queued_variable)
+                if isinstance(step, dict):
+                    queued_variable = step.get(flag) or (step.get("ELSE") if tool_dtype == "NUMERIC" else None)
+                elif isinstance(step, str):
+                    queued_variable = step
+                else:
+                    queued_variable = None
 
                 n_questions+=1
+                
+            # log responses
