@@ -159,10 +159,10 @@ class SurveyAgent(lr.ChatAgent):
     Subclasses Langroid's Chat Agent Class for LLM interfacing and
     logic
     """
-    def __init__(self, config: lr.ChatAgentConfig, agent_id, bio:str):
+    def __init__(self, config: lr.ChatAgentConfig, agent_id, bio:str=None):
         super().__init__(config)
 
-        # a lot of this loggig stuff has been moved to survey logic, remove this eventually
+        # a lot of this logging stuff has been moved to survey logic, remove this eventually
         # record survey responses
         self.agent_id = agent_id
         self.bio = bio
@@ -182,7 +182,7 @@ class SurveyAgent(lr.ChatAgent):
         self.survey_complete: bool
         self.survey_failed: bool
 
-    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]], strict_format: bool = True):
+    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]]):
         """Takes a question/response
 
         Args:
