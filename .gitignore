@@ -168,6 +168,9 @@ cython_debug/
 # mac crap
 .DS_Store
 
+# project
+run/
+
 # keep data out of main repo
 *data/
 working/

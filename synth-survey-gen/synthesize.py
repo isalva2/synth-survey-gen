@@ -266,7 +266,7 @@ def build_agents(config_folder:str, n: int, subsample: int | None = None):
         agent.enable_message(_discreteNumericTool)
         agents.append(agent)
 
-    return agents
+    return agents, population_sample
 
 
 if __name__ == "__main__":
