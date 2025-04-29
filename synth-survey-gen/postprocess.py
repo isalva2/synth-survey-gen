@@ -14,7 +14,7 @@ class PostProcessMyDailyTravelResponse:
 
     def _prepare_dataset(self):
         ground_truth_cols = self.ground_truth_df.columns
-        synthetic_columns = ["agent_id", "bio"]
+        synthetic_columns = ["agent_id", "bio", "intro"]
         synthetic_columns.extend(ground_truth_cols)
         self.synthetic_dataset = pd.DataFrame(columns=synthetic_columns)
 

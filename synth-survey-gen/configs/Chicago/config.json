@@ -13,7 +13,7 @@
             "NUMERIC": ["discreteNumericResponse"],
             "TEXT": ["singleAnswerResponse", "multipleAnswerResponse", "textResponse"]
         },
-        "start": "AGE",
+        "start": "INTRO",
         "logic": {
             "INTRO": "AGE",
             "AGE": {
