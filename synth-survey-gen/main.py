@@ -11,7 +11,7 @@ from survey import SurveyEngine
 from postprocess import PostProcessMyDailyTravelResponse
 from langroid.utils.configuration import settings
 
-settings.quiet = True
+# settings.quiet = True
 config_folder = "configs/Chicago"
 n = 100
 subsample = 5

@@ -95,7 +95,12 @@ def process_MyDailyTravelData(config_folder: str):
             query_dictionary[survey_variable]["question"] = clean_and_replace(question_text, replacement_dict)
 
     # add introduction
-    introduction = {"INTRO": "Please tell us your name and a little about yourself."}
+    introduction = {"INTRO":{
+        "question": "Please tell us your name and a little about yourself.",
+        "dtype": "TEXT",
+        "response": {
+            "-8": "I don't know",
+            "-7": "I prefer not to answer",}}}
     query_dictionary = {**introduction, **query_dictionary}
 
     return query_dictionary

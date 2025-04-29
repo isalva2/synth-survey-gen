@@ -30,6 +30,7 @@ Deprecated==1.2.18
 distro==1.9.0
 docstring_parser==0.16
 duckduckgo_search==6.4.2
+et_xmlfile==2.0.0
 exa-py==1.9.0
 executing==2.2.0
 Faker==18.13.0
@@ -90,6 +91,7 @@ numpy==2.2.4
 oauthlib==3.2.2
 onnxruntime==1.21.0
 openai==1.66.3
+openpyxl==3.1.5
 packaging==24.2
 pandas==2.2.3
 parso==0.8.4
