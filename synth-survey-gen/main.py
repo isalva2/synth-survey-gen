@@ -25,15 +25,19 @@ def run_survey(result_queue: Queue,
     questions: Dict,
     agents: List[SurveyAgent],
     batch_size: int):
-    for i in tqdm(range(0, len(agents), batch_size)):
-        batch = agents[i: i+batch_size]
-        SE = SurveyEngine(survey_conf, questions, batch)
-        SE.run()
-        print("results:")
-        print(len(SE.results()))
-        for r in SE.results():
-            result_queue.put(r)
-    stop_event.set()
+    try:
+        for i in tqdm(range(0, len(agents), batch_size)):
+            batch = agents[i: i+batch_size]
+            SE = SurveyEngine(survey_conf, questions, batch)
+            SE.run()
+            print("results:")
+            print(len(SE.results()))
+            for r in SE.results():
+                result_queue.put(r)
+    except Exception as e:
+        print(f"Exception: {e}")
+    finally:
+        stop_event.set()
 
 
 def postprocess_response(
@@ -67,14 +71,6 @@ def main():
 
     result_queue = Queue()
 
-    # Fake result to test the flow
-    fake_result = AgentReponsePackage(
-        logic_flow=["AGE", "DTYPE"],
-        encoded_responses=[18, 0]
-    )
-
-    result_queue.put(fake_result)
-
     stop_event = threading.Event()
 
     survey_thread = threading.Thread(
@@ -85,13 +81,11 @@ def main():
             survey_conf,
             questions,
             agents,
-            batch_size)
-    )
+            batch_size))
 
     postprocessing_thread = threading.Thread(
         target=postprocess_response,
-        args=(result_queue, stop_event, postprocessor)
-    )
+        args=(result_queue, stop_event, postprocessor))
 
     survey_thread.start()
     postprocessing_thread.start()

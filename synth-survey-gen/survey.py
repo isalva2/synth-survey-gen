@@ -81,13 +81,17 @@ class SurveyEngine:
                 queued_question_package = self.questions[queued_variable] # get corresponding question package
                 target_dtype = queued_question_package["dtype"]
 
-                # load up question package and corresponding survey variable
-                agent.queue_question(queued_variable, queued_question_package)
-                agent.ask_question()
+                try:
+                    # load up question package and corresponding survey variable
+                    agent.queue_question(queued_variable, queued_question_package)
+                    agent.ask_question()
 
-                # get latest LLM response message from message history
-                last_message = agent.message_history[-1]
-                parsed_response, scrap = _response_from_tool_message(last_message)
+                    # get latest LLM response message from message history
+                    last_message = agent.message_history[-1]
+                    parsed_response, scrap = _response_from_tool_message(last_message)
+                except:
+                    parsed_response = None
+                    scrap = None
 
                 # match case to settle different tool responses
                 match parsed_response: # extensible
