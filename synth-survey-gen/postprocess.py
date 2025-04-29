@@ -42,6 +42,8 @@ class PostProcessMyDailyTravelResponse:
                 else:
                     new_row[col] = self._coerce_to_int(val)  # Coerce to integer if possible
 
+        print("serializing")
+        print(new_row)
         print(new_row)  # Debugging output to check the result
         self.synthetic_dataset = pd.concat([self.synthetic_dataset, pd.DataFrame([new_row])], ignore_index=True)
 

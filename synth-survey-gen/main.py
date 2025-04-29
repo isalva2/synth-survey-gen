@@ -7,14 +7,14 @@ from tqdm import tqdm
 from typing import Dict, List
 from preprocess import process_MyDailyTravelData
 from synthesize import load_config, build_agents, SurveyAgent
-from survey import SurveyEngine
+from survey import SurveyEngine, AgentReponsePackage
 from postprocess import PostProcessMyDailyTravelResponse
 from langroid.utils.configuration import settings
 
-# settings.quiet = True
+settings.quiet = True
 config_folder = "configs/Chicago"
 n = 100
-subsample = 5
+subsample = 3
 batch_size = 1
 RUN_FOLDER = None
 
@@ -29,6 +29,8 @@ def run_survey(result_queue: Queue,
         batch = agents[i: i+batch_size]
         SE = SurveyEngine(survey_conf, questions, batch)
         SE.run()
+        print("results:")
+        print(len(SE.results()))
         for r in SE.results():
             result_queue.put(r)
     stop_event.set()
@@ -41,6 +43,7 @@ def postprocess_response(
     while not stop_event.is_set() or not result_queue.empty():
         try:
             result = result_queue.get(timeout=1.0)
+            print(result)
             postprocessor.serialize_response(result)
         except:
             pass
@@ -63,6 +66,15 @@ def main():
     postprocessor = PostProcessMyDailyTravelResponse(config_folder)
 
     result_queue = Queue()
+
+    # Fake result to test the flow
+    fake_result = AgentReponsePackage(
+        logic_flow=["AGE", "DTYPE"],
+        encoded_responses=[18, 0]
+    )
+
+    result_queue.put(fake_result)
+
     stop_event = threading.Event()
 
     survey_thread = threading.Thread(
@@ -101,7 +113,8 @@ def main():
         f.write(f"  subsample = {subsample}\n")
         f.write(f"  batch_size = {batch_size}\n")
 
-    postprocessor.synthetic_dataset.to_csv(os.path.join(RUN_FOLDER, "_".join(("results", date_str))))
+    print(postprocessor.synthetic_dataset.shape)
+    postprocessor.synthetic_dataset.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "results.csv"))))
 
 if __name__ == "__main__":
     main()
