@@ -94,7 +94,12 @@ def process_MyDailyTravelData(config_folder: str):
             question_text = query_dictionary[survey_variable]["question"]
             query_dictionary[survey_variable]["question"] = clean_and_replace(question_text, replacement_dict)
 
+    # add introduction
+    introduction = {"INTRO": "Please tell us your name and a little about yourself."}
+    query_dictionary = {**introduction, **query_dictionary}
+
     return query_dictionary
+
 
 
 def process_pums_data(config_folder: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
