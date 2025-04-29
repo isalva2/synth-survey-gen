@@ -15,6 +15,7 @@
         },
         "start": "AGE",
         "logic": {
+            "INTRO": "AGE",
             "AGE": {
                 "-8": "AAGE",
                 "-7": "AAGE",
