@@ -24,8 +24,24 @@ Birth and citizenship
 #}
 {% if CIT.startswith('B') %}
     {% include 'bornUS.j2' %}
-
 {% else %}
-    {% include 'notBornUS.j2'%}
+    {% include 'notBornUS.j2' %}
+{% endif %}
 
+{#
+Relationship status
+#}
+{%- if MAR == 'Married'  -%}
+    {% include 'married.j2'%}
+{%- else -%}
+    {% include 'notMarried.j2'%}
+{%- endif -%}
+
+{#
+check
+#}
+{% if verbose_debug %}
+{% for key, value in _all_args.items() %}
+{{ key }}: {{ value }}
+{% endfor %}
 {% endif %}

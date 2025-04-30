@@ -247,7 +247,7 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     return bio
 
 class SystemMessageGenerator:
-    def __init__(self, config_folder: str, template: str):
+    def __init__(self, config_folder: str, template: str, verbose_debug:bool = False):
         # load environment
         self.env = Environment(
             loader=FileSystemLoader(
@@ -255,6 +255,7 @@ class SystemMessageGenerator:
             )
         )
         self.template = template
+        self.verbose_debug = verbose_debug
 
         # initialize environment preferences and filters
         self.env.trim_blocks=True
@@ -268,7 +269,7 @@ class SystemMessageGenerator:
         self.system_message_template = self.env.get_template(self.template)
 
     def write_system_message(self, **kwargs):
-        return self.system_message_template.render(**kwargs)
+        return self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug)
 
 
 if __name__ == "__main__":

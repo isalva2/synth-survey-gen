@@ -2,10 +2,13 @@
 Born outside of the US
 #}
 {% set DOB = (YEAR - AGEP|int)|string %}
-{% if CIT.startswith("U") %}
+{%- if CIT.startswith("U") -%}
 {{
     "You were born in" + DOB|wspace + "in"|wspace + POBP|wspace
-    +"and became a"|wspace + CIT|wspace + "in"|wspace + CITWP|wspace
+    +"and became a"|wspace + CIT|wspace + "in"|wspace + CITWP|wspace + "."
 }}
-
-{% endif %}
+{%- else -%}
+{{
+"You are not " + CIT | desentence+" and were born in "+DOB+"in"|wspace + "."
+}}
+{%- endif -%}

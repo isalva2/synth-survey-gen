@@ -1,0 +1,7 @@
+{#
+Relationship in household
+#}
+{% if RELSHIPP != 'Reference person' %}
+{{'You live with ' + RELSHIPP|desentence|indefinite}}
+
+{% endif %}

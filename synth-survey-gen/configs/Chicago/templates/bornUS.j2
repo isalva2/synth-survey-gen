@@ -2,4 +2,7 @@
 Born in the United States
 #}
 {% set DOB = (YEAR - AGEP|int)|string %}
-{{"You were" + CIT|desentence|wspace + " in "+DOB}}
+{{'You were' + CIT|desentence|wspace + ' in ' + DOB}}
+{%- if  'Puerto Rico' not in CIT -%}
+    {{' in ' + POBP[:-3]+'.'}}
+{%- endif -%}
