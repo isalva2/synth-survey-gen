@@ -40,6 +40,7 @@
                 "97":"RACE_O",
                 "ELSE": "SMRTPHN"
             },
+            "RACE_O": "SMRTPHN",
             "SMRTPHN": "EMPLY_ASK",
             "EMPLY_ASK": {
                 "1": "JOBS",

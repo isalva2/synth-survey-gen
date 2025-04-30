@@ -17,7 +17,6 @@ class AgentReponsePackage:
     dtype_matches: List[bool]
     n_questions: int
     bad_iteration: bool
-    agent: SurveyAgent = None
 
 
 
@@ -149,7 +148,6 @@ class SurveyEngine:
 
             # add to package
             response_package = AgentReponsePackage(
-                agent=agent,
                 logic_flow=logic_flow,
                 parsed_responses=parsed_responses,
                 responses_scraps=scraps,

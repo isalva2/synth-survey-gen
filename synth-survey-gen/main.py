@@ -11,7 +11,7 @@ from survey import SurveyEngine, AgentReponsePackage
 from postprocess import PostProcessMyDailyTravelResponse
 from langroid.utils.configuration import settings
 
-settings.quiet = True
+# settings.quiet = True
 config_folder = "configs/Chicago"
 n = 100
 subsample = 3
@@ -30,8 +30,6 @@ def run_survey(result_queue: Queue,
             batch = agents[i: i+batch_size]
             SE = SurveyEngine(survey_conf, questions, batch)
             SE.run()
-            print("results:")
-            print(len(SE.results()))
             for r in SE.results():
                 result_queue.put(r)
     except Exception as e:
@@ -47,7 +45,6 @@ def postprocess_response(
     while not stop_event.is_set() or not result_queue.empty():
         try:
             result = result_queue.get(timeout=1.0)
-            print(result)
             postprocessor.serialize_response(result)
         except:
             pass
@@ -63,7 +60,7 @@ def main():
     RUN_FOLDER = os.path.join("run", dir_name)
     os.makedirs(RUN_FOLDER, exist_ok=True)
 
-    model_conf, survey_conf, survey_conf = load_config(config_folder)
+    model_conf, _, survey_conf = load_config(config_folder)
     questions = process_MyDailyTravelData(config_folder)
     agents, population_sample = build_agents(config_folder, n, subsample)
     population_sample.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "population_sample.csv"))), index=False)
@@ -107,7 +104,6 @@ def main():
         f.write(f"  subsample = {subsample}\n")
         f.write(f"  batch_size = {batch_size}\n")
 
-    print(postprocessor.synthetic_dataset.shape)
     postprocessor.synthetic_dataset.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "results.csv"))))
 
 if __name__ == "__main__":
