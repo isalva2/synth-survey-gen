@@ -2,8 +2,7 @@ from survey import AgentReponsePackage
 from pathlib import Path
 from dataclasses import asdict
 import pandas as pd
-import re
-
+import json
 
 class PostProcessMyDailyTravelResponse:
     def __init__(self, config_folder):
@@ -17,6 +16,7 @@ class PostProcessMyDailyTravelResponse:
         synthetic_columns = ["agent_id", "bio", "intro"]
         synthetic_columns.extend(ground_truth_cols)
         self.synthetic_dataset = pd.DataFrame(columns=synthetic_columns)
+        self.synthetic_asdict = []
 
         self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
 
@@ -42,10 +42,9 @@ class PostProcessMyDailyTravelResponse:
                 else:
                     new_row[col] = self._coerce_to_int(val)  # Coerce to integer if possible
 
-        print("serializing")
-        print(new_row)
-        print(new_row)  # Debugging output to check the result
+        # serialize result to dataset
         self.synthetic_dataset = pd.concat([self.synthetic_dataset, pd.DataFrame([new_row])], ignore_index=True)
+        self.synthetic_asdict.append(response_dict)
 
     def _coerce_to_int(self, value):
         """
@@ -62,10 +61,24 @@ class PostProcessMyDailyTravelResponse:
             # Return the value as is if it cannot be coerced into an integer
             return value
 
-def main():
-    # print(os.getcwd())
-    PostProcessMyDailyTravelResponse("configs/Chicago")
+    def write_results(self, RUN_FOLDER, date_str) -> bool | str:
+        # write csv and json this may fail
+        write_success = True
+        try:
+            self.synthetic_dataset.to_csv(Path(RUN_FOLDER / "_".join((date_str, "results.csv"))))
+        except Exception as e:
+            write_success = e
 
+        try:
+            with open(Path(RUN_FOLDER) / "_".join((date_str, "results.json")), "w") as f:
+                json.dump(self.synthetic_asdict, f, indent=4)
+        except Exception as e:
+            write_success = e
+
+        return write_success
+
+def main():
+    pass
 
 if __name__ == "__main__":
     main()

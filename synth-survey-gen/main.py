@@ -1,3 +1,4 @@
+import sys
 import os
 from pathlib import Path
 import threading
@@ -11,12 +12,19 @@ from survey import SurveyEngine, AgentReponsePackage
 from postprocess import PostProcessMyDailyTravelResponse
 from langroid.utils.configuration import settings
 
-# settings.quiet = True
-config_folder = "configs/Chicago"
+if len(sys.argv) < 2:
+    print("Usage: python main.py path/to/config/ [path/to/runfolder]")
+    sys.exit(1)
+
+config_folder = sys.argv[1]
+RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
+
+settings.quiet = True
+# config_folder = "configs/Chicago"
 n = 100
 subsample = 3
 batch_size = 1
-RUN_FOLDER = None
+# RUN_FOLDER = None
 
 
 def run_survey(result_queue: Queue,
@@ -26,7 +34,7 @@ def run_survey(result_queue: Queue,
     agents: List[SurveyAgent],
     batch_size: int):
     try:
-        for i in tqdm(range(0, len(agents), batch_size)):
+        for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
             batch = agents[i: i+batch_size]
             SE = SurveyEngine(survey_conf, questions, batch)
             SE.run()
@@ -57,7 +65,13 @@ def main():
     date_str = time.strftime("%Y%m%d_%H%M")
     name_str = Path(config_folder).name
     dir_name = "_".join((name_str, date_str))
-    RUN_FOLDER = os.path.join("run", dir_name)
+
+    if RUN_FOLDER is None:
+        dir_name = "_".join((name_str, date_str))
+        RUN_FOLDER = os.path.join("run", dir_name)
+    else:
+        RUN_FOLDER = os.path.join(RUN_FOLDER, dir_name)
+
     os.makedirs(RUN_FOLDER, exist_ok=True)
 
     model_conf, _, survey_conf = load_config(config_folder)
@@ -92,14 +106,17 @@ def main():
     end_time = time.time()
     durtation_min = (end_time - start_time) / 60.0
 
+    write_success = postprocessor.write_results(RUN_FOLDER, date_str)
+
     log_path = os.path.join(RUN_FOLDER, "log.txt")
+    chat_model = model_conf["chat_model"]
     with open(log_path, "w") as f:
         f.write(f"Start Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}\n")
         f.write(f"End Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}\n")
         f.write(f"Duration (seconds): {durtation_min:.2f}\n")
+        f.write(f"Successful write to disk: {write_success}\n")
         f.write(f"Parameters:\n")
         f.write(f"  n = {n}\n")
-        chat_model = model_conf["chat_model"]
         f.write(f"  model = {chat_model}\n")
         f.write(f"  subsample = {subsample}\n")
         f.write(f"  batch_size = {batch_size}\n")
