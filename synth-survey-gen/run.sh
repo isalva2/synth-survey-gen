@@ -41,8 +41,8 @@ if [ "$runtype" = "local" ]; then
     fi
 
 elif [ "$runtype" = "acer" ]; then
-    echo "HPC mode not implemented yet"
-    exit 1
+    module load Mamba
+    mamba activate synth_env
 
 else
     echo "Invalid runtype: $runtype"
