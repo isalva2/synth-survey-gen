@@ -38,6 +38,7 @@ class PostProcessMyDailyTravelResponse:
             else:
                 # For other types of values, handle coercion based on type
                 if isinstance(val, str):
+                    val = val.replace('\n', '').replace('\r', '')
                     new_row[col] = val  # Ensure it's a string
                 else:
                     new_row[col] = self._coerce_to_int(val)  # Coerce to integer if possible
