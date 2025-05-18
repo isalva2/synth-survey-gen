@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import threading
 import time
-from queue import Queue
+from queue import Queue, Empty
 from tqdm import tqdm
 from typing import Dict, List
 from preprocess import process_MyDailyTravelData
@@ -20,11 +20,9 @@ config_folder = sys.argv[1]
 RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
 
 settings.quiet = True
-# config_folder = "configs/Chicago"
 n = 100
-subsample = 3
-batch_size = 1
-# RUN_FOLDER = None
+subsample = 6
+batch_size = 2
 
 
 def run_survey(result_queue: Queue,
@@ -49,13 +47,17 @@ def run_survey(result_queue: Queue,
 def postprocess_response(
     result_queue: Queue,
     stop_event: threading.Event,
-    postprocessor: PostProcessMyDailyTravelResponse):
+    postprocessor: PostProcessMyDailyTravelResponse,
+    date_str: str):
     while not stop_event.is_set() or not result_queue.empty():
         try:
             result = result_queue.get(timeout=1.0)
             postprocessor.serialize_response(result)
-        except:
-            pass
+        except Empty:
+            continue
+        except Exception as e:
+            print(f"Error at postprocess thread: {e}")
+            print(type(e))
 
 
 def main():
@@ -78,7 +80,11 @@ def main():
     questions = process_MyDailyTravelData(config_folder)
     agents, population_sample = build_agents(config_folder, n, subsample)
     population_sample.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "population_sample.csv"))), index=False)
-    postprocessor = PostProcessMyDailyTravelResponse(config_folder)
+    postprocessor = PostProcessMyDailyTravelResponse(
+        config_folder,
+        batch_size=batch_size,
+        RUN_FOLDER=RUN_FOLDER,
+        date_str=date_str)
 
     result_queue = Queue()
 
@@ -96,7 +102,7 @@ def main():
 
     postprocessing_thread = threading.Thread(
         target=postprocess_response,
-        args=(result_queue, stop_event, postprocessor))
+        args=(result_queue, stop_event, postprocessor, date_str))
 
     survey_thread.start()
     postprocessing_thread.start()
@@ -113,7 +119,7 @@ def main():
     with open(log_path, "w") as f:
         f.write(f"Start Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}\n")
         f.write(f"End Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}\n")
-        f.write(f"Duration (seconds): {durtation_min:.2f}\n")
+        f.write(f"Duration (minutes): {durtation_min:.2f}\n")
         f.write(f"Successful write to disk: {write_success}\n")
         f.write(f"Parameters:\n")
         f.write(f"  n = {n}\n")

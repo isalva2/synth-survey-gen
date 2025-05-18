@@ -1,22 +1,29 @@
 from survey import AgentReponsePackage
 from pathlib import Path
 from dataclasses import asdict
+import copy
 import pandas as pd
 import json
 
 class PostProcessMyDailyTravelResponse:
-    def __init__(self, config_folder):
+    def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, date_str: str):
         self.data_path = Path(config_folder) / "data"
         self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
-
+        self.batch_size = batch_size
+        self.n_batches = 0
+        self.batches_written = 1
+        self.RUN_FOLDER = RUN_FOLDER
+        self.date_str = date_str
         self._prepare_dataset()
 
     def _prepare_dataset(self):
         ground_truth_cols = self.ground_truth_df.columns
-        synthetic_columns = ["agent_id", "bio", "intro"]
-        synthetic_columns.extend(ground_truth_cols)
-        self.synthetic_dataset = pd.DataFrame(columns=synthetic_columns)
+        self.synthetic_columns = ["agent_id", "bio", "intro"]
+        self.synthetic_columns.extend(ground_truth_cols)
+        self.synthetic_dataset = pd.DataFrame(columns=self.synthetic_columns)
+        self.batch_dataset = copy.deepcopy(self.synthetic_dataset)
         self.synthetic_asdict = []
+        self.batch_asdict = []
 
         self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
 
@@ -47,6 +54,13 @@ class PostProcessMyDailyTravelResponse:
         self.synthetic_dataset = pd.concat([self.synthetic_dataset, pd.DataFrame([new_row])], ignore_index=True)
         self.synthetic_asdict.append(response_dict)
 
+        # batch dataset
+        self.batch_dataset = pd.concat([self.batch_dataset, pd.DataFrame([new_row])], ignore_index=True)
+        self.batch_asdict.append(response_dict)
+
+        self._batch_write_results()
+
+
     def _coerce_to_int(self, value):
         """
         Helper function to attempt to coerce a value into an integer.
@@ -66,7 +80,7 @@ class PostProcessMyDailyTravelResponse:
         # write csv and json this may fail
         write_success = True
         try:
-            self.synthetic_dataset.to_csv(Path(RUN_FOLDER / "_".join((date_str, "results.csv"))))
+            self.synthetic_dataset.to_csv(Path(RUN_FOLDER) / "_".join((date_str, "results.csv")), index=False)
         except Exception as e:
             write_success = e
 
@@ -77,6 +91,28 @@ class PostProcessMyDailyTravelResponse:
             write_success = e
 
         return write_success
+
+    def _batch_write_results(self) -> None:
+        # write csv and json this may fail
+        if self.n_batches % self.batch_size == 0:
+            try:
+                self.batch_dataset.to_csv(Path(self.RUN_FOLDER) / f"batch_{self.batches_written}_{self.date_str}_results.csv", index=False)
+            except Exception as e:
+                print(e)
+
+            try:
+                with open(Path(self.RUN_FOLDER) / f"batch_{self.batches_written}_{self.date_str}_results.json", "w") as f:
+                    json.dump(self.batch_asdict, f, indent=4)
+            except Exception as e:
+                print(e)
+
+            # reset batch datasets
+            self.batches_written += 1
+            self.batch_dataset = self.batch_dataset[0:0]
+            self.batch_asdict = []
+
+        # iterate n_batches written
+        self.n_batches += 1
 
 def main():
     pass
