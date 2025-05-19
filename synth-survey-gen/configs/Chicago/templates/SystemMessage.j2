@@ -40,6 +40,26 @@ Relationship status
 {%- endif -%}
 
 {#
+Occupation: Student, worker, or retired and military history
+#}
+{%- if "No" in SCH -%}{# Working #}
+    {{-"You do not go to school"+ "\n"-}}
+{%- else -%}{# Student or retired #}
+    {%- if SCHG.startswith("Grade")-%}
+        {% include 'highschool.j2'%}
+    {%- elif SCHG.startswith("College")-%}
+        {% include 'college.j2'%}
+    {%- endif -%}
+{%- endif -%}
+
+{# is Employed? -> Means of Transportation to Work #}
+{%- if FOCCP == 'No'-%}
+    {% include 'noOccupation.j2'%}
+{%- else -%}
+    {% include 'occupation.j2'%}
+{%- endif -%}
+
+{#
 check
 #}
 {% if verbose_debug %}
