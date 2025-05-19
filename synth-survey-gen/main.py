@@ -20,9 +20,9 @@ config_folder = sys.argv[1]
 RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
 
 settings.quiet = True
-n = 100
-subsample = 6
-batch_size = 2
+n = 500
+subsample = 400
+batch_size = 10
 
 
 def run_survey(result_queue: Queue,
