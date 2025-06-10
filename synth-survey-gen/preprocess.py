@@ -227,7 +227,7 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
-    year = "2015"
+    year = "2019"
     month = "March"
     day = "25"
 
