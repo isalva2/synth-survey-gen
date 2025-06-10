@@ -224,6 +224,13 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     except:
         return "RANDOM_SELECT_MISSING"
 
+def _decontext(phrase: str) -> str:
+    """
+    Removes anything in parentheses
+    """
+    if " (" in phrase: return phrase.split(" (")[0]
+    else: return phrase
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
@@ -241,6 +248,7 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     env.filters["indefinite"] = _indefinite
     env.filters["wspace"] = _wspace
     env.filters["random_s"] = _random_select
+    env.filters["decontext"] = _decontext
 
     bio_template = env.get_template("bio.j2")
     bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
@@ -264,6 +272,7 @@ class SystemMessageGenerator:
         self.env.filters["indefinite"] = _indefinite
         self.env.filters["wspace"]     = _wspace
         self.env.filters["random_s"]   = _random_select
+        self.env.filters["decontext"] = _decontext
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)

@@ -37,7 +37,12 @@ Relationship status
     {% include 'married.j2'%}
 {%- else -%}
     {% include 'notMarried.j2'%}
-{%- endif -%}
+{% endif %}
+
+{#
+Occupation - Student, Employee, Military
+#}
+{% include 'occupation.j2' %}
 
 {#
 check

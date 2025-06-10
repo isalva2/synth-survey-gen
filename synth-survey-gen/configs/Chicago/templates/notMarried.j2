@@ -1,7 +1,23 @@
 {#
 Relationship in household
 #}
-{% if RELSHIPP != 'Reference person' %}
-{{'You live with ' + RELSHIPP|desentence|indefinite}}
-
-{% endif %}
+{# Non married status #}
+{%- if MAR == "Widowed" -%}
+{{'You are widowed and you'}}
+{%- elif MAR == 'Divorced' -%}
+{%- if MARHD == "No" -%}
+{{'You are divorced and you'}}
+{%- else -%}
+{{'You are recently divorced and you'}}
+{%- endif -%}
+{% elif MAR == 'Separated' -%}
+{{'You are separated from your previous partner and you'}}
+{%-else -%}
+{{'You'}}
+{%- endif -%}
+{# Relationship to others in household #}
+{%- if RELSHIPP != 'Reference person' -%}
+{{' live with ' + RELSHIPP|desentence|indefinite + '.'}}
+{%- else -%}
+{{" live alone."}}
+{%- endif -%}

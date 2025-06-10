@@ -1,0 +1,50 @@
+{#
+Occupation
+#}
+{# Student and educational attainment #}
+{{'Your highest educational attainment is '}}
+{%- if 'Grade' in SCHL or SCHL.startswith('1') -%}
+{{SCHL}}
+{%- elif 'Professional' in SCHL -%}
+{{'a Professional degree'}}
+{%- else -%}
+{{SCHL|indefinite}}
+{%- endif -%}
+{%- if 'degree' in SCHL and FOD1P != 'MISSING' -%}
+{{' in ' + FOD1P}}
+{%- endif -%}
+{%- if 'public' in SCH  -%}
+{{' and you you attend a public college '}}
+{%- elif 'private' in SCH -%}
+{{' and you attend a private college '}}
+{%- endif -%}
+{# Check student level #}
+{%- if 'undergraduate' in SCHG -%}
+{{'as an undergraduate student'}}
+{%- elif 'professional' in SCHG -%}
+{{'as graduate or professional student'}}
+{%- endif -%}
+{{'.'}}
+{# Employment/Military Service#}
+{# Not in military and describe place of employment#}
+{% if (MIL == 'Never served in the military') or (MIL == 'On active duty in the past, but not now') %}
+{%- if 'for-profit' in COW -%}
+{{'You are an employee of a for-profit business'}}
+{%- elif 'not-for-profit' in COW -%}
+{{'You are an employee of a not-for-profit or charitable organization'}}
+{%- elif 'Self-employed' in COW -%}
+{{'You are self-employed'}}
+{%- elif 'government' in COW -%}
+{{'You are a ' + COW.split(' ', 1)[0] + ' government employee'}}
+{%- elif COW != 'missing' -%}
+{{'You are probably retired'}}
+{%- endif -%}
+{{' in the field of' + NAICSP.split('-',1)[1]|wspace|decontext + '.'}}
+{# In military #}
+{% elif MIL == 'Only on active duty for training in Reserves/National Guard' %}
+{{'reserving it up'}}
+{% else %}
+{{'You are in the military' + NAICSP}}
+{% endif %}
+
+{{MIL}}

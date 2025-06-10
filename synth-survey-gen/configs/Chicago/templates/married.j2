@@ -1,4 +1,11 @@
 {#
 Relationship in household
 #}
-{{"You are married "}}
+{%- set MARYR = (YEAR - MARHYP|int)|string -%}
+{{'You have been married for ' + MARYR + ' years'}}
+{%- if 'husband' in  RELSHIPP -%}
+{{' to '+ RELSHIPP|desentence|indefinite}}
+{%- elif RELSHIPP != 'Reference person' -%}
+{{' and live with '+RELSHIPP|desentence|indefinite}}
+{%- endif -%}
+{{'.'}}
