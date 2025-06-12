@@ -234,7 +234,7 @@ class SurveyAgent(lr.ChatAgent):
 def build_agents(config_folder:str, n: int, subsample: int | None = None):
     model_config, _, _ = load_config(config_folder)
     person = process_pums_data(config_folder)
-    population_sample = synthesize_population(config_folder, n, min_age=18)
+    population_sample = synthesize_population(config_folder, n, min_age=18, max_age=65)
     ploc = puma_locations(config_folder)
 
     MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2")

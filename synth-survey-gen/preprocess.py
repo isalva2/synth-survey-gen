@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import json
 import re
+import locale
 
 """
 Preprocessing steps for census and travel survey data.
@@ -13,6 +14,8 @@ These functions prepare json files for a specific survey
 configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
+
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8") # this will be a problem in the future
 
 def process_MyDailyTravelData(config_folder: str):
     def value_to_int(x):
@@ -231,6 +234,9 @@ def _decontext(phrase: str, sep: str = " (") -> str:
     if sep in phrase: return phrase.split(sep, maxsplit=1)[0]
     else: return phrase
 
+def _to_currency(val: str, symbol: bool = True, grouping: bool = True):
+    return locale.currency(float(val), symbol=True, grouping=grouping)[:-3]
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
@@ -272,7 +278,8 @@ class SystemMessageGenerator:
         self.env.filters["indefinite"] = _indefinite
         self.env.filters["wspace"]     = _wspace
         self.env.filters["random_s"]   = _random_select
-        self.env.filters["decontext"] = _decontext
+        self.env.filters["decontext"]  = _decontext
+        self.env.filters["to_currency"]= _to_currency
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)

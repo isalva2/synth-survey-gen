@@ -29,8 +29,8 @@ Occupation
 {# Employment/Military Service#}
 {# Not in military and describe place of employment#}
 {%- if (MIL == 'Never served in the military') or (MIL == 'On active duty in the past, but not now') -%}
-    {%- if 'Unemployed' in COW -%}
-    {{'You are unemployed.'}}
+    {%- if 'Unemployed' in ESR -%}
+    {{'You are currently unemployed'}}
     {%- elif COW == 'MISSING' -%}
     {{'You are not working'}}
     {%- else -%}
@@ -48,6 +48,9 @@ Occupation
         {{'You are unemployed'}}
         {%- endif -%}
         {{' in' + NAICSP.lower().split('-',1)[-1]|wspace|decontext}}
+        {%- if 'Not in labor force' in ESR -%}
+            {{' but are not currently working'}}
+        {%- endif -%}
     {%- endif -%}
 {# In military #}
 {%- elif MIL == 'Only on active duty for training in Reserves/National Guard' or "National Guard" in NAICSP -%}
