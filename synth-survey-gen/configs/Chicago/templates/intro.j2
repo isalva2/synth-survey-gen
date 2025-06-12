@@ -1,0 +1,16 @@
+{{'You area a ' + AGEP + ' year old'}}
+{%- if AGEP|int < 18-%}
+    {{'teenager'|wspace}}
+{%- elif AGEP|int >=18 -%}
+    {%- if SEX == 'Male' -%}
+    {{'man'|wspace}}
+    {%- elif SEX == 'Female'  -%}
+    {{'woman'|wspace}}
+    {%- endif -%}
+{%- endif -%}
+{# Ancestry #}
+{%- if ANC1P in ['Not reported']  -%}
+{{''}}
+{%- else -%}
+{{' of' + ANC1P|wspace + ' ancestry'}}
+{%- endif -%}

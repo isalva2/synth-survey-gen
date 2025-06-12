@@ -24,7 +24,7 @@ def load_config(config_folder:str):
     return config.values()
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int | None = None, random_state=0) -> pd.DataFrame | None:
+def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int|None = None, max_age: int|None = None, random_state=0) -> pd.DataFrame | None:
     """
     Returns a spatially proportional sample of the PUMS dataset based on CMAP My Daily Travel Survey respondent sample.
     """
@@ -47,6 +47,8 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", mi
         pums_person_df = pd.read_csv(data_folder/"psam_p17.csv", dtype=str)
         if min_age is not None:
             pums_person_df = pums_person_df[pums_person_df.AGEP.astype(int) >= min_age]
+        if max_age is not None:
+            pums_person_df = pums_person_df[pums_person_df.AGEP.astype(int) <= max_age]
 
         puma_gdf = gpd.read_file(data_folder/"tl_2019_17_puma10.shp")
         puma_gdf = puma_gdf.to_crs(crs=crs)

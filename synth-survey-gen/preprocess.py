@@ -224,11 +224,11 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     except:
         return "RANDOM_SELECT_MISSING"
 
-def _decontext(phrase: str) -> str:
+def _decontext(phrase: str, sep: str = " (") -> str:
     """
-    Removes anything in parentheses
+    Removes anything in parentheses (default behavior)
     """
-    if " (" in phrase: return phrase.split(" (")[0]
+    if sep in phrase: return phrase.split(sep, maxsplit=1)[0]
     else: return phrase
 
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:

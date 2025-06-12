@@ -5,6 +5,7 @@ https://github.com/isalva2/synth-survey-gen
 pretend your describing yourself to a new person
 #}
 {# Age and gender if adult #}
+{#
 {%- if AGEP|int < 18-%}
 
     {% include 'teen.j2' %}
@@ -14,6 +15,9 @@ pretend your describing yourself to a new person
     {% include 'adult.j2' %}
 
 {%- endif -%}
+#}
+
+{%- include 'intro.j2' -%}
 
 {#
 Randomly Assigned residence by PUMA location
@@ -36,13 +40,16 @@ Relationship status
 {%- if MAR == 'Married'  -%}
     {% include 'married.j2'%}
 {%- else -%}
-    {% include 'notMarried.j2'%}
+    {% include 'notMarried.j2' %}
 {% endif %}
 
 {#
 Occupation - Student, Employee, Military
 #}
 {% include 'occupation.j2' %}
+
+{# Economic #}
+{% include 'economic.j2' %}
 
 {#
 check
