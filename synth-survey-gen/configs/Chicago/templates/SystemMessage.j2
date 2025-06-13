@@ -3,55 +3,35 @@ System Message Template for synthetic survey generation
 https://github.com/isalva2/synth-survey-gen
 
 pretend your describing yourself to a new person
+
+#TODO
+add a randomizer to includes
 #}
-{# Age and gender if adult #}
-{#
-{%- if AGEP|int < 18-%}
+{% if not shuffle %}
+    {% include 'intro.j2' %}
 
-    {% include 'teen.j2' %}
+    {#
+    Birth and citizenship
+    #}
+    {% include 'birth.j2' %}
 
-{%- elif AGEP|int >=18 -%}
+    {#
+    Relationship status
+    #}
+    {% include 'relationship.j2' %}
 
-    {% include 'adult.j2' %}
+    {#
+    Occupation - Student, Employee, Military and economic
+    #}
+    {% include 'occupation.j2' %}
 
-{%- endif -%}
-#}
-
-{%- include 'intro.j2' -%}
-
-{#
-Randomly Assigned residence by PUMA location
-or generic location
-#}
-{% include 'residence.j2' %}
-{#
-
-Birth and citizenship
-#}
-{% if CIT.startswith('B') %}
-    {% include 'bornUS.j2' %}
 {% else %}
-    {% include 'notBornUS.j2' %}
+    {% set sections = ['intro.j2', 'birth.j2', 'relationship.j2', 'occupation.j2'] %}
+    {% for section in sections|randomize_includes %}
+        {% include section %}
+    {% endfor %}
+
 {% endif %}
-
-{#
-Relationship status
-#}
-{%- if MAR == 'Married'  -%}
-    {% include 'married.j2'%}
-{%- else -%}
-    {% include 'notMarried.j2' %}
-{% endif %}
-
-{#
-Occupation - Student, Employee, Military
-#}
-{% include 'occupation.j2' %}
-
-{#
-Economic
-#}
-{% include 'economic.j2' %}
 
 {#
 check

@@ -2,7 +2,7 @@
 Occupation
 #}
 {# Student and educational attainment #}
-{{'Your highest educational attainment is '}}
+{{'Your highest educational attainment is '|wspace}}
 {%- if 'Grade' in SCHL or SCHL.startswith('1') -%}
     {{SCHL}}
 {%- elif 'Professional' in SCHL -%}
@@ -65,4 +65,19 @@ Occupation
     {{'You are a U.S. veteran that served in the' + VPS|decontext(':')|wspace + '.'}}
 {%- elif 'Between' in VPS -%}
     {{'You are a U.S. veteran that served in' + VPS|decontext(' only')|desentence|wspace + '.'}}
+{%- endif -%}
+{# Income #}
+{%- set SWINC = SSP|int + SSIP|int -%}
+{%- if PERNP|int > 0 -%}
+    {{'In the last year you earned' + PERNP|to_currency|wspace}}
+    {%- if SWINC > 0 -%}
+        {{'and received'|wspace + SWINC|to_currency|wspace + 'from social services'|wspace}}
+    {%- endif -%}
+        {{'. You typically work' + WKHP|wspace + 'hours per week'|wspace}}
+    {%- if WKWN != 'MISSING' -%}
+        {{'and have worked for'|wspace + WKWN|wspace + 'weeks in the past year'|wspace}}
+    {%- endif -%}
+{{'.'}}
+{%- elif PERNP|int == 0 and SWINC|int > 0 -%}
+    {{'You recieved' + SWINC|to_currency|wspace + 'from social services.'|wspace}}
 {%- endif -%}

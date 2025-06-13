@@ -227,6 +227,7 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     except:
         return "RANDOM_SELECT_MISSING"
 
+
 def _decontext(phrase: str, sep: str = " (") -> str:
     """
     Removes anything in parentheses (default behavior)
@@ -234,8 +235,15 @@ def _decontext(phrase: str, sep: str = " (") -> str:
     if sep in phrase: return phrase.split(sep, maxsplit=1)[0]
     else: return phrase
 
-def _to_currency(val: str, symbol: bool = True, grouping: bool = True):
+
+def _to_currency(val: str | float, symbol: bool = True, grouping: bool = True):
     return locale.currency(float(val), symbol=True, grouping=grouping)[:-3]
+
+
+def _random_includes(seq: List[str]) -> List[str]:
+    shuffled = list(seq)
+    random.shuffle(shuffled)
+    return shuffled
 
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
@@ -261,7 +269,10 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     return bio
 
 class SystemMessageGenerator:
-    def __init__(self, config_folder: str, template: str, verbose_debug:bool = False):
+    def __init__(self, config_folder: str, template: str, verbose_debug:bool = False, shuffle:bool = False, wrap: int|None = None):
+        """
+        WRAP IS DEFAULT BEHAVIOR ON SYS MSG
+        """
         # load environment
         self.env = Environment(
             loader=FileSystemLoader(
@@ -270,22 +281,51 @@ class SystemMessageGenerator:
         )
         self.template = template
         self.verbose_debug = verbose_debug
+        self.shuffle = shuffle
+        self.wrap = wrap
 
         # initialize environment preferences and filters
         self.env.trim_blocks=True
         self.env.lstrip_blocks=True
-        self.env.filters["desentence"] = _decapitalize
-        self.env.filters["indefinite"] = _indefinite
-        self.env.filters["wspace"]     = _wspace
-        self.env.filters["random_s"]   = _random_select
-        self.env.filters["decontext"]  = _decontext
-        self.env.filters["to_currency"]= _to_currency
+        self.env.filters["desentence"]         = _decapitalize
+        self.env.filters["indefinite"]         = _indefinite
+        self.env.filters["wspace"]             = _wspace
+        self.env.filters["random_s"]           = _random_select
+        self.env.filters["decontext"]          = _decontext
+        self.env.filters["to_currency"]        = _to_currency
+        self.env.filters["randomize_includes"] = _random_includes
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)
 
+    def _wrap_text(self, text, n):
+        """
+        Utility to break text on char width
+        """
+        words = text.split()
+        lines = []
+        current_line = []
+
+        for word in words:
+            if sum(len(w) for w in current_line) + len(current_line) + len(word) <= n:
+                current_line.append(word)
+            else:
+                # Join current line and start a new one
+                lines.append(' '.join(current_line))
+                current_line = [word]
+
+        # Add last line if not empty
+        if current_line:
+            lines.append(' '.join(current_line))
+
+        return '\n'.join(lines)
+
     def write_system_message(self, **kwargs):
-        return self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug)
+        rendered_msg = self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug, shuffle = self.shuffle)
+        if self.wrap is not None:
+            return self._wrap_text(rendered_msg, self.wrap)
+        else:
+            return rendered_msg[1:] # there is an extra space on intro to make shuffling work
 
 
 if __name__ == "__main__":
