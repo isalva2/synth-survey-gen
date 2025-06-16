@@ -25,8 +25,13 @@ add a randomizer to includes
     #}
     {% include 'occupation.j2' %}
 
+    {#
+    Insurance
+    #}
+    {% include 'health.j2'%}
+
 {% else %}
-    {% set sections = ['intro.j2', 'birth.j2', 'relationship.j2', 'occupation.j2'] %}
+    {% set sections = ['intro.j2', 'residence.j2', 'birth.j2', 'relationship.j2', 'occupation.j2'] %}
     {% for section in sections|randomize_includes %}
         {% include section %}
     {% endfor %}

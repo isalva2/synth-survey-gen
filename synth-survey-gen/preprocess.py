@@ -245,6 +245,17 @@ def _random_includes(seq: List[str]) -> List[str]:
     random.shuffle(shuffled)
     return shuffled
 
+
+def _listify(items: List[str]) -> str:
+    if not items:
+        return ''
+    if len(items) == 1:
+        return items[0]
+    elif len(items) == 2:
+        return f'{items[0]} and {items[1]}'
+    else:
+        return f"{', '.join(items[:-1])}, and {items[-1]}"
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
@@ -277,7 +288,8 @@ class SystemMessageGenerator:
         self.env = Environment(
             loader=FileSystemLoader(
                 Path(config_folder) / "templates"
-            )
+            ),
+            extensions=["jinja2.ext.do"]
         )
         self.template = template
         self.verbose_debug = verbose_debug
@@ -294,6 +306,7 @@ class SystemMessageGenerator:
         self.env.filters["decontext"]          = _decontext
         self.env.filters["to_currency"]        = _to_currency
         self.env.filters["randomize_includes"] = _random_includes
+        self.env.filters["listify"]            = _listify
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)
