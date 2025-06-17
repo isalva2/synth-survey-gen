@@ -10,6 +10,7 @@ from preprocess import process_MyDailyTravelData
 from synthesize import load_config, build_agents, SurveyAgent
 from survey import SurveyEngine, AgentReponsePackage
 from postprocess import PostProcessMyDailyTravelResponse
+from types import SimpleNamespace
 from langroid.utils.configuration import settings
 
 if len(sys.argv) < 2:
@@ -20,21 +21,19 @@ config_folder = sys.argv[1]
 RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
 
 settings.quiet = True
-n = 500
-subsample = 400
-batch_size = 10
-
 
 def run_survey(result_queue: Queue,
     stop_event: threading.Event,
     survey_conf: Dict,
     questions: Dict,
     agents: List[SurveyAgent],
-    batch_size: int):
+    batch_size: int,
+    shuffle_response: bool
+    ):
     try:
         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
             batch = agents[i: i+batch_size]
-            SE = SurveyEngine(survey_conf, questions, batch)
+            SE = SurveyEngine(survey_conf, questions, batch, shuffle_response)
             SE.run()
             for r in SE.results():
                 result_queue.put(r)
@@ -76,10 +75,21 @@ def main():
 
     os.makedirs(RUN_FOLDER, exist_ok=True)
 
-    model_conf, _, survey_conf = load_config(config_folder)
+    model_conf, synth_conf, survey_conf = load_config(config_folder)
+
+    synth = SimpleNamespace(**synth_conf)
+    n = synth.sample_size
+    subsample = synth.subsample
+    batch_size = synth.batch_size
+    source = synth.source
+    shuffle_response = synth.shuffle_response
+    shuffle_prompt = synth.shuffle_response
+    wrap = synth.wrap
+
     questions = process_MyDailyTravelData(config_folder)
-    agents, population_sample = build_agents(config_folder, n, subsample)
+    agents, population_sample = build_agents(config_folder, n=n, subsample=subsample, source=source, shuffle=shuffle_prompt, wrap=wrap)
     population_sample.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "population_sample.csv"))), index=False)
+
     postprocessor = PostProcessMyDailyTravelResponse(
         config_folder,
         batch_size=batch_size,
@@ -98,7 +108,8 @@ def main():
             survey_conf,
             questions,
             agents,
-            batch_size))
+            batch_size,
+            shuffle_response))
 
     postprocessing_thread = threading.Thread(
         target=postprocess_response,

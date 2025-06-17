@@ -15,6 +15,7 @@ configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
 
+# set for US currency atm
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8") # this will be a problem in the future
 
 def process_MyDailyTravelData(config_folder: str):
@@ -38,18 +39,21 @@ def process_MyDailyTravelData(config_folder: str):
         "AGE_COMPUTED": "",
         "ARE_YOU": "are you",
         "ARE_YOU_CAP": "Are you",
+        "CURRENTDATE": "today",
+        "DAYCARE": "",
         "DO_YOU": "do you",
         "DO_YOU_CAP": "Do you",
         "HAVE_YOU": "have you",
+        "I_DO": "I do",
         "JOBTEXT": "",
         "NONWORKER_TEXT": "",
+        "ON_DAY": "today",
         "PRIMARY": " primary",
         "WERE_ACTIVITIES": "Were activities",
         "WORK_PRE": "",
         "WORKER_TEXT": "",
         "YOUR": "your",
         "YOUR1": "your",
-        "YOUR1": "you",
         "YOUR_EMPLOYER": "your employer",
         "YOUR_THEIR": "your",
         "YOU": "you",

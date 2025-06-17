@@ -50,11 +50,12 @@ def _response_from_tool_message(survey_response) -> Tuple[Union[Dict[str, str], 
 
 
 class SurveyEngine:
-    def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent]):
+    def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent], shuffle_response: bool, **kwargs):
         self.survey_conf = survey_conf
         self.questions = survey_questions
         self.agents = agents
         self.respondent_summaries = []
+        self.shuffle_response = shuffle_response
 
     def run(self):
         # survey logic and tool mapping
@@ -82,7 +83,7 @@ class SurveyEngine:
 
                 try:
                     # load up question package and corresponding survey variable
-                    agent.queue_question(queued_variable, queued_question_package)
+                    agent.queue_question(queued_variable, queued_question_package, shuffle_response=self.shuffle_response)
                     agent.ask_question()
 
                     # get latest LLM response message from message history

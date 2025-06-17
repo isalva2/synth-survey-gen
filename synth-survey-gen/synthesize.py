@@ -24,14 +24,14 @@ def load_config(config_folder:str):
     return config.values()
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int|None = None, max_age: int|None = None, random_state=0) -> pd.DataFrame | None:
+def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, random_state=0) -> pd.DataFrame | None:
     """
     Returns a spatially proportional sample of the PUMS dataset based on CMAP My Daily Travel Survey respondent sample.
     """
     data_folder = Path(config_folder) / "data"
     na_str = "MISSING"
 
-    if source == "pums":
+    if source == "US":
         """
         Data derived from 2019 Public Use Microdata Sample (PUMS) dataset.
         PUMS: https://www.census.gov/programs-surveys/acs/microdata/access.2019.html#list-tab-735824205
@@ -184,7 +184,7 @@ class SurveyAgent(lr.ChatAgent):
         self.survey_complete: bool
         self.survey_failed: bool
 
-    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]]):
+    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]], shuffle_response: bool = False):
         """Takes a question/response
 
         Args:
@@ -194,6 +194,13 @@ class SurveyAgent(lr.ChatAgent):
         """
         self.question_beginning = question_package["question"]
         self.possible_responses = question_package["response"]
+
+        if shuffle_response:
+            # shuffle key-value pairs and rebuild the dict
+            items = list(self.possible_responses.items())
+            random.shuffle(items)
+            self.possible_responses = dict(items)
+
         self.queued_keys = list(self.possible_responses.keys())
 
         self.question_variables.append(variable)
@@ -231,14 +238,14 @@ class SurveyAgent(lr.ChatAgent):
         return str(msg.NUMERIC if msg.NUMERIC not in self.queued_keys else None)
 
 
-def build_agents(config_folder:str, n: int, subsample: int | None = None):
+def build_agents(config_folder:str, n: int, source: str, subsample: int | None = None, **kwargs):
     model_config, _, _ = load_config(config_folder)
     person = process_pums_data(config_folder)
-    population_sample = synthesize_population(config_folder, n, min_age=18, max_age=65)
+    population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
     ploc = puma_locations(config_folder)
 
-    MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2")
-    year = 2015
+    MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2", **kwargs)
+    year = 2019
 
     system_messages = []
     attribute_descriptions = get_attribute_descriptions(person)
@@ -257,9 +264,9 @@ def build_agents(config_folder:str, n: int, subsample: int | None = None):
         agent_config = lr.ChatAgentConfig(
             name=f"Agent_{i}",
             llm=llm_config,
-            system_message= f"We are role playing. Please assume the identity provided below and answer the questions to the best of your ability. " \
+            system_message= f"We are role playing. Please assume the identity provided below and answer the questions to the best of your ability.\n\n" \
                 + system_message + \
-                " The date is July 17, 2015. Please answer the following travel survey questions.",
+                f"\n\nThe date is July 17, {year}. Please answer the following travel survey questions.",
             use_tools=True,
             use_functions_api=False)
         agent = SurveyAgent(config=agent_config, agent_id = i, bio = system_message)

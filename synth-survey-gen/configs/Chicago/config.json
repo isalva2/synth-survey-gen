@@ -5,8 +5,13 @@
         "temperature": 0.5
     },
     "synthesis": {
-        "sample_size": 100,
-        "source": "US"
+        "sample_size": 1000,
+        "subsample": 10,
+        "batch_size": 10,
+        "source": "US",
+        "shuffle_response": true,
+        "shuffle_prompt": true,
+        "wrap": 80
     },
     "survey": {
         "dtype_tools": {
