@@ -8,7 +8,7 @@ from tqdm import tqdm
 from typing import Dict, List
 from preprocess import process_MyDailyTravelData
 from synthesize import load_config, build_agents, SurveyAgent
-from survey import SurveyEngine, AgentReponsePackage
+from survey import SurveyEngine, AgentResponsePackage
 from postprocess import PostProcessMyDailyTravelResponse
 from types import SimpleNamespace
 from langroid.utils.configuration import settings
@@ -121,7 +121,7 @@ def main():
     postprocessing_thread.join()
 
     end_time = time.time()
-    durtation_min = (end_time - start_time) / 60.0
+    duration_hour = (end_time - start_time) / 3600.00
 
     write_success = postprocessor.write_results(RUN_FOLDER, date_str)
 
@@ -130,15 +130,16 @@ def main():
     with open(log_path, "w") as f:
         f.write(f"Start Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}\n")
         f.write(f"End Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}\n")
-        f.write(f"Duration (minutes): {durtation_min:.2f}\n")
+        f.write(f"Duration (hours): {duration_hour:.2f}\n")
         f.write(f"Successful write to disk: {write_success}\n")
-        f.write(f"Parameters:\n")
-        f.write(f"  n = {n}\n")
-        f.write(f"  model = {chat_model}\n")
-        f.write(f"  subsample = {subsample}\n")
-        f.write(f"  batch_size = {batch_size}\n")
 
-    postprocessor.synthetic_dataset.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "results.csv"))))
+        f.write("Model Configuration:\n")
+        for key, value in model_conf.items():
+            f.write(f"{key}: {value}\n")
+
+        f.write("\nSynthesis Configuration:\n")
+        for key, value in synth_conf.items():
+            f.write(f"{key}: {value}\n")
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,9 @@ import re
 import json
 
 @dataclass
-class AgentReponsePackage:
+class AgentResponsePackage:
+    agent_id: str
+    system_message: str
     logic_flow: List[str]
     parsed_responses: List[str | int | List[int]]
     responses_scraps: List[str]
@@ -147,8 +149,14 @@ class SurveyEngine:
                 else:
                     queued_variable = None
 
+            # agent id and system message
+            agent_id = agent.config.name
+            system_message = agent.config.system_message
+
             # add to package
-            response_package = AgentReponsePackage(
+            response_package = AgentResponsePackage(
+                agent_id = agent_id,
+                system_message = system_message,
                 logic_flow=logic_flow,
                 parsed_responses=parsed_responses,
                 responses_scraps=scraps,

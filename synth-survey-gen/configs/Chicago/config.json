@@ -1,13 +1,13 @@
 {
     "model": {
-        "chat_model": "ollama/llama3.1:8b",
+        "chat_model": "ollama/llama3.2:latest",
         "chat_context_length": 16000,
         "temperature": 0.5
     },
     "synthesis": {
         "sample_size": 1000,
-        "subsample": 10,
-        "batch_size": 10,
+        "subsample": 5,
+        "batch_size": 1,
         "source": "US",
         "shuffle_response": true,
         "shuffle_prompt": true,

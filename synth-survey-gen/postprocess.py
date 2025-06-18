@@ -1,4 +1,4 @@
-from survey import AgentReponsePackage
+from survey import AgentResponsePackage
 from pathlib import Path
 from dataclasses import asdict
 import copy
@@ -18,7 +18,7 @@ class PostProcessMyDailyTravelResponse:
 
     def _prepare_dataset(self):
         ground_truth_cols = self.ground_truth_df.columns
-        self.synthetic_columns = ["agent_id", "bio", "intro"]
+        self.synthetic_columns = ["agent_id", "system_message", "intro"]
         self.synthetic_columns.extend(ground_truth_cols)
         self.synthetic_dataset = pd.DataFrame(columns=self.synthetic_columns)
         self.batch_dataset = copy.deepcopy(self.synthetic_dataset)
@@ -27,10 +27,14 @@ class PostProcessMyDailyTravelResponse:
 
         self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
 
-    def serialize_response(self, agent_response: AgentReponsePackage):
+    def serialize_response(self, agent_response: AgentResponsePackage):
         response_dict = asdict(agent_response)
         response_cols = [col.lower() for col in response_dict["logic_flow"]]
         new_row = {}
+
+        # get agent id and system_message
+        new_row["agent_id"]       = agent_response.agent_id
+        new_row["system_message"] = agent_response.system_message
 
         # Loop through the logic flow and encoded responses to build the new row
         for col, val in zip(response_cols, response_dict["encoded_responses"]):
