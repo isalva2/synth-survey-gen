@@ -18,7 +18,7 @@ class PostProcessMyDailyTravelResponse:
 
     def _prepare_dataset(self):
         ground_truth_cols = self.ground_truth_df.columns
-        self.synthetic_columns = ["agent_id", "system_message", "intro"]
+        self.synthetic_columns = ["agent_id", "serial_number", "agent_bio", "intro"]
         self.synthetic_columns.extend(ground_truth_cols)
         self.synthetic_dataset = pd.DataFrame(columns=self.synthetic_columns)
         self.batch_dataset = copy.deepcopy(self.synthetic_dataset)
@@ -34,7 +34,8 @@ class PostProcessMyDailyTravelResponse:
 
         # get agent id and system_message
         new_row["agent_id"]       = agent_response.agent_id
-        new_row["system_message"] = agent_response.system_message
+        new_row["serial_number"]  = agent_response.serial_number
+        new_row["agent_bio"]            = agent_response.agent_bio
 
         # Loop through the logic flow and encoded responses to build the new row
         for col, val in zip(response_cols, response_dict["encoded_responses"]):

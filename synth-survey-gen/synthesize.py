@@ -161,13 +161,22 @@ class SurveyAgent(lr.ChatAgent):
     Subclasses Langroid's Chat Agent Class for LLM interfacing and
     logic
     """
-    def __init__(self, config: lr.ChatAgentConfig, agent_id, bio:str=None):
+    def __init__(self, config: lr.ChatAgentConfig, agent_id: str, bio:str, serial_number: str):
         super().__init__(config)
+        """Survey Agent Class
+
+        Args:
+            config (lr.ChatAgentConfig): Langroid agent configuration pointing to LLM
+            agent_id (str): Agent ID linked to synthesis
+            bio (str): Unique contents of system message based on heterogeneous socio-demographic data
+            serial_number (str): ID linked to original population synthesis dataset
+        """
 
         # a lot of this logging stuff has been moved to survey logic, remove this eventually
         # record survey responses
         self.agent_id = agent_id
         self.bio = bio
+        self.serial_number = serial_number # on PUMS dataset, need to configure for other datasets eventually
         self.responses = []
         self.question_variables = []
         self.question_dtypes = []
@@ -239,15 +248,21 @@ class SurveyAgent(lr.ChatAgent):
 
 
 def build_agents(config_folder:str, n: int, source: str, subsample: int | None = None, **kwargs):
-    model_config, _, _ = load_config(config_folder)
+    model_config, synth_conf, _ = load_config(config_folder)
     person = process_pums_data(config_folder)
     population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
     ploc = puma_locations(config_folder)
 
     MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2", **kwargs)
-    year = 2019
+
+    # synthesis configuration vars
+    sim_year = synth_conf.get("sim_year")
+    header = synth_conf.get("system_message_header")
+    footer = synth_conf.get("system_message_footer")
 
     system_messages = []
+    serial_numbers = [] # link to person dataset
+
     attribute_descriptions = get_attribute_descriptions(person)
     for i, individual in population_sample.iterrows():
         individual_attributes = attribute_decoder_dict(individual.to_dict(), person)
@@ -255,21 +270,22 @@ def build_agents(config_folder:str, n: int, source: str, subsample: int | None =
             **individual_attributes,
             **attribute_descriptions,
             ploc=ploc,
-            YEAR=year)
+            YEAR=sim_year)
+
         system_messages.append(system_message)
+        serial_numbers.append(individual["SERIALNO"])
 
     llm_config = lm.OpenAIGPTConfig(**model_config)
     agents = []
-    for i, system_message in enumerate(system_messages[0:subsample]):
+    for i, zipped_content in enumerate(zip(system_messages[0:subsample], serial_numbers[0:subsample])):
+        system_message, serial_number = zipped_content
         agent_config = lr.ChatAgentConfig(
             name=f"Agent_{i}",
             llm=llm_config,
-            system_message= f"We are role playing. Please assume the identity provided below and answer the questions to the best of your ability.\n\n" \
-                + system_message + \
-                f"\n\nThe date is July 17, {year}. Please answer the following travel survey questions.",
-            use_tools=True,
+            system_message= header + system_message + footer,   # system message configuration
+            use_tools=True,                                     # - could have more in the future
             use_functions_api=False)
-        agent = SurveyAgent(config=agent_config, agent_id = i, bio = system_message)
+        agent = SurveyAgent(config=agent_config, agent_id = i, bio = system_message, serial_number = serial_number)
         agent.enable_message(_singleAnswerTool)
         agent.enable_message(_multipleAnswerTool)
         agent.enable_message(_discreteNumericTool)

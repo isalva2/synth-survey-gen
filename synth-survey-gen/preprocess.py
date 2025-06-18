@@ -337,7 +337,14 @@ class SystemMessageGenerator:
 
         return '\n'.join(lines)
 
-    def write_system_message(self, **kwargs):
+    def write_system_message(self, **kwargs) -> str:
+        """Writes agent system messages
+
+        kwargs are specific to population synthesis dataset
+
+        Returns:
+            str: _description_
+        """
         rendered_msg = self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug, shuffle = self.shuffle)
         if self.wrap is not None:
             return self._wrap_text(rendered_msg, self.wrap)

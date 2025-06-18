@@ -10,7 +10,8 @@ import json
 @dataclass
 class AgentResponsePackage:
     agent_id: str
-    system_message: str
+    agent_bio: str
+    serial_number: str
     logic_flow: List[str]
     parsed_responses: List[str | int | List[int]]
     responses_scraps: List[str]
@@ -151,12 +152,14 @@ class SurveyEngine:
 
             # agent id and system message
             agent_id = agent.config.name
-            system_message = agent.config.system_message
+            serial_number = agent.serial_number
+            agent_bio = agent.bio
 
             # add to package
             response_package = AgentResponsePackage(
-                agent_id = agent_id,
-                system_message = system_message,
+                agent_id=agent_id,
+                agent_bio=agent_bio,
+                serial_number=serial_number,
                 logic_flow=logic_flow,
                 parsed_responses=parsed_responses,
                 responses_scraps=scraps,
