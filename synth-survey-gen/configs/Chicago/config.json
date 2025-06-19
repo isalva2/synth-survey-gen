@@ -1,12 +1,20 @@
 {
     "model": {
-        "chat_model": "ollama/llama3.1",
+        "chat_model": "ollama/llama3.2:latest",
         "chat_context_length": 16000,
-        "temperature": 0.2
+        "temperature": 0.5
     },
     "synthesis": {
-        "sample_size": 100,
-        "source": "US"
+        "sample_size": 1000,
+        "subsample": 2,
+        "batch_size": 2,
+        "source": "US",
+        "sim_year": 2019,
+        "system_message_header": "We are role playing. Please assume the identity provided below and answer the questions to the best of your ability.\n\n",
+        "system_message_footer": "\n\nThe date is July 17, 2019. Please answer the following travel survey questions",
+        "shuffle_response": true,
+        "shuffle_prompt": true,
+        "wrap": 80
     },
     "survey": {
         "dtype_tools": {
@@ -47,23 +55,20 @@
                 "2": "WKSTAT",
                 "ELSE": "JOBS"
             },
-            "JOBS": {
-                "-7": "WKSTAT",
-                "-8": "WKSTAT",
-                "ELSE": "WPLACE"
-            },
+            "JOBS": "WKSTAT",
             "WKSTAT": {
                 "0": "WPLACE",
                 "2": "VOLUN_FREQ",
                 "97": "WKSTAT_O",
-                "ELSE": null
+                "ELSE": "STUDE"
             },
-            "WKSTAT_O": "VOLUN_FREQ",
+            "WKSTAT_O": "STUDE",
             "VOLUN_FREQ": "WMODE",
             "WPLACE": "WMODE",
             "WMODE": {
                 "1": "TCOFF",
                 "2": "TCOFF",
+                "3": "TCOFF",
                 "97": "WMODE_O",
                 "ELSE": "CARPTOWK"
             },
@@ -85,10 +90,40 @@
             "EMPLY_TRANSIT_O": "EMPLY_PARK",
             "EMPLY_PARK": {
                 "97": "EMPLY_PARK_O",
-                "ELSE": "TRAVELDATADEVICE"
+                "ELSE": "TRAVELDATAUSE"
             },
-            "EMPLY_PARK_O": "TRAVELDATADEVICE",
-            "TRAVELDATADEVICE": null
+            "EMPLY_PARK_O": "TRAVELDATAUSE",
+            "STUDE": {
+                "1": "SCHOL",
+                "2": "SCHOL",
+                "ELSE": "EDUC"
+            },
+            "SCHOL": {
+                "5": "SWEB",
+                "6": "SWEB",
+                "7": "SWEB",
+                "8": "SWEB",
+                "97": "SCHOL_O",
+                "ELSE": "SLOC"
+            },
+            "SCHOL_O": "SLOC",
+            "SLOC": "EDUC",
+            "SWEB": {
+                "1": "EDUC",
+                "2": "SMODE"
+            },
+            "SMODE": {
+                "8": "SPARKRIDE",
+                "9": "SPARKRIDE",
+                "10": "SPARKRIDE",
+                "97": "SMODE_O",
+                "ELSE": "EDUC"
+            },
+            "SMODE_O": "EDUC",
+            "SPARKRIDE": "EDUC",
+            "EDUC": "TRAVELDATAUSE",
+            "TRAVELDATAUSE": "TRAVELDATADEVICE",
+            "TRAVELDATADEVICE": "TRAVELDATAMODE"
         }
     }
 }

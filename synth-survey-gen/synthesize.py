@@ -24,14 +24,14 @@ def load_config(config_folder:str):
     return config.values()
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="pums", min_age: int | None = None, random_state=0) -> pd.DataFrame | None:
+def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, random_state=0) -> pd.DataFrame | None:
     """
     Returns a spatially proportional sample of the PUMS dataset based on CMAP My Daily Travel Survey respondent sample.
     """
     data_folder = Path(config_folder) / "data"
     na_str = "MISSING"
 
-    if source == "pums":
+    if source == "US":
         """
         Data derived from 2019 Public Use Microdata Sample (PUMS) dataset.
         PUMS: https://www.census.gov/programs-surveys/acs/microdata/access.2019.html#list-tab-735824205
@@ -47,6 +47,8 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="pums", mi
         pums_person_df = pd.read_csv(data_folder/"psam_p17.csv", dtype=str)
         if min_age is not None:
             pums_person_df = pums_person_df[pums_person_df.AGEP.astype(int) >= min_age]
+        if max_age is not None:
+            pums_person_df = pums_person_df[pums_person_df.AGEP.astype(int) <= max_age]
 
         puma_gdf = gpd.read_file(data_folder/"tl_2019_17_puma10.shp")
         puma_gdf = puma_gdf.to_crs(crs=crs)
@@ -159,13 +161,22 @@ class SurveyAgent(lr.ChatAgent):
     Subclasses Langroid's Chat Agent Class for LLM interfacing and
     logic
     """
-    def __init__(self, config: lr.ChatAgentConfig, agent_id, bio:str=None):
+    def __init__(self, config: lr.ChatAgentConfig, agent_id: str, bio:str, serial_number: str):
         super().__init__(config)
+        """Survey Agent Class
+
+        Args:
+            config (lr.ChatAgentConfig): Langroid agent configuration pointing to LLM
+            agent_id (str): Agent ID linked to synthesis
+            bio (str): Unique contents of system message based on heterogeneous socio-demographic data
+            serial_number (str): ID linked to original population synthesis dataset
+        """
 
         # a lot of this logging stuff has been moved to survey logic, remove this eventually
         # record survey responses
         self.agent_id = agent_id
         self.bio = bio
+        self.serial_number = serial_number # on PUMS dataset, need to configure for other datasets eventually
         self.responses = []
         self.question_variables = []
         self.question_dtypes = []
@@ -182,7 +193,7 @@ class SurveyAgent(lr.ChatAgent):
         self.survey_complete: bool
         self.survey_failed: bool
 
-    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]]):
+    def queue_question(self, variable: str, question_package: Dict[str, str | Dict[int, str]], shuffle_response: bool = False):
         """Takes a question/response
 
         Args:
@@ -192,6 +203,13 @@ class SurveyAgent(lr.ChatAgent):
         """
         self.question_beginning = question_package["question"]
         self.possible_responses = question_package["response"]
+
+        if shuffle_response:
+            # shuffle key-value pairs and rebuild the dict
+            items = list(self.possible_responses.items())
+            random.shuffle(items)
+            self.possible_responses = dict(items)
+
         self.queued_keys = list(self.possible_responses.keys())
 
         self.question_variables.append(variable)
@@ -229,16 +247,22 @@ class SurveyAgent(lr.ChatAgent):
         return str(msg.NUMERIC if msg.NUMERIC not in self.queued_keys else None)
 
 
-def build_agents(config_folder:str, n: int, subsample: int | None = None):
-    model_config, _, _ = load_config(config_folder)
+def build_agents(config_folder:str, n: int, source: str, subsample: int | None = None, **kwargs):
+    model_config, synth_conf, _ = load_config(config_folder)
     person = process_pums_data(config_folder)
-    population_sample = synthesize_population(config_folder, n, min_age=18)
+    population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
     ploc = puma_locations(config_folder)
 
-    MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2")
-    year = 2015
+    MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2", **kwargs)
+
+    # synthesis configuration vars
+    sim_year = synth_conf.get("sim_year")
+    header = synth_conf.get("system_message_header")
+    footer = synth_conf.get("system_message_footer")
 
     system_messages = []
+    serial_numbers = [] # link to person dataset
+
     attribute_descriptions = get_attribute_descriptions(person)
     for i, individual in population_sample.iterrows():
         individual_attributes = attribute_decoder_dict(individual.to_dict(), person)
@@ -246,21 +270,22 @@ def build_agents(config_folder:str, n: int, subsample: int | None = None):
             **individual_attributes,
             **attribute_descriptions,
             ploc=ploc,
-            YEAR=year)
+            YEAR=sim_year)
+
         system_messages.append(system_message)
+        serial_numbers.append(individual["SERIALNO"])
 
     llm_config = lm.OpenAIGPTConfig(**model_config)
     agents = []
-    for i, system_message in enumerate(system_messages[0:subsample]):
+    for i, zipped_content in enumerate(zip(system_messages[0:subsample], serial_numbers[0:subsample])):
+        system_message, serial_number = zipped_content
         agent_config = lr.ChatAgentConfig(
             name=f"Agent_{i}",
             llm=llm_config,
-            system_message= f"We are role playing. Please assume the identity provided below and answer the questions to the best of your ability. " \
-                + system_message + \
-                " The date is July 17, 2015. Please answer the following travel survey questions.",
-            use_tools=True,
+            system_message= header + system_message + footer,   # system message configuration
+            use_tools=True,                                     # - could have more in the future
             use_functions_api=False)
-        agent = SurveyAgent(config=agent_config, agent_id = i, bio = system_message)
+        agent = SurveyAgent(config=agent_config, agent_id = i, bio = system_message, serial_number = serial_number)
         agent.enable_message(_singleAnswerTool)
         agent.enable_message(_multipleAnswerTool)
         agent.enable_message(_discreteNumericTool)

@@ -8,7 +8,10 @@ import re
 import json
 
 @dataclass
-class AgentReponsePackage:
+class AgentResponsePackage:
+    agent_id: str
+    agent_bio: str
+    serial_number: str
     logic_flow: List[str]
     parsed_responses: List[str | int | List[int]]
     responses_scraps: List[str]
@@ -50,11 +53,12 @@ def _response_from_tool_message(survey_response) -> Tuple[Union[Dict[str, str], 
 
 
 class SurveyEngine:
-    def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent]):
+    def __init__(self, survey_conf: Dict, survey_questions: Dict, agents: List[SurveyAgent], shuffle_response: bool, **kwargs):
         self.survey_conf = survey_conf
         self.questions = survey_questions
         self.agents = agents
         self.respondent_summaries = []
+        self.shuffle_response = shuffle_response
 
     def run(self):
         # survey logic and tool mapping
@@ -82,7 +86,7 @@ class SurveyEngine:
 
                 try:
                     # load up question package and corresponding survey variable
-                    agent.queue_question(queued_variable, queued_question_package)
+                    agent.queue_question(queued_variable, queued_question_package, shuffle_response=self.shuffle_response)
                     agent.ask_question()
 
                     # get latest LLM response message from message history
@@ -146,8 +150,16 @@ class SurveyEngine:
                 else:
                     queued_variable = None
 
+            # agent id and system message
+            agent_id = agent.config.name
+            serial_number = agent.serial_number
+            agent_bio = agent.bio
+
             # add to package
-            response_package = AgentReponsePackage(
+            response_package = AgentResponsePackage(
+                agent_id=agent_id,
+                agent_bio=agent_bio,
+                serial_number=serial_number,
                 logic_flow=logic_flow,
                 parsed_responses=parsed_responses,
                 responses_scraps=scraps,

@@ -1,10 +1,10 @@
 {#
 Residence in Illinois
 #}
-{{"that lives in"|wspace}}
+{{"You live in"|wspace}}
 {%- set location = PUMA|random_s(mapper=ploc) -%}
 {%- if PUMA | random_s(mapper=ploc) == "RANDOM_SELECT_MISSING" -%}
-    {{"the Chicago metropolitan area of Illinois."|wspace}}
+    {{"the Chicago metropolitan area of Illinois. "|wspace}}
 {%- else -%}
-    {{PUMA|random_s(mapper=ploc)|wspace+", Illinois."}}
+    {{PUMA|random_s(mapper=ploc)|wspace+", Illinois. "}}
 {%- endif -%}

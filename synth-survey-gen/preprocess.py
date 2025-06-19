@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import json
 import re
+import locale
 
 """
 Preprocessing steps for census and travel survey data.
@@ -13,6 +14,9 @@ These functions prepare json files for a specific survey
 configuration, however there are a couple steps (~10%)
 that needs to be done manually.
 """
+
+# set for US currency atm
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8") # this will be a problem in the future
 
 def process_MyDailyTravelData(config_folder: str):
     def value_to_int(x):
@@ -35,18 +39,21 @@ def process_MyDailyTravelData(config_folder: str):
         "AGE_COMPUTED": "",
         "ARE_YOU": "are you",
         "ARE_YOU_CAP": "Are you",
+        "CURRENTDATE": "today",
+        "DAYCARE": "",
         "DO_YOU": "do you",
         "DO_YOU_CAP": "Do you",
         "HAVE_YOU": "have you",
+        "I_DO": "I do",
         "JOBTEXT": "",
         "NONWORKER_TEXT": "",
+        "ON_DAY": "today",
         "PRIMARY": " primary",
         "WERE_ACTIVITIES": "Were activities",
         "WORK_PRE": "",
         "WORKER_TEXT": "",
         "YOUR": "your",
         "YOUR1": "your",
-        "YOUR1": "you",
         "YOUR_EMPLOYER": "your employer",
         "YOUR_THEIR": "your",
         "YOU": "you",
@@ -224,10 +231,39 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     except:
         return "RANDOM_SELECT_MISSING"
 
+
+def _decontext(phrase: str, sep: str = " (") -> str:
+    """
+    Removes anything in parentheses (default behavior)
+    """
+    if sep in phrase: return phrase.split(sep, maxsplit=1)[0]
+    else: return phrase
+
+
+def _to_currency(val: str | float, symbol: bool = True, grouping: bool = True):
+    return locale.currency(float(val), symbol=True, grouping=grouping)[:-3]
+
+
+def _random_includes(seq: List[str]) -> List[str]:
+    shuffled = list(seq)
+    random.shuffle(shuffled)
+    return shuffled
+
+
+def _listify(items: List[str]) -> str:
+    if not items:
+        return ''
+    if len(items) == 1:
+        return items[0]
+    elif len(items) == 2:
+        return f'{items[0]} and {items[1]}'
+    else:
+        return f"{', '.join(items[:-1])}, and {items[-1]}"
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
-    year = "2015"
+    year = "2019"
     month = "March"
     day = "25"
 
@@ -241,35 +277,79 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     env.filters["indefinite"] = _indefinite
     env.filters["wspace"] = _wspace
     env.filters["random_s"] = _random_select
+    env.filters["decontext"] = _decontext
 
     bio_template = env.get_template("bio.j2")
     bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
     return bio
 
 class SystemMessageGenerator:
-    def __init__(self, config_folder: str, template: str, verbose_debug:bool = False):
+    def __init__(self, config_folder: str, template: str, verbose_debug:bool = False, shuffle:bool = False, wrap: int|None = None):
+        """
+        WRAP IS DEFAULT BEHAVIOR ON SYS MSG
+        """
         # load environment
         self.env = Environment(
             loader=FileSystemLoader(
                 Path(config_folder) / "templates"
-            )
+            ),
+            extensions=["jinja2.ext.do"]
         )
         self.template = template
         self.verbose_debug = verbose_debug
+        self.shuffle = shuffle
+        self.wrap = wrap
 
         # initialize environment preferences and filters
         self.env.trim_blocks=True
         self.env.lstrip_blocks=True
-        self.env.filters["desentence"] = _decapitalize
-        self.env.filters["indefinite"] = _indefinite
-        self.env.filters["wspace"]     = _wspace
-        self.env.filters["random_s"]   = _random_select
+        self.env.filters["desentence"]         = _decapitalize
+        self.env.filters["indefinite"]         = _indefinite
+        self.env.filters["wspace"]             = _wspace
+        self.env.filters["random_s"]           = _random_select
+        self.env.filters["decontext"]          = _decontext
+        self.env.filters["to_currency"]        = _to_currency
+        self.env.filters["randomize_includes"] = _random_includes
+        self.env.filters["listify"]            = _listify
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)
 
-    def write_system_message(self, **kwargs):
-        return self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug)
+    def _wrap_text(self, text, n):
+        """
+        Utility to break text on char width
+        """
+        words = text.split()
+        lines = []
+        current_line = []
+
+        for word in words:
+            if sum(len(w) for w in current_line) + len(current_line) + len(word) <= n:
+                current_line.append(word)
+            else:
+                # Join current line and start a new one
+                lines.append(' '.join(current_line))
+                current_line = [word]
+
+        # Add last line if not empty
+        if current_line:
+            lines.append(' '.join(current_line))
+
+        return '\n'.join(lines)
+
+    def write_system_message(self, **kwargs) -> str:
+        """Writes agent system messages
+
+        kwargs are specific to population synthesis dataset
+
+        Returns:
+            str: _description_
+        """
+        rendered_msg = self.system_message_template.render(**kwargs, _all_args = kwargs, verbose_debug = self.verbose_debug, shuffle = self.shuffle)
+        if self.wrap is not None:
+            return self._wrap_text(rendered_msg, self.wrap)
+        else:
+            return rendered_msg[1:] # there is an extra space on intro to make shuffling work
 
 
 if __name__ == "__main__":
