@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Any, Optional
 import pandas as pd
 import geopandas as gpd
 import random
@@ -172,7 +172,7 @@ def puma_locations(config_folder: str) -> Dict[str, List[str]]:
     return puma_locations
 
 
-def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dict[any, any]) -> Dict[str, str]:
+def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dict[Any, Any]) -> Dict[str, str]:
     """
     prepares a dictionary of encoded individual attributes and their
     descriptions (from the person.json and house.json files) for system prompt templating
@@ -191,7 +191,7 @@ def attribute_decoder_dict(encoded_attributes: Dict[str, str], decoder_dict: Dic
     return individual_attributes
 
 
-def get_attribute_descriptions(decoder_dict: Dict[any, any]) -> Dict[str, str]:
+def get_attribute_descriptions(decoder_dict: Dict[Any, Any]) -> Dict[str, str]:
     return {key+"_desc": decoder_dict[key]["description"] for key in decoder_dict.keys()}
 
 
@@ -226,10 +226,10 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     Returns:
         _type_: _description_
     """
-    try:
-        return random.choice(mapper.get(key))
-    except:
-        return "RANDOM_SELECT_MISSING"
+    values: Optional[List[str]] = mapper.get(key)
+    if values:
+        return random.choice(values)
+    return "RANDOM_SELECT_MISSING"
 
 
 def _decontext(phrase: str, sep: str = " (") -> str:
