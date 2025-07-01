@@ -195,6 +195,89 @@ def get_attribute_descriptions(decoder_dict: Dict[Any, Any]) -> Dict[str, str]:
     return {key+"_desc": decoder_dict[key]["description"] for key in decoder_dict.keys()}
 
 
+def _get_fiche_responses(excel_path: str):
+    # read df, get var name series and var response df
+    df = pd.read_excel(excel_path, sheet_name=1)
+
+    # get list of list of variables that corresponds to grouped response options
+    var_series = df.iloc[:,0]
+    var_series = var_series[~var_series.str.contains("FILTRE", na=False)]
+
+    # group on 'islands' of vars
+    mask =var_series.notna()
+    groups = (mask != mask.shift()).cumsum()
+    var_groups = [group.to_list() for key, group in var_series.groupby(groups) if group.notna().any()]
+
+    # concat and convert groups of vars to one list
+    formatted_var_groups = []
+    for group in var_groups:
+        if len(group) == 1 and not "," in group[0]:
+            formatted_var_groups.append(group)
+        elif len(group) == 1:
+            formatted_group = [var.strip() for var in group[0].split(",")]
+            formatted_var_groups.append(formatted_group)
+        elif len(group) >= 1:
+            formatted_vars = []
+            for subgroup in group:
+                formatted_subgroup = [var.strip() for var in subgroup.split(",")]
+                formatted_vars.extend(formatted_subgroup)
+            formatted_var_groups.append(formatted_vars)
+        else:
+            print(f"Group {group} not formatted")
+
+    # group response options - if correct should be the same
+    # length as formatted_var_groups
+    response_options_df = df.iloc[:,1:]
+
+    # get mask and index for each group
+    mask = response_options_df.iloc[:,1].notna()
+    group_id = (mask != mask.shift()).cumsum()
+    filtered_groups = response_options_df[mask].groupby(group_id)
+    chunks = [group for _, group in filtered_groups]
+
+    return formatted_var_groups, chunks
+
+
+def _df_to_dict(df: pd.DataFrame):
+    df = df.dropna()
+    try:
+        converted_dict = dict(zip(df["FICHE MENAGE"].astype(int).astype(str), df["Unnamed: 2"]))
+    except:
+        converted_dict = dict(zip(df["FICHE MENAGE"].astype(str), df["Unnamed: 2"]))
+    return converted_dict
+
+
+def process_EnqueteMenagesDeplacements(config_folder:str) -> dict:
+    data_path = Path(config_folder) / "data"
+    data_dictionary_path = data_path / "Dessin_fichier_Dictionnaire_variables_EDGT_AML_Face-a-Face_02082015.xls"
+    questions_path = Path(config_folder) / "questions.csv"
+
+    # questions df
+    questions_df = pd.read_csv(questions_path, header=None, names=["var", "question"])
+
+    # variables and responses from data dictionary
+    var_groups, chunks = _get_fiche_responses(data_dictionary_path)
+
+    formatted_responses = [_df_to_dict(chunk) for chunk in chunks]
+    question_vars = questions_df.iloc[:,0].to_list()
+
+    query_dictionary = {}
+    re_ignore = ["JOURDEP", "M12A"]
+
+    for group_index, var_group in enumerate(var_groups):
+        for var in var_group:
+            if var not in re_ignore:
+                var = re.sub(r'([A-Z]+\d+)(?:[A-Z]$|-\d+$)', r'\1', var)
+            if var in question_vars:
+                query_dictionary[var] = {
+                    "question": questions_df[questions_df["var"] == var]["question"].values[0],
+                    "dtype": "TEXT",
+                    "response": formatted_responses[group_index]
+                }
+
+    return query_dictionary
+
+
 def _decapitalize(sentence: str)->str:
     """
     Returns sentence without capitalization

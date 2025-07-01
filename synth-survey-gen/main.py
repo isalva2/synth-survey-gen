@@ -8,7 +8,7 @@ from tqdm import tqdm
 from typing import Dict, List
 from preprocess import process_MyDailyTravelData
 from synthesize import load_config, build_agents, SurveyAgent
-from survey import SurveyEngine, AgentResponsePackage
+from survey import SurveyEngine
 from postprocess import PostProcessMyDailyTravelResponse
 from types import SimpleNamespace
 from langroid.utils.configuration import settings

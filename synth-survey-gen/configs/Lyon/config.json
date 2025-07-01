@@ -1,0 +1,23 @@
+{
+    "model": {
+        "chat_model": "ollama/llama3.2:latest",
+        "chat_context_length": 16000,
+        "temperature": 0.5
+    },
+    "synthesis": {
+        "sample_size": 1000,
+        "subsample": 2,
+        "batch_size": 2,
+        "source": "FR",
+        "read_from_dataset": true,
+        "sim_year": 2015,
+        "system_message_header": "",
+        "system_message_footer": "",
+        "shuffle_response": true,
+        "shuffle_prompt": true,
+        "wrap": 80
+    },
+    "survey": {
+        "":null
+    }
+}

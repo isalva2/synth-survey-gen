@@ -9,6 +9,7 @@
         "subsample": 2,
         "batch_size": 2,
         "source": "US",
+        "read_from_dataset": false,
         "sim_year": 2019,
         "system_message_header": "We are role playing. Please assume the identity provided below and answer the questions to the best of your ability.\n\n",
         "system_message_footer": "\n\nThe date is July 17, 2019. Please answer the following travel survey questions",

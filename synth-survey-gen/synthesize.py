@@ -91,7 +91,15 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_
 
         return population_sample
 
-    return None
+    if source == "FR":
+        """
+        Read population sample from previous Lyon population synthesis
+        https://github.com/eqasim-org/ile-de-france
+        """
+
+        file_folder = data_folder / "lyon_FD_INDCVI_2021.csv"
+        df = pd.read_csv(file_folder, index_col=0, sep=";", dtype=str)
+        return df
 
 
 class _singleAnswerTool(lr.agent.ToolMessage):
