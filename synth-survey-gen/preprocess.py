@@ -278,6 +278,40 @@ def process_EnqueteMenagesDeplacements(config_folder:str) -> dict:
     return query_dictionary
 
 
+def process_insee_census(config_folder):
+    """
+    Reads INSEE census data description.
+    From: https://www.insee.fr/fr/statistiques/8268848
+    """
+    data_path = Path(config_folder) / "data"
+    df_path = data_path / "varmod_indcvi_2021.csv"
+    df = pd.read_csv(df_path, sep=";")
+
+    insee_variables = df.COD_VAR.unique()
+
+    mapper = {}
+    for var in insee_variables:
+
+        # get variable description
+        filtered_df = df[df.COD_VAR==var]
+        row_match = filtered_df.iloc[0]
+        description = row_match.LIB_VAR
+        dtype = row_match.TYPE_VAR
+
+        answers = dict(zip(
+            filtered_df["COD_MOD"],
+            filtered_df["LIB_MOD"]
+        ))
+
+        mapper[var] = {
+            "description": description,
+            "dtype": dtype,
+            "answers": answers
+        }
+
+    return mapper
+
+
 def _decapitalize(sentence: str)->str:
     """
     Returns sentence without capitalization
@@ -343,6 +377,7 @@ def _listify(items: List[str]) -> str:
     else:
         return f"{', '.join(items[:-1])}, and {items[-1]}"
 
+
 def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
 
     # globals -> to be derived from a config file eventually, ahahahah
@@ -365,6 +400,7 @@ def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str
     bio_template = env.get_template("bio.j2")
     bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
     return bio
+
 
 class SystemMessageGenerator:
     def __init__(self, config_folder: str, template: str, verbose_debug:bool = False, shuffle:bool = False, wrap: int|None = None):

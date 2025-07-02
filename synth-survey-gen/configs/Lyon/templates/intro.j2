@@ -1,0 +1,43 @@
+{#
+Age/gender
+#}
+{%- set AGE = YEAR - ANAI[7:]|int -%}
+{{'Vous êtes'}}
+{%- if SEXE == "Hommes" -%}
+    {{'un homme de'|wspace}}
+{%- elif SEXE == "Femmes" -%}
+    {{'une femme de'|wspace}}
+{%- endif -%}
+    {{AGED|wspace}}
+{{'qui habite'}}
+{%- if 'Ain' in DEPT -%}
+    {{"dans l'Ain"|wspace}}
+{%- elif 'Isère' in DEPT -%}
+    {{"en Isère"|wspace}}
+{%- elif 'Loire' in DEPT -%}
+    {{'dans la Loire'|wspace}}
+{%- elif 'Rhône' in DEPT -%}
+    {{'dans le Rhône'|wspace}}
+{%- endif -%}
+{{'.'}}
+{#
+Birth and ancestry
+#}
+{%- set dep_a = ["Guadeloupe", "Martinique", "Guyane", "La Réunion", "Saint-Pierre-et-Miquelon", "Mayotte", "Saint-Barthélemy", "Saint-Martin", "Corse-du-Sud", "Haute-Corse", "Paris", "Autres COM (Terres australes et antarctiques françaises, Wallis et Futuna, Polynésie Française, Nouvelle-Calédonie, Île de Clipperton)", "Étranger"] -%}
+{{'Vous êtes né en' + ANAI[7:]|wspace}}
+{%- if INAI == "À l'étranger" -%}
+    {{'hors de France'|wspace}}
+{%- elif dep_a | select('in', DNAI) | list | length>0 -%}|
+    {{'en' + (DNAI)}}
+{%- else -%}
+    {{'dans le'|wspace + DNAI|decontext|wspace}}
+
+{%- endif -%}
+{#
+{{DNAI}}
+{{DEPT}}
+{{INATC}}
+{{NAIDT}}
+{{ORIDT}}
+{{IMMI}}
+#}

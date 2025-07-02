@@ -24,7 +24,7 @@ def load_config(config_folder:str):
     return config.values()
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, random_state=0) -> pd.DataFrame | None:
+def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, read_from_dataset: bool|None = None, random_state=0) -> pd.DataFrame | None:
     """
     Returns a spatially proportional sample of the PUMS dataset based on CMAP My Daily Travel Survey respondent sample.
     """
@@ -96,10 +96,18 @@ def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_
         Read population sample from previous Lyon population synthesis
         https://github.com/eqasim-org/ile-de-france
         """
+        if read_from_dataset:
+            file_folder = data_folder / "lyon_FD_INDCVI_2021.csv"
+            df = pd.read_csv(file_folder, index_col=0, sep=";", dtype=str)
 
-        file_folder = data_folder / "lyon_FD_INDCVI_2021.csv"
-        df = pd.read_csv(file_folder, index_col=0, sep=";", dtype=str)
-        return df
+            # add "SERIALNO" field for tracking
+            df["SERIALNO"] = df.index
+
+            df["AGE_INT"] = df["AGED"].astype(int)
+            df = df[(df["AGE_INT"] > min_age) & (df["AGE_INT"] < max_age)]
+            df.drop(labels="AGE_INT", axis=1, inplace=True)
+
+            return df
 
 
 class _singleAnswerTool(lr.agent.ToolMessage):
@@ -257,9 +265,14 @@ class SurveyAgent(lr.ChatAgent):
 
 def build_agents(config_folder:str, n: int, source: str, subsample: int | None = None, **kwargs):
     model_config, synth_conf, _ = load_config(config_folder)
-    person = process_pums_data(config_folder)
     population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
-    ploc = puma_locations(config_folder)
+
+    if source == "US":
+        person = process_pums_data(config_folder=config_folder)
+        ploc = puma_locations(config_folder)
+    if source == "FR":
+        person = process_EnqueteMenagesDeplacements(config_folder=config_folder)
+        ploc = None
 
     MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2", **kwargs)
 
