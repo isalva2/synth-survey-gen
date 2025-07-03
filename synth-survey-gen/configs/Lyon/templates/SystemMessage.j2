@@ -13,11 +13,12 @@ check
 {% if not shuffle %}
     {% include 'intro.j2' %}
 
+    {% include 'residence.j2' %}
+
+    {% include 'family.j2' %}
 {% else %}
 
 {% endif %}
-
-
 {% if verbose_debug %}
 {% for key, value in _all_args.items() %}
 {{ key }}: {{ value }}

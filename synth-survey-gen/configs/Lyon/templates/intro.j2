@@ -1,5 +1,5 @@
 {#
-Age/gender
+Age birth location
 #}
 {%- set AGE = YEAR - ANAI[7:]|int -%}
 {{'Vous êtes'}}
@@ -9,35 +9,35 @@ Age/gender
     {{'une femme de'|wspace}}
 {%- endif -%}
     {{AGED|wspace}}
-{{'qui habite'}}
-{%- if 'Ain' in DEPT -%}
-    {{"dans l'Ain"|wspace}}
-{%- elif 'Isère' in DEPT -%}
-    {{"en Isère"|wspace}}
-{%- elif 'Loire' in DEPT -%}
-    {{'dans la Loire'|wspace}}
-{%- elif 'Rhône' in DEPT -%}
-    {{'dans le Rhône'|wspace}}
-{%- endif -%}
-{{'.'}}
-{#
-Birth and ancestry
-#}
-{%- set dep_a = ["Guadeloupe", "Martinique", "Guyane", "La Réunion", "Saint-Pierre-et-Miquelon", "Mayotte", "Saint-Barthélemy", "Saint-Martin", "Corse-du-Sud", "Haute-Corse", "Paris", "Autres COM (Terres australes et antarctiques françaises, Wallis et Futuna, Polynésie Française, Nouvelle-Calédonie, Île de Clipperton)", "Étranger"] -%}
-{{'Vous êtes né en' + ANAI[7:]|wspace}}
+{%- set a_locs = [
+    "La Réunion",
+    "Saint-Pierre-et-Miquelon",
+    "Saint-Barthélemy",
+    "Saint-Martin",
+    "Paris",
+    "Wallis et Futuna",
+    "Île de Clipperton"
+] -%}
+{%- set en_locs  = [
+    "Guadeloupe",
+    "Martinique",
+    "Guyane",
+    "Mayotte",
+    "Corse-du-Sud",
+    "Haute-Corse",
+    "Polynésie Française",
+    "Nouvelle-Calédonie"
+] -%}
+{{'née en'|wspace + ANAI[7:]|wspace}}
 {%- if INAI == "À l'étranger" -%}
     {{'hors de France'|wspace}}
-{%- elif dep_a | select('in', DNAI) | list | length>0 -%}|
-    {{'en' + (DNAI)}}
+{%- elif "Autres COM" in DNAI -%}
+    {{"dans une collectivité d'outre-mer"|wspace}}
+{%- elif a_locs | select('in', DNAI) | list | length > 0 -%}
+    {{'à'|wspace + DNAI|decontext|wspace}}
+{%- elif en_locs | select('in', DNAI) | list | length > 0 -%}
+    {{'en'|wspace + DNAI|decontext|wspace}}
 {%- else -%}
     {{'dans le'|wspace + DNAI|decontext|wspace}}
-
 {%- endif -%}
-{#
-{{DNAI}}
-{{DEPT}}
-{{INATC}}
-{{NAIDT}}
-{{ORIDT}}
-{{IMMI}}
-#}
+{{'.'}}

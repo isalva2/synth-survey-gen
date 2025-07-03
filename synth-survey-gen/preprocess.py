@@ -378,28 +378,32 @@ def _listify(items: List[str]) -> str:
         return f"{', '.join(items[:-1])}, and {items[-1]}"
 
 
-def write_individual_bio(attributes: Dict[str, str], descriptions: Dict[str, str], config_folder: str, **kwargs) -> str:
+def _fr_ANEMR_select(ANEMR_response: str) -> str:
+    """
+    Returns a formatted string resposne
+    to the INSEE survey question ANEMR:
 
-    # globals -> to be derived from a config file eventually, ahahahah
-    year = "2019"
-    month = "March"
-    day = "25"
+    'Ancienneté d'emménagement dans le logement (regroupée)'
 
-    env_path = Path(config_folder) / "templates"
-    env = Environment(
-        loader=FileSystemLoader(env_path),
-    )
-    env.trim_blocks = True
-    env.lstrip_blocks=True
-    env.filters["desentence"] = _decapitalize
-    env.filters["indefinite"] = _indefinite
-    env.filters["wspace"] = _wspace
-    env.filters["random_s"] = _random_select
-    env.filters["decontext"] = _decontext
+    Args:
+        ANEMR_response (str): Response from ANEMR variable
 
-    bio_template = env.get_template("bio.j2")
-    bio = bio_template.render(**attributes, **descriptions, **kwargs, YEAR = year)
-    return bio
+    Returns:
+        str: formatted string for templating
+    """
+
+    years = [int(num) for num in re.findall(r"-?\d+", ANEMR_response)]
+
+    if not years:
+        return "" # Hors logement odrinaire - atypical situation
+    elif years and years[0] == 2:
+        return "depuis moins de 2 ans"
+    elif years[0] == 70:
+        return "depuis plus de 70 ans"
+    else:
+        min, max = years
+        selected_year = random.randint(min, max)
+        return f"depuis {selected_year} ans"
 
 
 class SystemMessageGenerator:
@@ -430,6 +434,7 @@ class SystemMessageGenerator:
         self.env.filters["to_currency"]        = _to_currency
         self.env.filters["randomize_includes"] = _random_includes
         self.env.filters["listify"]            = _listify
+        self.env.filters["ANEMR_select"]       = _fr_ANEMR_select
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)
