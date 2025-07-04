@@ -406,6 +406,23 @@ def _fr_ANEMR_select(ANEMR_response: str) -> str:
         return f"depuis {selected_year} ans"
 
 
+def _fr_mariage(SEXE: str) -> str:
+    """
+    Returns appropriate partner of married couple
+    """
+
+    if SEXE == "Hommes":
+        return "épouse"
+    else:
+        return "mari"
+
+def _fr_couple(SEXE: str) -> str:
+    if SEXE == "Hommes":
+        return "petit amie"
+    else:
+        return "petit ami"
+
+
 class SystemMessageGenerator:
     def __init__(self, config_folder: str, template: str, verbose_debug:bool = False, shuffle:bool = False, wrap: int|None = None):
         """
@@ -435,6 +452,8 @@ class SystemMessageGenerator:
         self.env.filters["randomize_includes"] = _random_includes
         self.env.filters["listify"]            = _listify
         self.env.filters["ANEMR_select"]       = _fr_ANEMR_select
+        self.env.filters["SEXE_mariage"]       = _fr_mariage
+        self.env.filters["SEXE_couple"]        = _fr_couple
 
         # get system message template
         self.system_message_template = self.env.get_template(self.template)

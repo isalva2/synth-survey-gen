@@ -3,7 +3,7 @@
 Residence
 
 #}
-{{'Vous habitez'}}
+{{'Tu habites'}}
 {%- if 'Ain' in DEPT -%}
     {{"dans l'Ain"|wspace}}
 {%- elif 'Isère' in DEPT -%}
@@ -18,4 +18,4 @@ Residence
 {%- elif (TYPL == 'Appartement') or ('fortune' in TYPL) or ('Hors' in TYPL)-%}
     {{'dans un'|wspace + TYPL|desentence|wspace}}
 {%- endif -%}
-{{ANEMR|ANEMR_select|wspace if not ' ' else ''+ "."}}{# bumper for no response from filter#}
+{{ANEMR|ANEMR_select|wspace if not ' ' else ''+ "."}}
