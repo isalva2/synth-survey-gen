@@ -12,7 +12,7 @@ Age/gender
     {%- endif -%}
 {%- endif -%}
 {# Ancestry #}
-{%- if ANC1P in ['Not reported']  -%}
+{%- if (ANC1P in ['Not reported']) or (ANC1P == "MISSING") -%}
 {{''}}
 {%- else -%}
 {{' of' + ANC1P|wspace + ' ancestry'}}

@@ -2,29 +2,31 @@
 Occupation
 #}
 {# Student and educational attainment #}
-{{'Your highest educational attainment is '|wspace}}
-{%- if 'Grade' in SCHL or SCHL.startswith('1') -%}
-    {{SCHL}}
-{%- elif 'Professional' in SCHL -%}
-    {{'a Professional degree'}}
-{%- else -%}
-    {{SCHL|indefinite}}
+{%- if not 'No schooling completed' in SCL -%}
+    {{'Your highest educational attainment is '|wspace}}
+    {%- if 'Grade' in SCHL or SCHL.startswith('1') -%}
+        {{SCHL}}
+    {%- elif 'Professional' in SCHL -%}
+        {{'a Professional degree'}}
+    {%- else -%}
+        {{SCHL|indefinite}}
+    {%- endif -%}
+    {%- if 'degree' in SCHL and FOD1P != 'MISSING' -%}
+        {{' in ' + FOD1P}}
+    {%- endif -%}
+    {%- if 'public' in SCH  -%}
+        {{' and you attend a public college'}}
+    {%- elif 'private' in SCH -%}
+        {{' and you attend a private college'}}
+    {%- endif -%}
+    {# Check student level #}
+    {%- if 'undergraduate' in SCHG -%}
+        {{' as an undergraduate student'}}
+    {%- elif 'professional' in SCHG -%}
+        {{' as graduate or professional student'}}
+    {%- endif -%}
+    {{'. '}}
 {%- endif -%}
-{%- if 'degree' in SCHL and FOD1P != 'MISSING' -%}
-    {{' in ' + FOD1P}}
-{%- endif -%}
-{%- if 'public' in SCH  -%}
-    {{' and you attend a public college'}}
-{%- elif 'private' in SCH -%}
-    {{' and you attend a private college'}}
-{%- endif -%}
-{# Check student level #}
-{%- if 'undergraduate' in SCHG -%}
-    {{' as an undergraduate student'}}
-{%- elif 'professional' in SCHG -%}
-    {{' as graduate or professional student'}}
-{%- endif -%}
-{{'.'}}
 {# end student #}
 {# Employment/Military Service#}
 {# Not in military and describe place of employment#}
