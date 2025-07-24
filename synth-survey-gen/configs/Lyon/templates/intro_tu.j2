@@ -29,7 +29,12 @@ Age birth location
     "Polynésie Française",
     "Nouvelle-Calédonie"
 ] -%}
-{{'né(e) en'|wspace + ANAI[7:]|wspace}}
+{%- if SEXE == "Hommes" -%}
+    {{'né'|wspace}}
+{%- elif SEXE == "Femmes" -%}
+    {{'née'|wspace}}
+{%- endif -%}
+{{ANAI[7:]|wspace}}
 {%- if INAI == "À l'étranger" -%}
     {{'hors de France'|wspace}}
 {%- elif "Autres COM" in DNAI -%}

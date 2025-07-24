@@ -26,7 +26,7 @@ Family
     {%- else -%}
         {%- set NO_ENFANT = SFM[45:54] -%}
         {{'et tes'|wspace + NO_ENFANT|wspace}}
-    {% endif %}
+    {%- endif -%}
 {%- elif 'Famille principale un couple sans enfant avec' in SFM -%}
     {%- if 'Marié(e)' in STAT_CONJ -%}
         {{'Tu vis avec ton' + SEXE|SEXE_mariage|wspace}}
@@ -46,7 +46,7 @@ Family
     {%- else -%}
         {%- set NO_ENFANT = NENFR[:8] -%}
         {{', tes'|wspace + NO_ENFANT}} {# fix this eventually #}
-    {% endif %}
+    {%- endif -%}
     {%- set calc = NPERR[0]|int - 2 - NO_ENFANT[0]|int -%}
     {%- set NO_ISOLES = 1 if calc == 0 else calc -%}
     {{'et'|wspace + NO_ISOLES|string|wspace + 'autre(s) membre(s) de ta famille'|wspace}}
