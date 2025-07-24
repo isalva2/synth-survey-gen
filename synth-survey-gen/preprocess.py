@@ -18,6 +18,7 @@ that needs to be done manually.
 # set for US currency atm
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8") # this will be a problem in the future
 
+
 def process_MyDailyTravelData(config_folder: str):
     def value_to_int(x):
         try:
@@ -111,7 +112,6 @@ def process_MyDailyTravelData(config_folder: str):
     query_dictionary = {**introduction, **query_dictionary}
 
     return query_dictionary
-
 
 
 def process_pums_data(config_folder: str, person: bool = True, write: str | None = None) -> Dict[str, str] | None:
@@ -255,6 +255,16 @@ def process_EnqueteMenagesDeplacements(config_folder:str) -> dict:
     # questions df
     questions_df = pd.read_csv(questions_path, header=None, names=["var", "question"])
 
+    # numeric vars
+    numeric_vars = [
+        "M6", "M9", "M10", "M14",
+        "M18", "M21", "M22", "P4",
+        "D1", "D3", "D4", "D7", "D8",
+        "D9", "D10", "T1", "T2", "T4",
+        "T5", "T6", "T7", "T8", "T8a",
+        "T8b", "T11"]
+
+
     # variables and responses from data dictionary
     var_groups, chunks = _get_fiche_responses(data_dictionary_path)
 
@@ -271,9 +281,17 @@ def process_EnqueteMenagesDeplacements(config_folder:str) -> dict:
             if var in question_vars:
                 query_dictionary[var] = {
                     "question": questions_df[questions_df["var"] == var]["question"].values[0],
-                    "dtype": "TEXT",
+                    "dtype": "TEXT" if var not in numeric_vars else "NUMERIC",
                     "response": formatted_responses[group_index]
                 }
+
+    # add intro
+    query_dictionary["INTRO"] = {
+        "question": "Parlez-nous un peu de vous.",
+        "dtype": "TEXT",
+        "response": {
+            "-8": "I don't know",
+            "-7": "I prefer not to answer",}}
 
     return query_dictionary
 
@@ -310,6 +328,13 @@ def process_insee_census(config_folder):
         }
 
     return mapper
+
+
+def generate_questions(config_folder: str, source: str = "US"):
+    if source == "US":
+        return process_MyDailyTravelData(config_folder=config_folder)
+    elif source == "FR":
+        return process_EnqueteMenagesDeplacements(config_folder=config_folder)
 
 
 def _decapitalize(sentence: str)->str:
@@ -349,12 +374,17 @@ def _random_select(key: str, mapper: Dict[str, List[str]]):
     return "RANDOM_SELECT_MISSING"
 
 
-def _decontext(phrase: str, sep: str = " (") -> str:
+def _decontext(phrase: str, seps: list[str] = [" (", " ;"]) -> str:
     """
-    Removes anything in parentheses (default behavior)
+    Removes anything in phrase after the first occurrence of any separator in `seps`.
     """
-    if sep in phrase: return phrase.split(sep, maxsplit=1)[0]
-    else: return phrase
+    first_split_index = len(phrase)
+    for sep in seps:
+        if sep in phrase:
+            idx = phrase.index(sep)
+            if idx < first_split_index:
+                first_split_index = idx
+    return phrase[:first_split_index]
 
 
 def _to_currency(val: str | float, symbol: bool = True, grouping: bool = True):

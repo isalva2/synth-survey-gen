@@ -1,6 +1,6 @@
 {
     "model": {
-        "chat_model": "ollama/llama3.2:latest",
+        "chat_model": "ollama/llama3.1:latest",
         "chat_context_length": 16000,
         "temperature": 0.5
     },
@@ -11,8 +11,8 @@
         "source": "FR",
         "read_from_dataset": true,
         "sim_year": 2015,
-        "system_message_header": "",
-        "system_message_footer": "",
+        "system_message_header": "Nous jouons un rôle. Veuillez adopter l'identité ci-dessous et respecter le personnage assigné. Veuillez répondre aux questions suivantes dans la mesure où votre personnage le permettrait raisonnablement.\n\n",
+        "system_message_footer": "\n\nLa date est le 17 juillet 2015. Veuillez répondre aux questions suivantes du sondage sur les voyages.",
         "shuffle_response": true,
         "shuffle_prompt": true,
         "wrap": 80

@@ -20,8 +20,13 @@ check
     {% include 'occupation_tu.j2' %}
 
 {% else %}
+    {% set sections = ['intro_tu.j2', 'residence_tu.j2', 'family_tu.j2', 'occupation_tu.j2'] %}
+    {% for section in sections|randomize_includes %}
+        {% include section %}
+    {% endfor %}
 
 {% endif %}
+
 {% if verbose_debug %}
 {% for key, value in _all_args.items() %}
 {{ key }}: {{ value }}

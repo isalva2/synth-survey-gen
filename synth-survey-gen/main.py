@@ -28,8 +28,7 @@ def run_survey(result_queue: Queue,
     questions: Dict,
     agents: List[SurveyAgent],
     batch_size: int,
-    shuffle_response: bool
-    ):
+    shuffle_response: bool):
     try:
         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
             batch = agents[i: i+batch_size]
@@ -86,10 +85,16 @@ def main():
     shuffle_prompt = synth.shuffle_response
     wrap = synth.wrap
 
-    questions = process_MyDailyTravelData(config_folder)
-    agents, population_sample = build_agents(config_folder, n=n, subsample=subsample, source=source, shuffle=shuffle_prompt, wrap=wrap)
-    population_sample.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "population_sample.csv"))), index=False)
+    questions = process_MyDailyTravelData(config_folder) # needs source config
+    agents, population_sample = build_agents(
+        config_folder,
+        n=n,
+        subsample=subsample,
+        source=source,
+        shuffle=shuffle_prompt,
+        wrap=wrap)
 
+    # needs source config
     postprocessor = PostProcessMyDailyTravelResponse(
         config_folder,
         batch_size=batch_size,
@@ -125,8 +130,10 @@ def main():
 
     write_success = postprocessor.write_results(RUN_FOLDER, date_str)
 
+    # logging
+    population_sample.to_csv(os.path.join(RUN_FOLDER, "_".join((date_str, "population_sample.csv"))), index=False)
+
     log_path = os.path.join(RUN_FOLDER, "log.txt")
-    chat_model = model_conf["chat_model"]
     with open(log_path, "w") as f:
         f.write(f"Start Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}\n")
         f.write(f"End Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(end_time))}\n")

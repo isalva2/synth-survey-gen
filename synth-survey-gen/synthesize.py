@@ -24,7 +24,7 @@ def load_config(config_folder:str):
     return config.values()
 
 
-def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, read_from_dataset: bool|None = None, random_state=0) -> pd.DataFrame | None:
+def synthesize_population(config_folder:str, n_sample:int, source:str="US", min_age: int|None = None, max_age: int|None = None, read_from_dataset: bool|None = True, random_state=0) -> pd.DataFrame | None:
     """
     Returns a spatially proportional sample of the PUMS dataset based on CMAP My Daily Travel Survey respondent sample.
     """
@@ -380,11 +380,13 @@ def build_agents(config_folder:str, n: int, source: str, subsample: int | None =
     model_config, synth_conf, _ = load_config(config_folder)
     population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
 
+    assert isinstance(population_sample, pd.DataFrame)
+
     if source == "US":
         person = process_pums_data(config_folder=config_folder)
         ploc = puma_locations(config_folder)
     if source == "FR":
-        person = process_EnqueteMenagesDeplacements(config_folder=config_folder)
+        person = process_insee_census(config_folder=config_folder)
         ploc = None
 
     MsgGen = SystemMessageGenerator(config_folder, "SystemMessage.j2", **kwargs)

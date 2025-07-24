@@ -3,6 +3,7 @@
 Family
 
 #}
+{{' '}}
 {%- if 'vivant seule' in SFM -%}
     {{'Tu vis seul'}}
 {%- elif 'Une famille principale monoparentale' in SFM -%}
@@ -44,7 +45,7 @@ Family
         {{''}}
     {%- else -%}
         {%- set NO_ENFANT = NENFR[:8] -%}
-        {{', tes'|wspace + NO_ENFANT}}
+        {{', tes'|wspace + NO_ENFANT}} {# fix this eventually #}
     {% endif %}
     {%- set calc = NPERR[0]|int - 2 - NO_ENFANT[0]|int -%}
     {%- set NO_ISOLES = 1 if calc == 0 else calc -%}
@@ -65,3 +66,4 @@ Family
 {%- else -%}
     {{"Tu vis avec d'autres personnes"}}
 {%- endif -%}
+{{'.'}}
