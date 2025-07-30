@@ -21,7 +21,7 @@ class ProcessSurveyResponse:
             self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
             self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
         else:
-            self.multiple_choice_cols = None
+            self.multiple_choice_cols = []
             questions_df = pd.read_csv(self.data_path / "../questions.csv").T
             self.ground_truth_df = questions_df
 
