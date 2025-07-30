@@ -85,7 +85,7 @@ def main():
     shuffle_prompt = synth.shuffle_response
     wrap = synth.wrap
 
-    questions = generate_questions(config_folder) # needs source config
+    questions = generate_questions(config_folder, source=source) # needs source config
     agents, population_sample = build_agents(
         config_folder,
         n=n,
