@@ -427,6 +427,22 @@ def build_agents(config_folder:str, n: int, source: str, subsample: int | None =
         agent.enable_message(_discreteNumericTool)
         agents.append(agent)
 
+    """
+    Must manually change tool use formatting instructions to FRENCH
+    https://github.com/langroid/langroid/blob/main/langroid/agent/chat_agent.py
+    lines 178 and 180.
+    """
+
+    # these must be changed to reflect new agent tools
+    fr_system_tool_instructions = '=== DIRECTIVES SUR L\'UTILISATION DE CERTAINS OUTILS/FONCTIONS ===\n            TOOL: singleAnswerResponse:\n                        DIRECTIVES: \n        IMPORTANT: Lors de l\'utilisation de cet outil ou de tout autre outil/fonction, vous DEVEZ inclure un \n        `request` champ et le définir égal au NOM DE L\'OUTIL/FONCTION que vous avez l\'intention d\'utiliser.\n\n\n\n\nTOOL: multipleAnswerResponse:\n                        DIRECTIVES: \n        IMPORTANT: Lors de l\'utilisation de cet outil ou de tout autre outil/fonction, vous DEVEZ inclure un \n        `request` champ et le définir égal au NOM DE L\'OUTIL/FONCTION que vous avez l\'intention d\'utiliser.\n\n\n\n\nTOOL: discreteNumericResponse:\n                        DIRECTIVES: \n        IMPORTANT: Lors de l\'utilisation de cet outil ou de tout autre outil/fonction, vous DEVEZ inclure un \n        `request` champ et le définir égal au NOM DE L\'OUTIL/FONCTION que vous avez l\'intention d\'utiliser.\n\n\n\n'
+
+    fr_system_tool_format_instructions = '\n=== TOUS LES OUTILS DISPONIBLES et LEURS INSTRUCTIONS DE FORMAT ===\nVous avez accès aux OUTILS suivants pour accomplir votre tâche :\n\nTOOL: singleAnswerResponse\n            OBJECTIF: \n        Répondre avec le <TEXT> de la réponse que vous spécifiez.\n\n            FORMAT JSON: {\n    "type": "object",\n    "properties": {\n        "request": {\n            "default": "singleAnswerResponse",\n            "type": "string"\n        },\n        "TEXT": {\n            "type": "integer"\n        }\n    },\n    "required": [\n        "TEXT",\n        "request"\n    ],\n    "request": {\n        "enum": [\n            "singleAnswerResponse"\n        ],\n        "type": "string"\n    }\n}\n\n\n\nTOOL: multipleAnswerResponse\n            OBJECTIF: \n    Répondre avec une liste de <TEXT> des réponses qui s\'appliquent à votre réponse.\n\n            FORMAT JSON: {\n    "type": "object",\n    "properties": {\n        "request": {\n            "default": "multipleAnswerResponse",\n            "type": "string"\n        },\n        "TEXT": {\n            "type": "array",\n            "minItems": 1,\n            "maxItems": 1,\n            "items": [\n                {\n                    "type": "integer"\n                }\n            ]\n        }\n    },\n    "required": [\n        "TEXT",\n        "request"\n    ],\n    "request": {\n        "enum": [\n            "multipleAnswerResponse"\n        ],\n        "type": "string"\n    }\n}\n\n\n\nTOOL: discreteNumericResponse\n            OBJECTIF: \n        Répondre avec une valeur <NUMERIC> appropriée lorsque aucune des réponses possibles n’a de sens à appliquer.\n\n            FORMAT JSON: {\n    "type": "object",\n    "properties": {\n        "request": {\n            "default": "discreteNumericResponse",\n            "type": "string"\n        },\n        "NUMERIC": {\n            "type": "integer"\n        }\n    },\n    "required": [\n        "NUMERIC",\n        "request"\n    ],\n    "request": {\n        "enum": [\n            "discreteNumericResponse"\n        ],\n        "type": "string"\n    }\n}\n\n\n\nLorsqu’un des OUTILS ci-dessus est applicable, vous devez exprimer votre \ndemande par "TOOL :" suivi de la requête dans le format ci-dessus.\n'
+
+    if source == "FR":
+        for agent in agents:
+            agent.system_tool_instructions = fr_system_tool_instructions
+            agent.system_tool_format_instructions = fr_system_tool_format_instructions
+
     return agents, population_sample
 
 
