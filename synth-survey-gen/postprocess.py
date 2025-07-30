@@ -5,14 +5,15 @@ import copy
 import pandas as pd
 import json
 
-class PostProcessMyDailyTravelResponse:
-    def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, date_str: str):
+class ProcessSurveyResponse:
+    def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, source: str, date_str: str):
         self.data_path = Path(config_folder) / "data"
         self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
         self.batch_size = batch_size
         self.n_batches = 0
         self.batches_written = 1
         self.RUN_FOLDER = RUN_FOLDER
+        self.source = source
         self.date_str = date_str
         self._prepare_dataset()
 
@@ -25,7 +26,10 @@ class PostProcessMyDailyTravelResponse:
         self.synthetic_asdict = []
         self.batch_asdict = []
 
-        self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
+        if self.source == "US":
+            self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
+        else:
+            self.multiple_choice_cols = None
 
     def serialize_response(self, agent_response: AgentResponsePackage):
         response_dict = asdict(agent_response)
@@ -35,7 +39,7 @@ class PostProcessMyDailyTravelResponse:
         # get agent id and system_message
         new_row["agent_id"]       = agent_response.agent_id
         new_row["serial_number"]  = agent_response.serial_number
-        new_row["agent_bio"]            = agent_response.agent_bio
+        new_row["agent_bio"]      = agent_response.agent_bio
 
         # Loop through the logic flow and encoded responses to build the new row
         for col, val in zip(response_cols, response_dict["encoded_responses"]):

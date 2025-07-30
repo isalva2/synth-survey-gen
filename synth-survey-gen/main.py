@@ -6,10 +6,10 @@ import time
 from queue import Queue, Empty
 from tqdm import tqdm
 from typing import Dict, List
-from preprocess import process_MyDailyTravelData
+from preprocess import generate_questions
 from synthesize import load_config, build_agents, SurveyAgent
 from survey import SurveyEngine
-from postprocess import PostProcessMyDailyTravelResponse
+from postprocess import ProcessSurveyResponse
 from types import SimpleNamespace
 from langroid.utils.configuration import settings
 
@@ -45,7 +45,7 @@ def run_survey(result_queue: Queue,
 def postprocess_response(
     result_queue: Queue,
     stop_event: threading.Event,
-    postprocessor: PostProcessMyDailyTravelResponse,
+    postprocessor: ProcessSurveyResponse,
     date_str: str):
     while not stop_event.is_set() or not result_queue.empty():
         try:
@@ -85,7 +85,7 @@ def main():
     shuffle_prompt = synth.shuffle_response
     wrap = synth.wrap
 
-    questions = process_MyDailyTravelData(config_folder) # needs source config
+    questions = generate_questions(config_folder) # needs source config
     agents, population_sample = build_agents(
         config_folder,
         n=n,
@@ -95,10 +95,11 @@ def main():
         wrap=wrap)
 
     # needs source config
-    postprocessor = PostProcessMyDailyTravelResponse(
+    postprocessor = ProcessSurveyResponse(
         config_folder,
         batch_size=batch_size,
         RUN_FOLDER=RUN_FOLDER,
+        source=source,
         date_str=date_str)
 
     result_queue = Queue()
