@@ -22,7 +22,7 @@ class ProcessSurveyResponse:
             self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
         else:
             self.multiple_choice_cols = []
-            questions_df = pd.read_csv(self.data_path / "../questions.csv").T
+            questions_df = pd.read_csv(self.data_path / "../questions.csv", index_col=None).T
             self.ground_truth_df = questions_df
 
         ground_truth_cols = self.ground_truth_df.columns
