@@ -8,7 +8,6 @@ import json
 class ProcessSurveyResponse:
     def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, source: str, date_str: str):
         self.data_path = Path(config_folder) / "data"
-        self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
         self.batch_size = batch_size
         self.n_batches = 0
         self.batches_written = 1
@@ -18,6 +17,14 @@ class ProcessSurveyResponse:
         self._prepare_dataset()
 
     def _prepare_dataset(self):
+        if self.source == "US":
+            self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
+            self.ground_truth_df = pd.read_csv(self.data_path / "person.csv", low_memory=False)
+        else:
+            self.multiple_choice_cols = None
+            questions_df = pd.read_csv(self.data_path / "../questions.csv").T
+            self.ground_truth_df = questions_df
+
         ground_truth_cols = self.ground_truth_df.columns
         self.synthetic_columns = ["agent_id", "serial_number", "agent_bio", "intro"]
         self.synthetic_columns.extend(ground_truth_cols)
@@ -25,11 +32,6 @@ class ProcessSurveyResponse:
         self.batch_dataset = copy.deepcopy(self.synthetic_dataset)
         self.synthetic_asdict = []
         self.batch_asdict = []
-
-        if self.source == "US":
-            self.multiple_choice_cols = ["NOGOWHY2", "TRAVELDATAMODE", "DTYPE"]
-        else:
-            self.multiple_choice_cols = None
 
     def serialize_response(self, agent_response: AgentResponsePackage):
         response_dict = asdict(agent_response)
@@ -68,7 +70,6 @@ class ProcessSurveyResponse:
         self.batch_asdict.append(response_dict)
 
         self._batch_write_results()
-
 
     def _coerce_to_int(self, value):
         """
