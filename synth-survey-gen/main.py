@@ -123,6 +123,8 @@ def main():
     wrap = synth.wrap
 
     questions = generate_questions(config_folder, source=source) # needs source config
+
+    # add shuffle here please
     agents, population_sample = build_agents(
         config_folder,
         n=n,
