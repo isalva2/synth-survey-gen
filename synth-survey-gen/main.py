@@ -22,22 +22,59 @@ RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
 
 settings.quiet = True
 
-def run_survey(result_queue: Queue,
+# def run_survey(result_queue: Queue,
+#     stop_event: threading.Event,
+#     survey_conf: Dict,
+#     questions: Dict,
+#     agents: List[SurveyAgent],
+#     batch_size: int,
+#     shuffle_response: bool):
+#     try:
+#         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
+#             batch = agents[i: i+batch_size]
+#             SE = SurveyEngine(survey_conf, questions, batch, shuffle_response)
+#             SE.run()
+#             for r in SE.results():
+#                 result_queue.put(r)
+#     except Exception as e:
+#         print(f"Exception: {e}")
+#     finally:
+#         stop_event.set()
+
+def run_survey(
+    result_queue: Queue,
     stop_event: threading.Event,
     survey_conf: Dict,
     questions: Dict,
     agents: List[SurveyAgent],
     batch_size: int,
-    shuffle_response: bool):
+    shuffle_response: bool,
+    timeout_per_batch: float = 60.0  # seconds
+):
     try:
         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
             batch = agents[i: i+batch_size]
-            SE = SurveyEngine(survey_conf, questions, batch, shuffle_response)
-            SE.run()
-            for r in SE.results():
+
+            def batch_runner():
+                nonlocal batch_results
+                SE = SurveyEngine(survey_conf, questions, batch, shuffle_response)
+                SE.run()
+                batch_results = SE.results()
+
+            batch_results = []
+            thread = threading.Thread(target=batch_runner)
+            thread.start()
+            thread.join(timeout=timeout_per_batch)
+
+            if thread.is_alive():
+                print(f"Batch {i // batch_size} timed out. Skipping.")
+                continue  # skip to next batch
+
+            for r in batch_results:
                 result_queue.put(r)
+
     except Exception as e:
-        print(f"Exception: {e}")
+        print(f"Exception in run_survey: {e}")
     finally:
         stop_event.set()
 
