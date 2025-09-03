@@ -126,5 +126,35 @@
             "TRAVELDATAUSE": "TRAVELDATADEVICE",
             "TRAVELDATADEVICE": "TRAVELDATAMODE"
         }
+    },
+    "analysis": {
+        "categorical_variables": [
+            "LIC",
+            "WKSTAT",
+            "WMODE",
+            "SMODE",
+            "STUDE",
+            "WPLACE"
+        ],
+        "continuous_variables": [
+            "AGE",
+            "WRKHRS",
+            "JOBS"
+        ],
+        "multiple_choice": [
+            "DTYPE",
+            "DTYPE_1",
+            "DTYPE_2",
+            "DTYPE_3",
+            "DTYPE_4",
+            "DTYPE_5",
+            "DTYPE_6",
+            "DTYPE_SE",
+            "DTYPE_RF",
+            "DTYPE_DK"
+        ],
+        "exclude": [
+            "INTRO"
+        ]
     }
 }

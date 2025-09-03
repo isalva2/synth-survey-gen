@@ -170,6 +170,7 @@ cython_debug/
 
 # project
 run/
+.run*
 *.html
 
 # keep data out of main repo
@@ -178,6 +179,7 @@ working/
 
 # anything related to testing
 test*
+.test*
 
 # LLM
 logs/

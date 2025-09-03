@@ -377,7 +377,7 @@ class SurveyAgent(lr.ChatAgent):
 
 
 def build_agents(config_folder:str, n: int, source: str, subsample: int | None = None, **kwargs):
-    model_config, synth_conf, _ = load_config(config_folder)
+    model_config, synth_conf, _, _ = load_config(config_folder)
     population_sample = synthesize_population(config_folder=config_folder, n_sample=subsample, source=source, min_age=18, max_age=65)
 
     assert isinstance(population_sample, pd.DataFrame)

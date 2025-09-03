@@ -111,7 +111,7 @@ def main():
 
     os.makedirs(RUN_FOLDER, exist_ok=True)
 
-    model_conf, synth_conf, survey_conf = load_config(config_folder)
+    model_conf, synth_conf, survey_conf, analysis = load_config(config_folder)
 
     synth = SimpleNamespace(**synth_conf)
     n = synth.sample_size

@@ -4,7 +4,7 @@ from graphviz import Digraph
 from pathlib import Path
 
 def survey_logic_viz(config_folder: str, write_to_disk: bool = False, output_path: str = 'flowchart'):
-    _, _, survey_conf = load_config(config_folder)
+    _, _, survey_conf, _ = load_config(config_folder)
 
     logic = survey_conf["logic"]
     dot = Digraph(format='png')

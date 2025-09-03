@@ -1,9 +1,13 @@
+from synthesize import load_config
+from preprocess import generate_questions
 from survey import AgentResponsePackage
 from pathlib import Path
 from dataclasses import asdict
+import matplotlib.pyplot as plt
 import copy
 import pandas as pd
 import json
+import re
 
 class ProcessSurveyResponse:
     def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, source: str, date_str: str):
@@ -123,6 +127,80 @@ class ProcessSurveyResponse:
 
         # iterate n_batches written
         self.n_batches += 1
+
+
+class ResultsWriter:
+    def __init__(self, config_folder: str, RUN_FOLDER: str, source:str="US"):
+        self.config_folder = config_folder
+        self.data_path = Path(config_folder) / "data"
+        self.RUN_PATH = Path(RUN_FOLDER)
+        self.source = source
+        _, _, _, self.analysis_conf = load_config(config_folder=config_folder)
+        self._load_datasets()
+        self._clean_test_datasets()
+
+
+    def _load_datasets(self):
+        # get timestamp from run folder name
+        SEP = "_"
+        self.timestamp = SEP.join(self.RUN_PATH.name.split(SEP)[-2:])
+
+        # check if sim is complete
+        if any(self.RUN_PATH.glob(self.timestamp+"_results.*")):
+            self.test_dataset = pd.read_csv(self.RUN_PATH / (self.timestamp+"_results.csv"))
+        else:
+            batches = self.RUN_PATH.glob("batch_*_results.csv")
+            self.test_dataset = pd.concat([pd.read_csv(batch) for batch in batches], ignore_index=True)
+
+        # load true dataset
+        if self.source == "US":
+            self.true_dataset = pd.read_csv(self.data_path / "person.csv", low_memory=False)
+
+    def _clean_test_datasets(self):
+        # get survey variables
+        self.questions = generate_questions(config_folder=self.config_folder)
+        self.survey_vars = list(self.questions.keys())
+        self.survey_vars_lower = [var.lower() for var in self.survey_vars]
+
+        # drop all Nan cols
+        self.test_dataset = self.test_dataset.dropna(axis=1, how="all")
+
+        # convert all cols to int except multiple choice cols
+        multiple_choice_cols_lower = [var.lower() for var in self.analysis_conf.get("multiple_choice")]
+        exclude_cols_lower = [var.lower() for var in self.analysis_conf.get("exclude")]
+        test_cols = self.test_dataset.columns
+        int_cols = []
+        for col in test_cols:
+            if \
+                col in self.survey_vars_lower and \
+                col not in multiple_choice_cols_lower and \
+                col not in exclude_cols_lower:
+                    int_cols.append(col)
+                    self.test_dataset[col] = self.test_dataset[col].apply(_extract_first_int)
+        self.test_dataset[int_cols] = self.test_dataset[int_cols].astype("Int64")
+
+    def _group_dataset(self, var: str, dataset: pd.DataFrame) -> pd.DataFrame:
+        """
+        get sums and percentages of responded survey value
+        exclude var > 0 for innapropriate vars
+        """
+        grouped = dataset.groupby(by=var)[var].value_counts().reset_index()
+        grouped = grouped[grouped[var] > 0].reset_index(drop=True)
+        grouped["share"] = grouped["count"] / grouped["count"].sum()
+        return grouped
+
+def
+
+
+def _extract_first_int(x):
+    if isinstance(x, str):
+        m = re.search(r"\d+", x)
+        if m:
+            return int(m.group ())
+        else:
+            return None
+    return x
+
 
 def main():
     pass
