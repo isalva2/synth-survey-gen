@@ -3,11 +3,12 @@ from preprocess import generate_questions
 from survey import AgentResponsePackage
 from pathlib import Path
 from dataclasses import asdict
-import matplotlib.pyplot as plt
 import copy
 import pandas as pd
 import json
 import re
+import matplotlib.pyplot as plt
+import colorcet as cc
 
 class ProcessSurveyResponse:
     def __init__(self, config_folder: str, batch_size: int, RUN_FOLDER: str, source: str, date_str: str):
@@ -157,6 +158,9 @@ class ResultsWriter:
             self.true_dataset = pd.read_csv(self.data_path / "person.csv", low_memory=False)
 
     def _clean_test_datasets(self):
+        """
+        This is a bad work around fix to properly format bad LLM responses. Need to fix this eventually.
+        """
         # get survey variables
         self.questions = generate_questions(config_folder=self.config_folder)
         self.survey_vars = list(self.questions.keys())
@@ -189,7 +193,56 @@ class ResultsWriter:
         grouped["share"] = grouped["count"] / grouped["count"].sum()
         return grouped
 
-def
+    def _set_plotting_format(self):
+        self.colors = cc.glasbey
+        pass
+
+    def generate_figure(self, test: pd.DataFrame, true: pd.DataFrame, var: str, how="share"):
+        """Generates grouped figure of results
+
+        Args:
+            test (pd.DataFrame): test (synthetic) dataset generated from _group_dataset()
+            true (pd.DataFrame): true dataset
+            var (str): survey variable to be plotted
+            how (str, optional): Display "share" percentage or "count" value counts. Defaults to "share".
+        """
+
+        # align vals on test dataset with all possible from true dataset
+        vals = set(true[var])
+        test = test.set_index(var).reindex(vals, fill_value=0)
+        true = true.set_index(var)
+
+        # set up plot
+        fig, ax = plt.subplots(figsize=(12,6))
+
+        # transform and concat for plotting
+        if how == "share":
+            true["percent"] = true["share"] * 100
+            true = true.drop(columns=["count", "share"])
+            test["percent"] = test["share"] * 100
+            test = test.drop(columns=["count", "share"])
+
+            plotting_df = pd.concat([true, test], axis=1).T
+
+            plotting_df.index = ["Survey Data", "LLM Synthetic"]
+
+        # rename
+        ax = plotting_df.plot.bar(
+            stacked=True,
+            ax=ax,
+            color=colors,
+
+            width=0.90,
+            rot=0
+            )
+
+        # format legend
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(
+            handles=handles,
+            labels=[self.questions.get(var.upper()).get("response").get(int(label)) for label in labels],
+            )
+        plt.tight_layout()
 
 
 def _extract_first_int(x):
