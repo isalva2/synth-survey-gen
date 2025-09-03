@@ -139,6 +139,7 @@ class ResultsWriter:
         _, _, _, self.analysis_conf = load_config(config_folder=config_folder)
         self._load_datasets()
         self._clean_test_datasets()
+        self._set_plotting_format()
 
 
     def _load_datasets(self):
@@ -195,7 +196,6 @@ class ResultsWriter:
 
     def _set_plotting_format(self):
         self.colors = cc.glasbey
-        pass
 
     def generate_figure(self, test: pd.DataFrame, true: pd.DataFrame, var: str, how="share"):
         """Generates grouped figure of results
@@ -230,7 +230,7 @@ class ResultsWriter:
         ax = plotting_df.plot.bar(
             stacked=True,
             ax=ax,
-            color=colors,
+            color=self.colors,
 
             width=0.90,
             rot=0
