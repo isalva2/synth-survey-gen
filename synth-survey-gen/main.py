@@ -22,25 +22,6 @@ RUN_FOLDER = sys.argv[2] if len(sys.argv) > 2 else None
 
 settings.quiet = True
 
-# def run_survey(result_queue: Queue,
-#     stop_event: threading.Event,
-#     survey_conf: Dict,
-#     questions: Dict,
-#     agents: List[SurveyAgent],
-#     batch_size: int,
-#     shuffle_response: bool):
-#     try:
-#         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
-#             batch = agents[i: i+batch_size]
-#             SE = SurveyEngine(survey_conf, questions, batch, shuffle_response)
-#             SE.run()
-#             for r in SE.results():
-#                 result_queue.put(r)
-#     except Exception as e:
-#         print(f"Exception: {e}")
-#     finally:
-#         stop_event.set()
-
 def run_survey(
     result_queue: Queue,
     stop_event: threading.Event,
