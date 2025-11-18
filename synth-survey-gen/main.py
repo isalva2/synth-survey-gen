@@ -49,7 +49,7 @@ def run_survey(
     agents: List[SurveyAgent],
     batch_size: int,
     shuffle_response: bool,
-    timeout_per_batch: float = 60.0  # seconds
+    timeout_per_batch: float = 600000  # seconds
 ):
     try:
         for i in tqdm(range(0, len(agents), batch_size), desc="running batches"):
