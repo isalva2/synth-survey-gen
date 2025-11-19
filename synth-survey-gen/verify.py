@@ -230,16 +230,19 @@ def main():
             if rating:
                 ratings.append(rating)
                 n_right += 1
-                tqdm.write(print(rating))
-                tqdm.write("Look at this")
             else:
-                tqdm.write("Bad evaluator JSON")
                 n_wrong_evaluator += 1
         else:
-            tqdm.write("Bad agent response")
             n_wrong_response += 1
 
-        tqdm.write(f"Good format: {n_right}\nBad response: {n_wrong_response}\nBad evaluation: {n_wrong_evaluator}")
+        tqdm.write(f"Good evaluation:\t{n_right}\nBad input:\n{n_wrong_response}\nBad evaluation:\t{n_wrong_evaluator}")
+
+    ratings_file = os.path.join(RESULT_FOLDER, "behavioral_analysis.json")
+
+    with open(ratings_file, "w") as f:
+        json.dump(ratings, f, indent=4)
+
+
 
 if __name__ == "__main__":
     main()
