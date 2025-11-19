@@ -228,6 +228,7 @@ def main():
             rating = evaluator_get_ratings(evaluator_prompt, agent_response, MODEL_NAME)
 
             if rating:
+                rating["ID"] = agent_id
                 ratings.append(rating)
                 n_right += 1
             else:
@@ -235,7 +236,7 @@ def main():
         else:
             n_wrong_response += 1
 
-        tqdm.write(f"Good evaluation:\t{n_right}\nBad input:\n{n_wrong_response}\nBad evaluation:\t{n_wrong_evaluator}")
+        tqdm.write(f"\nGood eval:\t{n_right}\nBad input:\t{n_wrong_response}\nBad eval:\t{n_wrong_evaluator}")
 
     ratings_file = os.path.join(RESULT_FOLDER, "behavioral_analysis.json")
 
