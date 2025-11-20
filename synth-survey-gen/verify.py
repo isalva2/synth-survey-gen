@@ -4,6 +4,8 @@ import json
 import re
 from tqdm import tqdm
 from pathlib import Path
+import pandas as pd
+from pandas import DataFrame
 from preprocess import generate_questions
 from ollama import chat
 
@@ -168,6 +170,49 @@ def evaluator_get_ratings(evaluator_prompt: str, agent_response:str, model: str)
     return(_extract_json_evaluator_response(response))
 
 
+def _read_behavioral_analysis(run_path: str) -> list[dict]:
+    file_path = os.path.join(run_path, "behavioral_analysis.json")
+    with open(file_path, "r") as f:
+        behavioral_analysis: dict = json.load(f)
+        return behavioral_analysis
+
+
+def _check_malformed(behavioral_analysis: list[dict]) -> tuple[int]:
+    n_analyses = len(behavioral_analysis)
+    n_malformed = 0
+    for analysis in behavioral_analysis:
+        if analysis.get("malformed_response") == True: n_malformed += 1
+
+    return n_analyses, n_malformed
+
+def _get_score_deep(analysis: dict, behavior_key: str, metric_key: str = "score"):
+    metric = analysis.get(behavior_key)
+    if metric:
+        score = metric[metric_key]
+        return score
+    else:
+        return None
+
+
+def _aggregate_analysis(behavioral_analysis: list[dict]):
+
+    behavior_scores = []
+    for analysis in behavioral_analysis:
+        score = {
+            "agent_id": analysis.get("ID"),
+            "malformed": analysis.get("malformed_response"),
+            "malformed_reason": analysis.get("malformed_reason"),
+            "consistency": _get_score_deep(analysis, "self_consistency"),
+            "relevance": _get_score_deep(analysis, "relevance_and_specificity"),
+            "tone": _get_score_deep(analysis, "empathy_and_tone"),
+            "consistency_justification": _get_score_deep(analysis, "self_consistency", "justification"),
+            "relevance_justification": _get_score_deep(analysis, "relevance_and_specificity", "justification"),
+            "tone_justification": _get_score_deep(analysis, "empathy_and_tone", "justification")
+        }
+        behavior_scores.append(score)
+
+    scores_df = DataFrame(behavior_scores)
+    return scores_df
 
 def main():
     if len(sys.argv) < 3:
